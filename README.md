@@ -35,8 +35,8 @@ helm install my-release damfle/generic --values my-values.yaml
 
 ## Charts
 
-- **generic** v0.1.15
-- **loki** v0.1.17
+- **generic** v0.1.16
+- **loki** v0.1.18
 
-Generated on: 2025-10-01 09:22:10 UTC
-Repository tag: v0.0.5
+Generated on: 2025-10-01 09:42:38 UTC
+Repository tag: v0.0.6
