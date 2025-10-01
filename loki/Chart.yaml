@@ -3,7 +3,7 @@ name: loki
 description: A Helm chart for Grafana Loki - Log aggregation system
 
 type: application
-version: 0.1.16
+version: 0.1.17
 appVersion: "2.9.0"
 
 maintainers:
