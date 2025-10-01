@@ -103,7 +103,8 @@ generic:
   # Additional volume mount for Loki config
   volumeMounts:
     - name: loki-config
-      mountPath: /etc/loki
+      mountPath: /etc/loki/loki.yaml
+      subPath: loki.yaml
       readOnly: true
 
   # Container args to use config file

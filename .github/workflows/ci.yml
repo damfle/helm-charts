@@ -251,25 +251,6 @@ jobs:
           git push origin main
           git push origin ${{ steps.version.outputs.version }}
 
-  trigger-cd:
-    runs-on: ubuntu-latest
-    needs: [detect-changes, lint-and-test, build, build-and-tag]
-    if: needs.detect-changes.outputs.charts-changed == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.build-and-tag.result == 'success'
-    steps:
-      - name: Notify CD trigger
-        run: |
-          echo "🎉 CI Pipeline completed successfully!"
-          echo "📦 Tag ${{ needs.build-and-tag.outputs.version }} has been created and pushed"
-          echo "🚀 This will automatically trigger the CD (Continuous Deployment) workflow via workflow_run trigger"
-          echo "📋 The CD workflow will:"
-          echo "   - Detect the new tag created by CI"
-          echo "   - Package all charts"
-          echo "   - Create GitHub release with artifacts"  
-          echo "   - Update Helm repository index"
-          echo "   - Deploy to GitHub Pages"
-          echo ""
-          echo "Monitor the CD workflow at: ${{ github.server_url }}/${{ github.repository }}/actions"
-
   summary:
     runs-on: ubuntu-latest
     needs: [detect-changes, lint-and-test, build, build-and-tag, trigger-cd]
@@ -304,9 +285,7 @@ jobs:
                 echo "### ✅ Version Bump and Tag: Success" >> $GITHUB_STEP_SUMMARY
                 echo "**Version:** ${{ needs.build-and-tag.outputs.version }}" >> $GITHUB_STEP_SUMMARY
                 
-                if [[ "${{ needs.trigger-cd.result }}" == "success" ]]; then
-                  echo "### 🚀 CD Trigger: CD workflow will be triggered by tag" >> $GITHUB_STEP_SUMMARY
-                fi
+                echo "Monitor the CD workflow at: ${{ github.server_url }}/${{ github.repository }}/actions"
               elif [[ "${{ needs.build-and-tag.result }}" == "failure" ]]; then
                 echo "### ❌ Version Bump and Tag: Failed" >> $GITHUB_STEP_SUMMARY
               else
