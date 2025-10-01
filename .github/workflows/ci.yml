@@ -253,7 +253,7 @@ jobs:
 
   summary:
     runs-on: ubuntu-latest
-    needs: [detect-changes, lint-and-test, build, build-and-tag, trigger-cd]
+    needs: [detect-changes, lint-and-test, build, build-and-tag]
     if: always()
     steps:
       - name: Job Summary
