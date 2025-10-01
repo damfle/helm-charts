@@ -3,24 +3,24 @@ entries:
   generic:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2025-10-01T13:01:47.248225701Z"
+    created: "2025-10-01T13:08:32.747211877Z"
     description: A Helm chart for Kubernetes
-    digest: 64c515424fa8f6a6d8886d7af236e92c1ca42e7aaa5b99155361a6001b7b933b
+    digest: f9adae8e0cf776012492b598bff4d26ee0781257074f2427d68baa07e9849589
     name: generic
     type: application
     urls:
-    - https://damfle.github.io/helm-charts/charts/generic-0.1.17.tgz
-    version: 0.1.17
+    - https://damfle.github.io/helm-charts/charts/generic-0.1.18.tgz
+    version: 0.1.18
   loki:
   - apiVersion: v2
     appVersion: 2.9.0
-    created: "2025-10-01T13:01:47.249321537Z"
+    created: "2025-10-01T13:08:32.748401248Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
       version: 0.1.17
     description: A Helm chart for Grafana Loki - Log aggregation system
-    digest: ef566de9409c52515f44ab4545a053e397cc47d7563bead37ba2934086e0ba5c
+    digest: 7772c0b186b11dfb255741d34a555222a7c18396baddd6c0811422270beb5c26
     home: https://grafana.com/oss/loki/
     keywords:
     - loki
@@ -36,6 +36,6 @@ entries:
     - https://github.com/grafana/loki
     type: application
     urls:
-    - https://damfle.github.io/helm-charts/charts/loki-0.1.20.tgz
-    version: 0.1.20
-generated: "2025-10-01T13:01:47.247574355Z"
+    - https://damfle.github.io/helm-charts/charts/loki-0.1.21.tgz
+    version: 0.1.21
+generated: "2025-10-01T13:08:32.746570099Z"
