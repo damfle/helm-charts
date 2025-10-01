@@ -302,20 +302,33 @@ jobs:
           # Create basic structure for helm repository
           mkdir -p charts
           
-          # Copy packaged charts from current directory
+          # Copy NEW packaged charts from current directory
           if ls *.tgz 1> /dev/null 2>&1; then
-            cp *.tgz charts/
-            echo "✅ Copied charts to charts/ directory:"
-            ls -la charts/
+            echo "📦 Adding new chart packages to repository:"
+            for new_chart in *.tgz; do
+              echo "  Adding: $new_chart"
+              cp "$new_chart" charts/
+            done
+            echo "✅ New charts added to charts/ directory"
           else
-            echo "❌ No .tgz files found to copy"
+            echo "❌ No new .tgz files found to add"
             exit 1
           fi
+          
+          echo "📋 All charts now in repository:"
+          ls -la charts/
 
       - name: Generate Helm repository index
         run: |
-          # Create or update the Helm repository index
+          # Create or update the Helm repository index (includes ALL chart versions)
+          echo "🔍 Generating Helm repository index for all chart versions..."
           helm repo index charts --url https://${{ github.repository_owner }}.github.io/helm-charts/charts
+          
+          echo "📊 Repository index contents:"
+          if [ -f charts/index.yaml ]; then
+            echo "Charts in index:"
+            cat charts/index.yaml | grep -A5 "entries:" || echo "No entries found"
+          fi
           
           # Move index.yaml to root for easier access
           cp charts/index.yaml .
@@ -363,6 +376,8 @@ jobs:
           EOF
           
           # Add chart information to README
+          echo "📦 Current repository contents:" >> README.md
+          echo "" >> README.md
           for chart_file in charts/*.tgz; do
             if [ -f "$chart_file" ]; then
               chart_name=$(basename "$chart_file" | sed 's/-[0-9].*.tgz$//')
@@ -374,6 +389,7 @@ jobs:
           echo "" >> README.md
           echo "Generated on: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> README.md
           echo "Repository tag: ${{ needs.build-release.outputs.tag-created }}" >> README.md
+          echo "Total chart packages: $(ls charts/*.tgz 2>/dev/null | wc -l)" >> README.md
 
       - name: Create simple index.html
         run: |
@@ -464,12 +480,13 @@ jobs:
           git add .
           
           if git diff --staged --quiet; then
-            echo "No changes to commit"
+            echo "ℹ️  No changes to commit (no new chart versions added)"
           else
-            git commit -m "Release ${{ needs.build-release.outputs.tag-created }} - Update Helm repository"
+            git commit -m "Build ${{ needs.build-release.outputs.tag-created }} - Add new chart versions to Helm repository"
             # Push to gh-pages which will automatically trigger GitHub Pages
             git push origin gh-pages
-            echo "✅ Successfully pushed to gh-pages branch"
+            echo "✅ Successfully pushed new chart versions to gh-pages branch"
+            echo "📊 Repository now contains all historical chart versions"
           fi
 
   summary:
