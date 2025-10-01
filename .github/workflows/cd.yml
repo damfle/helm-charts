@@ -122,8 +122,6 @@ jobs:
           
           for chart in "${chart_array[@]}"; do
             chart=$(echo "$chart" | xargs)  # trim whitespace
-            mkdir $chart/charts
-
             echo "Processing chart: '$chart'"
             
             if [ ! -d "$chart" ]; then
@@ -137,7 +135,8 @@ jobs:
             fi
             
             echo "Packaging chart: $chart"
-            helm dependency update "$chart" 2>/dev/null || true
+            helm dependency update "$chart"
+
             
             if helm package "$chart" --destination .cr-release-packages; then
               echo "✅ Successfully packaged $chart"

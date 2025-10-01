@@ -142,8 +142,8 @@ jobs:
           mkdir -p packages
           
           for chart in ${{ needs.detect-changes.outputs.charts-list }}; do
-            mkdir $chart/charts
             echo "Packaging chart: $chart"
+            helm dependency update "$chart"
             helm package "$chart" --destination packages/
           done
           
@@ -195,7 +195,6 @@ jobs:
           mkdir -p packages
           
           for chart in ${{ needs.detect-changes.outputs.charts-list }}; do
-            mkdir $chart/charts
 
             echo "Processing chart: $chart"
             
@@ -220,7 +219,8 @@ jobs:
             # Verify the change
             updated_version=$(helm show chart "$chart" | grep '^version:' | awk '{print $2}')
             echo "Updated chart version: $updated_version"
-            
+            helm dependency update "$chart"
+
             # Package the chart with new version
             helm package "$chart" --destination packages/
           done
