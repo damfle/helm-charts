@@ -29,6 +29,17 @@ jobs:
         run: |
           echo "✅ Tag ${{ github.ref_name }} triggered CD workflow"
           echo "Tag commit: $(git rev-list -n 1 ${{ github.ref_name }})"
+          
+          # Verify this tag was created by CI process
+          commit_message=$(git log -1 --pretty=format:"%s" ${{ github.ref_name }})
+          echo "Commit message: $commit_message"
+          
+          if [[ "$commit_message" =~ ^"chore: bump chart versions for release" ]]; then
+            echo "✅ Tag was created by CI process - proceeding with deployment"
+          else
+            echo "⚠️  Tag was not created by CI process, but proceeding anyway"
+            echo "This might be a manual tag or hotfix release"
+          fi
 
       - name: Configure Git
         run: |

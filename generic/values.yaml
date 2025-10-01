@@ -179,11 +179,3 @@ persistence:
   mountPath: /data
   # Subpath within the volume
   subPath: ""
-
-# HTTPRoute configuration (disabled by default)
-# For Gateway API HTTPRoute resources
-httpRoute:
-  enabled: false
-  hostnames: []
-  parentRefs: []
-  rules: []

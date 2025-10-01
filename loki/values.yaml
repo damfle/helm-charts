@@ -89,7 +89,7 @@ generic:
     enabled: true
     accessModes:
       - ReadWriteOnce
-    size: 8Gi
+    size: 16Gi
     mountPath: /loki
     annotations: {}
     labels: {}
@@ -98,7 +98,7 @@ generic:
   volumes:
     - name: loki-config
       configMap:
-        name: test-loki-loki-config
+        name: loki-loki-config
 
   # Additional volume mount for Loki config
   volumeMounts:
@@ -170,11 +170,3 @@ generic:
           - path: /
             pathType: Prefix
     tls: []
-
-  # Disable autoscaling for single instance
-  autoscaling:
-    enabled: false
-
-  # Disable HTTPRoute (not used by Loki)
-  httpRoute:
-    enabled: false
