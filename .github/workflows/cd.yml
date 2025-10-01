@@ -1,9 +1,12 @@
 name: Continuous Deployment
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    types:
+      - completed
+    branches:
+      - main
   workflow_dispatch:
 
 env:
@@ -17,28 +20,60 @@ permissions:
 jobs:
   build-release:
     runs-on: ubuntu-latest
+    # Only run if CI workflow completed successfully
+    if: github.event.workflow_run.conclusion == 'success'
     outputs:
       charts-changed: ${{ steps.detect-charts.outputs.charts }}
+      tag-created: ${{ steps.check-tag.outputs.tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Verify tag is on main branch
+      - name: Check if CI created a new tag
+        id: check-tag
         run: |
-          echo "✅ Tag ${{ github.ref_name }} triggered CD workflow"
-          echo "Tag commit: $(git rev-list -n 1 ${{ github.ref_name }})"
+          # Get the latest tag
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           
-          # Verify this tag was created by CI process
-          commit_message=$(git log -1 --pretty=format:"%s" ${{ github.ref_name }})
+          if [[ -n "$latest_tag" ]]; then
+            # Check if this tag was created by the CI workflow (should have specific commit message pattern)
+            tag_commit=$(git rev-list -n 1 "$latest_tag")
+            commit_message=$(git log -1 --pretty=format:"%s" "$tag_commit")
+            
+            echo "Latest tag: $latest_tag"
+            echo "Tag commit: $tag_commit"  
+            echo "Commit message: $commit_message"
+            
+            if [[ "$commit_message" =~ ^"chore: bump chart versions for release" ]]; then
+              echo "✅ Found tag created by CI: $latest_tag"
+              echo "tag=$latest_tag" >> "$GITHUB_OUTPUT"
+            else
+              echo "❌ Latest tag was not created by CI workflow"
+              echo "Commit message does not match CI pattern: $commit_message"
+              exit 1
+            fi
+          else
+            echo "❌ No tags found in repository"
+            exit 1
+          fi
+
+      - name: Verify tag and workflow trigger
+        run: |
+          echo "✅ CD workflow triggered by CI completion"
+          echo "✅ Tag ${{ steps.check-tag.outputs.tag }} was created by CI"
+          echo "Tag commit: $(git rev-list -n 1 ${{ steps.check-tag.outputs.tag }})"
+          
+          # Additional verification - ensure we're processing the right tag
+          commit_message=$(git log -1 --pretty=format:"%s" ${{ steps.check-tag.outputs.tag }})
           echo "Commit message: $commit_message"
           
           if [[ "$commit_message" =~ ^"chore: bump chart versions for release" ]]; then
-            echo "✅ Tag was created by CI process - proceeding with deployment"
+            echo "✅ Confirmed tag was created by CI process - proceeding with deployment"
           else
-            echo "⚠️  Tag was not created by CI process, but proceeding anyway"
-            echo "This might be a manual tag or hotfix release"
+            echo "❌ Tag verification failed"
+            exit 1
           fi
 
       - name: Configure Git
@@ -54,9 +89,10 @@ jobs:
       - name: Detect changed charts from tag
         id: detect-charts
         run: |
+          # Get the current tag from the previous step
+          current_tag="${{ steps.check-tag.outputs.tag }}"
           # Get the previous tag
           previous_tag=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
-          current_tag=${GITHUB_REF#refs/tags/}
           
           echo "Current tag: $current_tag"
           echo "Previous tag: $previous_tag"
@@ -146,7 +182,7 @@ jobs:
       - name: Generate release notes
         id: release-notes
         run: |
-          current_tag=${GITHUB_REF#refs/tags/}
+          current_tag="${{ steps.check-tag.outputs.tag }}"
           previous_tag=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
           
           echo "# Release $current_tag" > release-notes.md
@@ -176,8 +212,8 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
+          tag_name: ${{ steps.check-tag.outputs.tag }}
+          name: Release ${{ steps.check-tag.outputs.tag }}
           body_path: release-notes.md
           files: .cr-release-packages/*
           draft: false
@@ -220,40 +256,68 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: packaged-charts
-          path: ./
+          path: .cr-release-packages
 
       - name: Verify downloaded charts
         run: |
-          echo "Downloaded files in current directory:"
+          echo "Downloaded files structure:"
           ls -la ./
+          ls -la .cr-release-packages/ || echo "No .cr-release-packages directory"
           
-          # Look for .tgz files directly in current directory
-          if ! ls *.tgz 1> /dev/null 2>&1; then
-            echo "❌ No .tgz files found in current directory"
+          # Look for .tgz files in .cr-release-packages directory  
+          if ! ls .cr-release-packages/*.tgz 1> /dev/null 2>&1; then
+            echo "❌ No .tgz files found in .cr-release-packages/"
             echo "Available files:"
             find ./ -name "*.tgz" || echo "No .tgz files found anywhere"
             exit 1
           fi
           
-          echo "✅ Found .tgz files directly in current directory:"
+          echo "✅ Found .tgz files in .cr-release-packages/:"
+          ls -la .cr-release-packages/*.tgz
+          
+          # Copy them to current directory for easier handling
+          cp .cr-release-packages/*.tgz ./
+          echo "✅ Copied .tgz files to current directory:"
           ls -la *.tgz
 
       - name: Checkout gh-pages branch
         run: |
+          # First, save any .tgz files that exist
+          echo "💾 Saving .tgz files temporarily..."
+          mkdir -p /tmp/chart-packages
+          if ls *.tgz 1> /dev/null 2>&1; then
+            cp *.tgz /tmp/chart-packages/
+            echo "✅ Saved .tgz files:"
+            ls -la /tmp/chart-packages/
+          else
+            echo "ℹ️  No .tgz files to save"
+          fi
+          
+          # Clean up any untracked files that might conflict
+          echo "🧹 Cleaning up untracked files..."
+          git clean -fd
+          
+          # Remove any existing gh-pages branch locally to avoid conflicts
+          git branch -D gh-pages 2>/dev/null || true
+          
           # Try to fetch and checkout existing gh-pages branch, or create new orphan branch
-          if git fetch origin gh-pages:gh-pages 2>/dev/null && git checkout gh-pages; then
+          if git fetch origin gh-pages 2>/dev/null && git checkout -b gh-pages origin/gh-pages; then
             echo "✅ Checked out existing gh-pages branch"
           else
             echo "📄 Creating new orphan gh-pages branch"
             git checkout --orphan gh-pages
           fi
           
-          # Clean the working directory but preserve downloaded .tgz files
+          # Clean the working directory
           git rm -rf . 2>/dev/null || true
           
-          # Ensure we have our .tgz files available
-          echo "Available .tgz files after cleanup:"
-          ls -la *.tgz 2>/dev/null || echo "No .tgz files found after cleanup"
+          # Restore the .tgz files
+          if [ -d "/tmp/chart-packages" ] && ls /tmp/chart-packages/*.tgz 1> /dev/null 2>&1; then
+            echo "📦 Restoring .tgz files..."
+            cp /tmp/chart-packages/*.tgz ./
+            echo "✅ Restored .tgz files:"
+            ls -la *.tgz
+          fi
           
           # Create basic structure for helm repository
           mkdir -p charts
@@ -329,7 +393,7 @@ jobs:
           
           echo "" >> README.md
           echo "Generated on: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> README.md
-          echo "Repository tag: ${{ github.ref_name }}" >> README.md
+          echo "Repository tag: ${{ needs.build-release.outputs.tag-created }}" >> README.md
 
       - name: Create simple index.html
         run: |
@@ -408,7 +472,7 @@ jobs:
                   </div>
                   
                   <div class="footer">
-                      <p>Generated on $(date -u '+%Y-%m-%d %H:%M:%S UTC') | Repository tag: ${{ github.ref_name }}</p>
+                      <p>Generated on $(date -u '+%Y-%m-%d %H:%M:%S UTC') | Repository tag: ${{ needs.build-release.outputs.tag-created }}</p>
                   </div>
               </div>
           </body>
@@ -422,7 +486,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Release ${{ github.ref_name }} - Update Helm repository"
+            git commit -m "Release ${{ needs.build-release.outputs.tag-created }} - Update Helm repository"
             # Push to gh-pages which will automatically trigger GitHub Pages
             git push origin gh-pages
             echo "✅ Successfully pushed to gh-pages branch"
@@ -452,7 +516,7 @@ jobs:
         run: |
           echo "## 🚀 Continuous Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Tag:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag:** ${{ needs.build-release.outputs.tag-created }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
           if [[ "${{ needs.build-release.result }}" == "success" ]]; then

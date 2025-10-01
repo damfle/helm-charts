@@ -19,6 +19,7 @@ permissions:
   pages: write
   id-token: write
 
+
 jobs:
   detect-changes:
     runs-on: ubuntu-latest
@@ -259,8 +260,9 @@ jobs:
         run: |
           echo "🎉 CI Pipeline completed successfully!"
           echo "📦 Tag ${{ needs.build-and-tag.outputs.version }} has been created and pushed"
-          echo "🚀 This will automatically trigger the CD (Continuous Deployment) workflow"
-          echo "� The CD workflow will:"
+          echo "🚀 This will automatically trigger the CD (Continuous Deployment) workflow via workflow_run trigger"
+          echo "📋 The CD workflow will:"
+          echo "   - Detect the new tag created by CI"
           echo "   - Package all charts"
           echo "   - Create GitHub release with artifacts"  
           echo "   - Update Helm repository index"
@@ -303,8 +305,7 @@ jobs:
                 echo "**Version:** ${{ needs.build-and-tag.outputs.version }}" >> $GITHUB_STEP_SUMMARY
                 
                 if [[ "${{ needs.trigger-cd.result }}" == "success" ]]; then
-                  echo "### 🚀 CD Deployment: Automatically triggered by tag creation" >> $GITHUB_STEP_SUMMARY
-                  echo "The Continuous Deployment workflow will start shortly to package and deploy the charts." >> $GITHUB_STEP_SUMMARY
+                  echo "### 🚀 CD Trigger: CD workflow will be triggered by tag" >> $GITHUB_STEP_SUMMARY
                 fi
               elif [[ "${{ needs.build-and-tag.result }}" == "failure" ]]; then
                 echo "### ❌ Version Bump and Tag: Failed" >> $GITHUB_STEP_SUMMARY
