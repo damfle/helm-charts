@@ -1,0 +1,42 @@
+# YAML linting configuration for chart-testing
+# See: https://yamllint.readthedocs.io/en/stable/configuration.html
+
+extends: default
+
+rules:
+  # Allow longer lines for URLs and descriptions
+  line-length:
+    max: 120
+    level: warning
+
+  # Be more lenient with indentation in templates
+  indentation:
+    spaces: 2
+    indent-sequences: true
+    check-multi-line-strings: false
+
+  # Allow trailing spaces in templates (common in Helm)
+  trailing-spaces:
+    level: warning
+
+  # Allow empty values in YAML (common in values.yaml)
+  empty-values:
+    forbid-in-block-mappings: false
+    forbid-in-flow-mappings: false
+
+  # Allow duplicate keys (sometimes needed in Helm templates)
+  key-duplicates:
+    level: warning
+
+  # Be lenient with document separators
+  document-start:
+    present: false
+
+  # Allow quoted strings
+  quoted-strings:
+    quote-type: any
+    required: false
+
+  # Allow truthy values (common in Helm values)
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no', 'on', 'off']
