@@ -122,6 +122,8 @@ jobs:
           
           for chart in "${chart_array[@]}"; do
             chart=$(echo "$chart" | xargs)  # trim whitespace
+            mkdir $chart/charts
+
             echo "Processing chart: '$chart'"
             
             if [ ! -d "$chart" ]; then
