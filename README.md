@@ -47,6 +47,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **ollama** v0.1.1
 - **webdav** v0.1.0
 
-Generated on: 2025-10-02 09:24:47 UTC
+Generated on: 2025-10-02 09:35:23 UTC
 Repository tag: b8
 Total chart packages: 9
