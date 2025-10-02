@@ -51,7 +51,7 @@ jobs:
       - name: Find all charts
         id: find-charts
         run: |
-          charts=$(find . -name 'Chart.yaml' -not -path './.*' | xargs dirname | sed 's|^\./||' | sort)
+          charts=$(find . -name 'Chart.yaml' -not -path './.*' | xargs dirname | sed 's|^\./||' | sort | tr '\n' ' ')
           echo "charts=$charts" >> "$GITHUB_OUTPUT"
           echo "Charts found: $charts"
 
