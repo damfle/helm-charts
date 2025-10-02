@@ -3,10 +3,8 @@ name: Continuous Deployment
 on:
   workflow_run:
     workflows: ["Continuous Integration"]
-    types:
-      - completed
-    branches:
-      - main
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
 
 env:
@@ -20,147 +18,54 @@ permissions:
 jobs:
   build-release:
     runs-on: ubuntu-latest
-    # Only run if CI workflow completed successfully
     if: github.event.workflow_run.conclusion == 'success'
     outputs:
       tag-created: ${{ steps.check-tag.outputs.tag }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Check if CI created a new build tag
+      - name: Check for new build tag
         id: check-tag
         run: |
-          # Get the latest build tag
           latest_tag=$(git tag -l "b*" --sort=-version:refname | head -n1 || echo "")
-          
           if [[ -n "$latest_tag" ]]; then
-            # Check if this tag was created by the CI workflow (should have specific commit message pattern)
-            tag_commit=$(git rev-list -n 1 "$latest_tag")
-            commit_message=$(git log -1 --pretty=format:"%s" "$tag_commit")
-            
-            echo "Latest build tag: $latest_tag"
-            echo "Tag commit: $tag_commit"  
-            echo "Commit message: $commit_message"
-            
-            if [[ "$commit_message" =~ ^"chore: bump chart versions for build" ]]; then
-              echo "✅ Found build tag created by CI: $latest_tag"
+            commit_msg=$(git log -1 --pretty=format:"%s" "$latest_tag")
+            if [[ "$commit_msg" =~ ^"chore: bump chart versions for build" ]]; then
               echo "tag=$latest_tag" >> "$GITHUB_OUTPUT"
+              echo "Found build tag: $latest_tag"
             else
-              echo "❌ Latest tag was not created by CI workflow"
-              echo "Commit message does not match CI pattern: $commit_message"
+              echo "Latest tag not from CI: $commit_msg"
               exit 1
             fi
           else
-            echo "❌ No build tags found in repository"
+            echo "No build tags found"
             exit 1
           fi
 
-      - name: Verify build tag and workflow trigger
-        run: |
-          echo "✅ CD workflow triggered by CI completion"
-          echo "✅ Build tag ${{ steps.check-tag.outputs.tag }} was created by CI"
-          echo "Tag commit: $(git rev-list -n 1 ${{ steps.check-tag.outputs.tag }})"
-          
-          # Additional verification - ensure we're processing the right tag
-          commit_message=$(git log -1 --pretty=format:"%s" ${{ steps.check-tag.outputs.tag }})
-          echo "Commit message: $commit_message"
-          
-          if [[ "$commit_message" =~ ^"chore: bump chart versions for build" ]]; then
-            echo "✅ Confirmed build tag was created by CI process - proceeding with deployment"
-          else
-            echo "❌ Build tag verification failed"
-            exit 1
-          fi
-
-      - name: Configure Git
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
-      - name: Set up Helm
-        uses: azure/setup-helm@v3
+      - uses: azure/setup-helm@v3
         with:
           version: ${{ env.HELM_VERSION }}
 
-      - name: Find charts to package
+      - name: Find all charts
         id: find-charts
         run: |
-          echo "Working directory: $(pwd)"
-          
-          # Find all charts in the repository
-          all_charts=$(find . -name 'Chart.yaml' -not -path './.*' | xargs dirname | sed 's|^\./||' | sort)
-          echo "All charts found: $all_charts"
-          
-          # Since CI only creates tags when there are changes, package all charts
-          charts_list=""
-          for chart in $all_charts; do
-            if [ -f "$chart/Chart.yaml" ]; then
-              if [ -z "$charts_list" ]; then
-                charts_list="$chart"
-              else
-                charts_list="$charts_list $chart"
-              fi
-            fi
-          done
-          
-          echo "Charts to package: '$charts_list'"
-          echo "charts=$charts_list" >> "$GITHUB_OUTPUT"
+          charts=$(find . -name 'Chart.yaml' -not -path './.*' | xargs dirname | sed 's|^\./||' | sort)
+          echo "charts=$charts" >> "$GITHUB_OUTPUT"
+          echo "Charts found: $charts"
 
       - name: Package charts
         run: |
           mkdir -p .cr-release-packages
-          
-          charts="${{ steps.find-charts.outputs.charts }}"
-          echo "Raw charts output: '$charts'"
-          
-          # Convert to array and process each chart
-          chart_array=($charts)
-          echo "Chart array length: ${#chart_array[@]}"
-          
-          for chart in "${chart_array[@]}"; do
-            chart=$(echo "$chart" | xargs)  # trim whitespace
-            echo "Processing chart: '$chart'"
-            
-            if [ ! -d "$chart" ]; then
-              echo "Chart directory '$chart' does not exist"
-              continue
-            fi
-            
-            if [ ! -f "$chart/Chart.yaml" ]; then
-              echo "Chart.yaml not found in $chart, skipping"
-              continue
-            fi
-            
-            echo "Packaging chart: $chart"
-            helm dependency update "$chart"
-
-            
-            if helm package "$chart" --destination .cr-release-packages; then
-              echo "✅ Successfully packaged $chart"
-            else
-              echo "❌ Failed to package $chart"
-              exit 1
-            fi
+          for chart in ${{ steps.find-charts.outputs.charts }}; do
+            helm dependency update "$chart" 2>/dev/null || true
+            helm package "$chart" --destination .cr-release-packages
+            echo "Packaged: $chart"
           done
-          
-          echo "Packaged charts:"
           ls -la .cr-release-packages/
-          
-          # Verify we have at least one .tgz file
-          if ! ls .cr-release-packages/*.tgz 1> /dev/null 2>&1; then
-            echo "No .tgz files found in .cr-release-packages/"
-            echo "Directory contents:"
-            ls -la .cr-release-packages/
-            exit 1
-          fi
-          
-          echo "✅ Chart packaging completed successfully"
 
       - name: Generate release notes
-        id: release-notes
         run: |
           current_tag="${{ steps.check-tag.outputs.tag }}"
           previous_tag=$(git tag -l "b*" --sort=-version:refname | sed -n '2p' || echo "")
@@ -168,26 +73,18 @@ jobs:
           echo "# Build $current_tag" > release-notes.md
           echo "" >> release-notes.md
           echo "## Charts in this build" >> release-notes.md
-          echo "" >> release-notes.md
           
-          charts="${{ steps.find-charts.outputs.charts }}"
-          for chart in $charts; do
-            chart_name=$(basename "$chart")
-            chart_version=$(helm show chart "$chart" | grep '^version:' | awk '{print $2}')
-            chart_app_version=$(helm show chart "$chart" | grep '^appVersion:' | awk '{print $2}' | tr -d '"')
-            echo "- **$chart_name** v$chart_version (app: $chart_app_version)" >> release-notes.md
+          for chart in ${{ steps.find-charts.outputs.charts }}; do
+            name=$(basename "$chart")
+            version=$(grep '^version:' "$chart/Chart.yaml" | awk '{print $2}')
+            app_version=$(grep '^appVersion:' "$chart/Chart.yaml" | awk '{print $2}' | tr -d '"')
+            echo "- **$name** v$version (app: $app_version)" >> release-notes.md
           done
           
-          echo "" >> release-notes.md
-          echo "## Changes" >> release-notes.md
-          echo "" >> release-notes.md
-          
-          if [ -n "$previous_tag" ]; then
-            echo "Changes since $previous_tag:" >> release-notes.md
+          if [[ -n "$previous_tag" ]]; then
             echo "" >> release-notes.md
+            echo "## Changes since $previous_tag" >> release-notes.md
             git log --oneline --pretty=format:"- %s" $previous_tag..HEAD >> release-notes.md
-          else
-            echo "- Initial build" >> release-notes.md
           fi
 
       - name: Create GitHub Release
@@ -197,19 +94,14 @@ jobs:
           name: Build ${{ steps.check-tag.outputs.tag }}
           body_path: release-notes.md
           files: .cr-release-packages/*
-          draft: false
-          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload packaged charts artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: packaged-charts
           path: .cr-release-packages/
           retention-days: 1
-          if-no-files-found: error
-          include-hidden-files: true
 
   publish-pages:
     needs: build-release
@@ -283,33 +175,28 @@ jobs:
           # Try to fetch and checkout existing gh-pages branch, or create new orphan branch
           if git fetch origin gh-pages 2>/dev/null && git checkout -b gh-pages origin/gh-pages; then
             echo "✅ Checked out existing gh-pages branch"
+            # Keep existing files - don't clean the working directory
+            echo "� Existing charts in repository:"
+            ls -la charts/ 2>/dev/null || echo "No existing charts directory"
           else
-            echo "📄 Creating new orphan gh-pages branch"
+            echo "�📄 Creating new orphan gh-pages branch"
             git checkout --orphan gh-pages
+            # Clean only for new branch
+            git rm -rf . 2>/dev/null || true
           fi
           
-          # Clean the working directory
-          git rm -rf . 2>/dev/null || true
-          
-          # Restore the .tgz files
-          if [ -d "/tmp/chart-packages" ] && ls /tmp/chart-packages/*.tgz 1> /dev/null 2>&1; then
-            echo "📦 Restoring .tgz files..."
-            cp /tmp/chart-packages/*.tgz ./
-            echo "✅ Restored .tgz files:"
-            ls -la *.tgz
-          fi
-          
-          # Create basic structure for helm repository
+          # Create charts directory if it doesn't exist
           mkdir -p charts
           
-          # Copy NEW packaged charts from current directory
-          if ls *.tgz 1> /dev/null 2>&1; then
+          # Restore the NEW .tgz files and add them to existing charts
+          if [ -d "/tmp/chart-packages" ] && ls /tmp/chart-packages/*.tgz 1> /dev/null 2>&1; then
             echo "📦 Adding new chart packages to repository:"
-            for new_chart in *.tgz; do
-              echo "  Adding: $new_chart"
+            for new_chart in /tmp/chart-packages/*.tgz; do
+              chart_name=$(basename "$new_chart")
+              echo "  Adding: $chart_name"
               cp "$new_chart" charts/
             done
-            echo "✅ New charts added to charts/ directory"
+            echo "✅ New charts added to repository"
           else
             echo "❌ No new .tgz files found to add"
             exit 1
