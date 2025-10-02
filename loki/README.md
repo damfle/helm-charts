@@ -241,7 +241,7 @@ kubectl delete pvc -l app.kubernetes.io/name=loki
 
 ## License
 
-This chart is licensed under the Apache 2.0 License.
+This chart is licensed under the ISC License.
 
 ## Links
 

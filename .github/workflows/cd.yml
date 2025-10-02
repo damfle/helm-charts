@@ -97,12 +97,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: packaged-charts
-          path: .cr-release-packages/
-          retention-days: 1
-
   publish-pages:
     needs: build-release
     runs-on: ubuntu-latest
@@ -124,16 +118,20 @@ jobs:
         with:
           version: ${{ env.HELM_VERSION }}
 
-      - name: Download packaged charts
-        uses: actions/download-artifact@v4
-        with:
-          name: packaged-charts
-          path: .cr-release-packages
-
-      - name: Verify downloaded charts
+      - name: Package charts for gh-pages
         run: |
-          echo "Downloaded files structure:"
-          ls -la ./
+          mkdir -p .cr-release-packages
+          charts=$(find . -name 'Chart.yaml' -not -path './.*' | xargs dirname | sed 's|^\./||' | sort | tr '\n' ' ')
+          for chart in $charts; do
+            helm dependency update "$chart" 2>/dev/null || true
+            helm package "$chart" --destination .cr-release-packages
+            echo "Packaged: $chart"
+          done
+          ls -la .cr-release-packages/
+
+      - name: Verify packaged charts
+        run: |
+          echo "Packaged charts:"
           ls -la .cr-release-packages/ || echo "No .cr-release-packages directory"
           
           # Look for .tgz files in .cr-release-packages directory  
