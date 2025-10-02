@@ -3,7 +3,7 @@ name: ittools
 description: A Helm chart for IT Tools - A collection of handy online tools for developers. Licensed under ISC License.
 
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "latest"
 
 maintainers:
