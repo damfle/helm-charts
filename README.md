@@ -39,12 +39,13 @@ helm install my-release damfle/generic --values my-values.yaml
 
 - **generic** v0.1.18
 - **generic** v0.1.19
+- **homebox** v0.1.1
 - **ittools** v0.1.1
 - **loki** v0.1.21
 - **loki** v0.1.23
 - **loki** v0.1.24
 - **webdav** v0.1.0
 
-Generated on: 2025-10-02 09:11:11 UTC
-Repository tag: b6
-Total chart packages: 7
+Generated on: 2025-10-02 09:18:12 UTC
+Repository tag: b7
+Total chart packages: 8
