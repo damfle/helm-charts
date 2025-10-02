@@ -7,7 +7,8 @@ This repository contains multiple Helm charts for Kubernetes deployments.
 ```
 ├── .github/
 │   ├── workflows/
-│   │   └── ci-cd.yml          # Main CI/CD pipeline
+│   │   ├── ci.yml             # Continuous Integration
+│   │   └── cd.yml             # Continuous Deployment
 │   ├── ct.yaml                # Chart testing configuration
 │   └── linters/
 │       └── lintconf.yaml      # YAML linting rules
@@ -15,7 +16,18 @@ This repository contains multiple Helm charts for Kubernetes deployments.
 │   ├── Chart.yaml
 │   ├── values.yaml
 │   ├── templates/
-│   └── examples/
+│   └── README.md
+├── loki/                      # Loki log aggregation chart
+│   ├── Chart.yaml
+│   ├── values.yaml
+│   ├── templates/
+│   └── README.md
+├── webdav/                    # WebDAV file sharing chart
+│   ├── Chart.yaml
+│   ├── values.yaml
+│   ├── templates/
+│   └── README.md
+├── LICENSE                    # ISC License
 └── README.md                  # This file
 ```
 
@@ -23,7 +35,9 @@ This repository contains multiple Helm charts for Kubernetes deployments.
 
 | Chart | Version | Description |
 |-------|---------|-------------|
-| [generic](./generic/) | 0.4.0 | A flexible chart for deploying applications with monitoring, persistence, and secrets support |
+| [generic](./generic/) | 0.1.18 | A flexible chart for deploying applications with monitoring, persistence, and secrets support |
+| [loki](./loki/) | 0.1.23 | Grafana Loki log aggregation system |
+| [webdav](./webdav/) | 0.1.0 | WebDAV server for HTTP-based file sharing and collaboration |
 
 ## CI/CD Pipeline
 
