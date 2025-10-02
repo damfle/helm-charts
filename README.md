@@ -187,10 +187,10 @@ chart-name/
 5. Create a pull request
 6. CI will automatically test your changes
 
-## Repository Maintainers
-
-- Add maintainer information here
-
 ## License
 
-- Add license information here
+This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
+
+## Repository Maintainers
+
+- Damien (@damfle)

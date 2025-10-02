@@ -1,6 +1,6 @@
 apiVersion: v2
 name: generic
-description: A Helm chart for Kubernetes
+description: A flexible Helm chart for deploying applications with monitoring, persistence, and secrets support
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -22,3 +22,18 @@ version: 0.1.18
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 appVersion: "0.1.0"
+
+maintainers:
+- name: Damien
+  email: damien@example.com
+
+keywords:
+- kubernetes
+- deployment
+- monitoring
+- persistence
+- generic
+
+home: https://github.com/damfle/helm-charts
+sources:
+- https://github.com/damfle/helm-charts

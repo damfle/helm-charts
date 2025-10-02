@@ -49,10 +49,3 @@ Selector labels for Loki
 app.kubernetes.io/name: {{ include "loki.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-ConfigMap name for Loki configuration
-*/}}
-{{- define "loki.configMapName" -}}
-{{ include "loki.fullname" . }}-config
-{{- end }}

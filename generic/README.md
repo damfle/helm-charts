@@ -107,3 +107,20 @@ See `values.yaml` for all available configuration options.
 - `persistentvolumeclaim.yaml`: Creates PVC when `persistence.enabled=true`
 - `deployment.yaml`: Updated to include volume mounts for persistent storage and environment variables
 - `service.yaml`: Updated with prometheus annotations when monitoring is enabled
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test locally with `helm lint` and `helm template`
+5. Submit a pull request
+
+## License
+
+This chart is licensed under the ISC License. See the [LICENSE](../LICENSE) file for details.
+
+## Links
+
+- [Repository](https://github.com/damfle/helm-charts)
+- [Helm Repository](https://damfle.github.io/helm-charts)

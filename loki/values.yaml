@@ -101,7 +101,7 @@ generic:
   volumes:
     - name: loki-config
       configMap:
-        name: "{{ include \"loki.configMapName\" . }}"
+        name: loki-config
 
   # Additional volume mount for Loki config
   volumeMounts:
