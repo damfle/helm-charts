@@ -291,13 +291,6 @@ generic:
 # Horizontal scaling
 generic:
   replicaCount: 3
-  
-# Optional: Enable HPA if supported by generic chart
-# autoscaling:
-#   enabled: true
-#   minReplicas: 2
-#   maxReplicas: 10
-#   targetCPUUtilizationPercentage: 70
 ```
 
 ## Upgrading

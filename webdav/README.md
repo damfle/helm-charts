@@ -114,7 +114,7 @@ generic:
 Access WebDAV within the cluster:
 
 ```bash
-kubectl port-forward svc/webdav 8080:80
+kubectl port-forward svc/webdav 8080:6065
 # Access via http://localhost:8080
 ```
 
@@ -245,7 +245,7 @@ kubectl logs <pod-name>
 
 ```bash
 kubectl get svc webdav
-kubectl port-forward svc/webdav 8080:80
+kubectl port-forward svc/webdav 8080:6065
 curl -u username:password http://localhost:8080/
 ```
 

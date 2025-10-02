@@ -58,7 +58,7 @@ helm install ollama damfle/ollama \
 | `generic.image.tag` | Ollama image tag | `latest` |
 | `generic.service.port` | Service and container port | `11434` |
 | `generic.persistence.enabled` | Enable persistent storage | `true` |
-| `generic.persistence.size` | Storage size for models | `80Gi` |
+| `generic.persistence.size` | Storage size for models | `16Gi` |
 | `generic.persistence.storageClassName` | Storage class | `local-path` |
 | `generic.persistence.mountPath` | Mount path for models | `/root/.ollama` |
 
@@ -448,11 +448,7 @@ While Ollama can be scaled horizontally, consider:
 
 ```yaml
 generic:
-  autoscaling:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 3
-    targetCPUUtilizationPercentage: 70
+  replicaCount: 3
 ```
 
 **Note**: Each replica needs its own model storage, significantly increasing storage requirements.
