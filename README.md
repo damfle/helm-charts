@@ -27,6 +27,11 @@ This repository contains multiple Helm charts for Kubernetes deployments.
 │   ├── values.yaml
 │   ├── templates/
 │   └── README.md
+├── ittools/                   # IT Tools developer utilities chart
+│   ├── Chart.yaml
+│   ├── values.yaml
+│   ├── templates/
+│   └── README.md
 ├── LICENSE                    # ISC License
 └── README.md                  # This file
 ```
@@ -38,6 +43,7 @@ This repository contains multiple Helm charts for Kubernetes deployments.
 | [generic](./generic/) | 0.1.18 | A flexible chart for deploying applications with monitoring, persistence, and secrets support |
 | [loki](./loki/) | 0.1.23 | Grafana Loki log aggregation system |
 | [webdav](./webdav/) | 0.1.0 | WebDAV server for HTTP-based file sharing and collaboration |
+| [ittools](./ittools/) | 0.1.0 | IT Tools - Collection of handy online tools for developers |
 
 ## CI/CD Pipeline
 

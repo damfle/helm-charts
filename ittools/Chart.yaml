@@ -1,0 +1,28 @@
+apiVersion: v2
+name: ittools
+description: A Helm chart for IT Tools - A collection of handy online tools for developers. Licensed under ISC License.
+
+type: application
+version: 0.1.0
+appVersion: "latest"
+
+maintainers:
+- name: Damien
+  email: damien@example.com
+
+keywords:
+- it-tools
+- developer-tools
+- utilities
+- web-tools
+- productivity
+
+home: https://github.com/damfle/helm-charts
+sources:
+- https://github.com/damfle/helm-charts
+- https://github.com/CorentinTh/it-tools
+
+dependencies:
+- name: generic
+  version: "0.1.18"
+  repository: "https://damfle.github.io/helm-charts"
