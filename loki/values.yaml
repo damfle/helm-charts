@@ -42,6 +42,9 @@ config:
 
 # Configuration for the generic subchart
 generic:
+  # Override naming to use "loki" instead of "generic"
+  nameOverride: "loki"
+  
   # Override image settings for Loki
   image:
     repository: grafana/loki
@@ -98,7 +101,7 @@ generic:
   volumes:
     - name: loki-config
       configMap:
-        name: loki-loki-config
+        name: "{{ include \"loki.configMapName\" . }}"
 
   # Additional volume mount for Loki config
   volumeMounts:

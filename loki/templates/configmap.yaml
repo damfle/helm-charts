@@ -2,11 +2,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-loki-config
+  name: {{ include "loki.configMapName" . }}
   labels:
-    app.kubernetes.io/name: loki
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- include "loki.labels" . | nindent 4 }}
 data:
   loki.yaml: |
     {{- toYaml .Values.config.data | nindent 4 }}
