@@ -37,6 +37,11 @@ This repository contains multiple Helm charts for Kubernetes deployments.
 │   ├── values.yaml
 │   ├── templates/
 │   └── README.md
+├── ollama/                    # Ollama local LLM inference chart
+│   ├── Chart.yaml
+│   ├── values.yaml
+│   ├── templates/
+│   └── README.md
 ├── LICENSE                    # ISC License
 └── README.md                  # This file
 ```
@@ -50,6 +55,7 @@ This repository contains multiple Helm charts for Kubernetes deployments.
 | [webdav](./webdav/) | 0.1.0 | WebDAV server for HTTP-based file sharing and collaboration |
 | [ittools](./ittools/) | 0.1.0 | IT Tools - Collection of handy online tools for developers |
 | [homebox](./homebox/) | 0.1.0 | Homebox inventory and organization system for the home |
+| [ollama](./ollama/) | 0.1.0 | Ollama local large language model inference engine |
 
 ## CI/CD Pipeline
 
