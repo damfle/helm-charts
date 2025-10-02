@@ -42,7 +42,8 @@ helm install my-release damfle/generic --values my-values.yaml
 - **loki** v0.1.21
 - **loki** v0.1.23
 - **loki** v0.1.24
+- **webdav** v0.1.0
 
-Generated on: 2025-10-02 08:31:05 UTC
+Generated on: 2025-10-02 09:04:26 UTC
 Repository tag: b5
-Total chart packages: 5
+Total chart packages: 6
