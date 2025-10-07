@@ -1,0 +1,176 @@
+# Default values for loki.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Loki-specific configuration that will be mounted as ConfigMap
+config:
+  enabled: true
+  data:
+    auth_enabled: false
+    
+    server:
+      http_listen_port: 3100
+      grpc_listen_port: 9096
+    
+    common:
+      path_prefix: /loki
+      storage:
+        filesystem:
+          chunks_directory: /loki/chunks
+          rules_directory: /loki/rules
+      replication_factor: 1
+      ring:
+        instance_addr: 127.0.0.1
+        kvstore:
+          store: inmemory
+    
+    query_scheduler:
+      max_outstanding_requests_per_tenant: 32768
+    
+    schema_config:
+      configs:
+        - from: 2020-10-24
+          store: boltdb-shipper
+          object_store: filesystem
+          schema: v11
+          index:
+            prefix: index_
+            period: 24h
+    
+    ruler:
+      alertmanager_url: http://localhost:9093
+
+# Configuration for the generic subchart
+generic:
+  # Override naming to use "loki" instead of "generic"
+  nameOverride: "loki"
+  
+  # Override image settings for Loki
+  image:
+    repository: grafana/loki
+    pullPolicy: IfNotPresent
+    tag: "2.9.0"
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 3100
+    targetPort: http
+    protocol: TCP
+    portName: http
+
+  # Container port configuration
+  containerPort: 3100
+
+  # ServiceAccount configuration
+  serviceAccount:
+    create: true
+    automount: true
+    annotations: {}
+    name: ""
+
+  # Single replica for Loki
+  replicaCount: 1
+
+  # Pod configuration
+  podAnnotations: {}
+  podLabels: {}
+  imagePullSecrets: []
+
+  # Node scheduling
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  # Loki specific environment variables
+  env:
+    - name: LOKI_AUTH_ENABLED
+      value: "false"
+
+  # Configure persistence for Loki data
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 16Gi
+    mountPath: /loki
+    annotations: {}
+    labels: {}
+
+  # Additional volume for Loki config
+  volumes:
+    - name: loki-config
+      configMap:
+        name: loki-config
+
+  # Additional volume mount for Loki config
+  volumeMounts:
+    - name: loki-config
+      mountPath: /etc/loki/loki.yaml
+      subPath: loki.yaml
+      readOnly: true
+
+  # Container args to use config file
+  args:
+    - "-config.file=/etc/loki/loki.yaml"
+
+  # Resource limits and requests
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Health checks
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http
+    initialDelaySeconds: 45
+    periodSeconds: 10
+    timeoutSeconds: 1
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http
+    initialDelaySeconds: 45
+    periodSeconds: 10
+    timeoutSeconds: 1
+    failureThreshold: 3
+
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    fsGroup: 10001
+
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    fsGroup: 10001
+
+  # ServiceMonitor for Prometheus monitoring
+  serviceMonitor:
+    enabled: true
+    portName: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
+    labels: {}
+    annotations: {}
+
+  # Ingress configuration (disabled by default)
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts:
+      - host: loki.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []

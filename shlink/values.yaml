@@ -1,0 +1,107 @@
+# Default values for Shlink URL shortener
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+generic:
+  # Image configuration
+  image:
+    repository: ghcr.io/shlinkio/shlink
+    pullPolicy: IfNotPresent
+    tag: "4.5.2"  # Must be explicit for dependency charts
+
+  # Replica count
+  replicaCount: 1
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8080
+
+  # Environment variables for Shlink configuration
+  env:
+    # Shlink configuration
+    - name: IS_HTTPS_ENABLED
+      value: "true"
+    - name: GEOLITE_LICENSE_KEY
+      value: ""  # Optional: Add your MaxMind GeoLite2 license key
+    # Database configuration (PostgreSQL)
+    - name: DB_DRIVER
+      value: "postgres"
+    - name: DB_HOST
+      value: "postgres.databases.svc.cluster.local"  # Change to your PostgreSQL service
+    - name: DB_PORT
+      value: "5432"
+    - name: DB_NAME
+      value: "shlink"
+    - name: DB_USER
+      value: "shlink"
+    # - name: DB_PASSWORD
+    #   value: "changeme"  # CHANGE THIS PASSWORD!
+    # - name: DEFAULT_DOMAIN
+    #   value: "localhost"  # Change this to your domain
+
+  # Resource limits and requests
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1024Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+    runAsGroup: 1001
+    fsGroup: 1001
+
+  # Ingress configuration
+  ingress:
+    enabled: true
+    className: "traefik"
+    annotations: {}
+      # traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      # traefik.ingress.kubernetes.io/router.tls: "true"
+      # cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - host: shlink.example.com  # Change this to your domain
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+
+  # Service account configuration
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+
+  # Pod annotations
+  podAnnotations: {}
+
+  # Pod security context
+  podSecurityContext:
+    fsGroup: 1001
+
+  # Node selector
+  nodeSelector: {}
+
+  # Tolerations
+  tolerations: []
+
+  # Affinity
+  affinity: {}
+
+  livenessProbe:
+    enabled: false
+  readinessProbe:
+    enabled: false
+
+  # Persistence for Shlink data
+  persistence:
+    enabled: false
+    # storageClass: "default"
+    # accessMode: ReadWriteOnce
+    # size: 1Gi

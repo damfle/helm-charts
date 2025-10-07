@@ -1,0 +1,95 @@
+# Default values for Shlink Web Client UI
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+generic:
+  # Image configuration
+  image:
+    repository: ghcr.io/shlinkio/shlink-web-client
+    pullPolicy: IfNotPresent
+    tag: "4.5.1"  # Must be explicit for dependency charts
+
+  # Replica count
+  replicaCount: 1
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8080
+
+  # Environment variables for Shlink UI configuration
+  env:
+    # Shlink server configuration
+    - name: SHLINK_SERVER_NAME
+      value: "shlink"  # Display name for your Shlink server
+    # - name: SHLINK_SERVER_URL
+    #   value: "https://shlink.example.com"
+    # - name: SHLINK_SERVER_API_KEY
+    #   valueFrom:
+    #     secretKeyRef:
+    #       name: shlink-ui-secrets
+    #       key: api-key
+
+  livenessProbe:
+    enabled: false
+  readinessProbe:
+    enabled: false
+
+  # Resource limits and requests
+  resources:
+    limits:
+      cpu: 500m
+      memory: 500Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+  # Security context
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+    runAsGroup: 0
+    fsGroup: 0
+
+  # Ingress configuration
+  ingress:
+    enabled: true
+    className: ""
+    annotations: {}
+      # traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      # traefik.ingress.kubernetes.io/router.tls: "true"
+      # cert-manager.io/cluster-issuer: letsencrypt-prod
+      # traefik.ingress.kubernetes.io/router.middlewares: authentik-ak-outpost-authentik-embedded-outpost@kubernetescrd
+    hosts:
+      - host: shlink-ui.example.com  # Change this to your domain
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+
+  # Service account configuration
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+
+  # Pod annotations
+  podAnnotations: {}
+
+  # Pod security context
+  podSecurityContext:
+    fsGroup: 0
+
+  # Node selector
+  nodeSelector: {}
+
+  # Tolerations
+  tolerations: []
+
+  # Affinity
+  affinity: {}
+
+  # Persistence (usually not needed for UI)
+  persistence:
+    enabled: false

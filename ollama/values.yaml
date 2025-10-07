@@ -1,0 +1,161 @@
+# Default values for ollama.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Configuration for the generic subchart
+generic:
+  # Override naming to use "ollama" instead of "generic"
+  nameOverride: "ollama"
+  
+  # Override image settings for Ollama
+  image:
+    repository: ollama/ollama
+    pullPolicy: IfNotPresent
+    tag: "0.12.3"  # Must be explicit for dependency charts
+
+  # Service configuration 
+  service:
+    type: ClusterIP
+    port: 11434  # Ollama runs on port 11434
+    targetPort: http
+    protocol: TCP
+    portName: http
+
+  # ServiceAccount configuration
+  serviceAccount:
+    create: true
+    automount: true
+    annotations: {}
+    name: ""
+
+  # Pod annotations
+  podAnnotations: {}
+
+  # Pod labels
+  podLabels: {}
+
+  # Pod security context
+  podSecurityContext:
+    fsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 1000
+
+  # Container security context
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+
+  # Resource limits and requests
+  resources:
+    limits:
+      cpu: 2000m      # Higher CPU for AI inference
+      memory: 4Gi     # Higher memory for large models
+    requests:
+      cpu: 1000m
+      memory: 2Gi
+
+  # Liveness and readiness probes
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  # Persistent volume configuration for model storage
+  persistence:
+    enabled: true
+    storageClassName: "local-path"
+    accessModes:
+      - ReadWriteOnce
+    size: 16Gi
+    mountPath: /root/.ollama
+    annotations: {}
+
+  # Environment variables
+  env: []
+    # Add any environment variables here if needed
+    # - name: OLLAMA_HOST
+    #   value: "0.0.0.0"
+
+  # Environment variables from secrets/configmaps
+  envFrom: []
+
+  # Volume mounts (additional to persistence)
+  volumeMounts: []
+
+  # Volumes (additional to persistence)
+  volumes: []
+
+  # Node selector
+  nodeSelector: {}
+
+  # Tolerations
+  tolerations: []
+
+  # Affinity
+  affinity: {}
+
+  # Ingress configuration
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+      # nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      # nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+      # nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    hosts:
+      - host: ollama.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+    #  - secretName: ollama-tls
+    #    hosts:
+    #      - ollama.local
+
+  # Service monitor for Prometheus (if available)
+  serviceMonitor:
+    enabled: false
+    interval: 30s
+    path: /metrics
+    labels: {}
+
+# Additional configuration specific to Ollama (not passed to generic chart)
+ollama:
+  # Models to pre-download during startup (optional)
+  models: []
+    # - llama2
+    # - codellama
+    # - mistral
+
+  # Configuration for model management
+  modelManagement:
+    # Whether to enable automatic model management
+    enabled: false
+    # Init container to pre-download models
+    initContainer:
+      image: ollama/ollama:latest
+      resources:
+        limits:
+          cpu: 500m
+          memory: 1Gi
+        requests:
+          cpu: 100m
+          memory: 256Mi

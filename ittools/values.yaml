@@ -1,0 +1,120 @@
+# Default values for ittools.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Configuration for the generic subchart
+generic:
+  # Override naming to use "ittools" instead of "generic"
+  nameOverride: "ittools"
+  
+  # Override image settings for IT Tools
+  image:
+    repository: ghcr.io/corentinth/it-tools
+    pullPolicy: IfNotPresent
+    tag: "2024.10.22-7ca5933"  # Must be explicit for dependency charts
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: http
+    protocol: TCP
+    portName: http
+
+  # Container port configuration
+  containerPort: 80
+
+  # ServiceAccount configuration
+  serviceAccount:
+    create: true
+    automount: true
+    annotations: {}
+    name: ""
+
+  # Single replica for IT Tools
+  replicaCount: 1
+
+  # Pod configuration
+  podAnnotations: {}
+  podLabels: {}
+  imagePullSecrets: []
+
+  # Node scheduling
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  # No specific environment variables needed for IT Tools
+  env: []
+
+  # No persistence needed for IT Tools (stateless web app)
+  persistence:
+    enabled: false
+
+  # Resource limits and requests
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+  # Health checks
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+
+  # ServiceMonitor for Prometheus monitoring (disabled by default)
+  serviceMonitor:
+    enabled: false
+    portName: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
+    labels: {}
+    annotations: {}
+
+  # Ingress configuration (recommended for external access)
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # For Traefik (as per your setup):
+      # traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    hosts:
+      - host: ittools.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+      # - secretName: ittools-tls
+      #   hosts:
+      #     - ittools.local

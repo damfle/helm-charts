@@ -1,0 +1,28 @@
+apiVersion: v2
+name: homebox
+description: A Helm chart for Homebox - Inventory and organization system for the home. Licensed under ISC License.
+
+type: application
+version: 0.1.4
+appVersion: "0.21.0-rootless"
+
+maintainers:
+- name: Damien FLETY
+  email: damfle+github@proton.me
+
+keywords:
+- homebox
+- inventory
+- organization
+- home-management
+- productivity
+
+home: https://github.com/damfle/helm-charts
+sources:
+- https://github.com/damfle/helm-charts
+- https://github.com/sysadminsmedia/homebox
+
+dependencies:
+- name: generic
+  version: "1.0.2"
+  repository: "https://damfle.github.io/helm-charts"

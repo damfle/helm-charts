@@ -1,0 +1,22 @@
+apiVersion: v2
+name: ollama
+description: A Helm chart for deploying Ollama - a tool to run large language models locally
+type: application
+version: 0.1.3
+appVersion: "0.12.3"
+home: https://github.com/ollama/ollama
+sources:
+  - https://github.com/ollama/ollama
+keywords:
+  - ollama
+  - ai
+  - llm
+  - machine-learning
+  - inference
+maintainers:
+  - name: damfle
+    email: damfle+github@proton.me
+dependencies:
+  - name: generic
+    version: "1.0.2"
+    repository: https://damfle.github.io/helm-charts

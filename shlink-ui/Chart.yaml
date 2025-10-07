@@ -1,0 +1,29 @@
+apiVersion: v2
+name: shlink-ui
+description: A Helm chart for Shlink Web Client UI - Web client for Shlink URL shortener. Licensed under ISC License.
+
+type: application
+version: 0.1.8
+appVersion: "4.5.1"
+
+maintainers:
+- name: Damien FLETY
+  email: damfle+github@proton.me
+
+keywords:
+- shlink
+- shlink-ui
+- url-shortener
+- web-client
+- ui
+- frontend
+
+home: https://github.com/damfle/helm-charts
+sources:
+- https://github.com/damfle/helm-charts
+- https://github.com/shlinkio/shlink-web-client
+
+dependencies:
+- name: generic
+  version: "1.0.2"
+  repository: "https://damfle.github.io/helm-charts"
