@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helm Charts Repository - damfle</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #326ce5; margin-bottom: 10px; }
+        .header p { color: #666; }
+        .section { margin-bottom: 30px; }
+        .section h2 { color: #333; border-bottom: 2px solid #326ce5; padding-bottom: 5px; }
+        .command { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 4px; padding: 15px; margin: 10px 0; font-family: monospace; }
+        .chart-list { list-style: none; padding: 0; }
+        .chart-list li { background: #f8f9fa; margin: 5px 0; padding: 10px; border-radius: 4px; border-left: 4px solid #326ce5; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 12px; }
+        a { color: #326ce5; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Helm Charts Repository</h1>
+            <p>damfle's Kubernetes Helm Charts</p>
+        </div>
+        
+        <div class="section">
+            <h2>📦 Quick Start</h2>
+            <p>Add this repository to your Helm client:</p>
+            <div class="command">helm repo add damfle https://damfle.github.io/helm-charts</div>
+            <div class="command">helm repo update</div>
+        </div>
+        
+        <div class="section">
+            <h2>🔍 Search Charts</h2>
+            <div class="command">helm search repo damfle</div>
+        </div>
+        
+        <div class="section">
+            <h2>📋 Available Charts</h2>
+            <ul class="chart-list">
+                          <li><strong>generic</strong> v1.0.2</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>🚀 Install a Chart</h2>
+            <div class="command">helm install my-release damfle/generic</div>
+        </div>
+        
+        <div class="section">
+            <h2>🔗 Links</h2>
+            <ul>
+                <li><a href="https://github.com/damfle/helm-charts">📖 Source Code</a></li>
+                <li><a href="./index.yaml">📄 Repository Index</a></li>
+                <li><a href="./charts/">📁 Chart Files</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <p>Generated on $(date -u '+%Y-%m-%d %H:%M:%S UTC') | Repository tag: r2</p>
+        </div>
+    </div>
+</body>
+</html>
