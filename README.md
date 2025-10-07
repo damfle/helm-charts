@@ -38,7 +38,15 @@ helm install my-release damfle/generic --values my-values.yaml
 📦 Current repository contents:
 
 - **generic** v1.0.2
+- **generic** v1.0.3
+- **homebox** v0.1.5
+- **ittools** v0.1.4
+- **loki** v0.1.26
+- **ollama** v0.1.4
+- **shlink** v0.1.7
+- **shlink-ui** v0.1.9
+- **webdav** v0.1.3
 
-Generated on: 2025-10-07 06:36:33 UTC
-Repository tag: r2
-Total chart packages: 1
+Generated on: 2025-10-07 06:42:15 UTC
+Repository tag: r3
+Total chart packages: 9

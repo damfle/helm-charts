@@ -1,0 +1,6 @@
+dependencies:
+- name: generic
+  repository: https://damfle.github.io/helm-charts
+  version: 1.0.2
+digest: sha256:b2d1315b854a1512281eb2bba0835b3f4bf2456a7086e986f12ed8df3fe2a174
+generated: "2025-10-07T06:42:14.973200828Z"
