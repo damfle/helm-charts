@@ -3,7 +3,7 @@ name: webdav
 description: A Helm chart for WebDAV server - HTTP-based file sharing protocol. Licensed under ISC License.
 
 type: application
-version: 0.1.2
+version: 0.1.3
 appVersion: "v5.8.0"
 
 maintainers:

@@ -3,7 +3,7 @@ name: shlink-ui
 description: A Helm chart for Shlink Web Client UI - Web client for Shlink URL shortener. Licensed under ISC License.
 
 type: application
-version: 0.1.8
+version: 0.1.9
 appVersion: "4.5.1"
 
 maintainers:
