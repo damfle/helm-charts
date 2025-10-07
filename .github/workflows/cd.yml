@@ -1,0 +1,409 @@
+name: Continuous Deployment
+
+on:
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  HELM_VERSION: v3.13.0
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    outputs:
+      tag-created: ${{ steps.check-tag.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for new release tag
+        id: check-tag
+        run: |
+          latest_tag=$(git tag -l "r*" --sort=-version:refname | head -n1 || echo "")
+          if [[ -n "$latest_tag" ]]; then
+            commit_msg=$(git log -1 --pretty=format:"%s" "$latest_tag")
+            if [[ "$commit_msg" =~ ^"chore: bump chart versions for release" ]]; then
+              echo "tag=$latest_tag" >> "$GITHUB_OUTPUT"
+              echo "Found release tag: $latest_tag"
+            else
+              echo "Latest tag not from CI: $commit_msg"
+              exit 1
+            fi
+          else
+            echo "No release tags found"
+            exit 1
+          fi
+
+      - uses: azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Find all charts
+        id: find-charts
+        run: |
+          charts=$(find . -name 'Chart.yaml' -not -path './.*' | xargs dirname | sed 's|^\./||' | sort | tr '\n' ' ')
+          echo "charts=$charts" >> "$GITHUB_OUTPUT"
+          echo "Charts found: $charts"
+
+      - name: Package charts
+        run: |
+          mkdir -p .cr-release-packages
+          for chart in ${{ steps.find-charts.outputs.charts }}; do
+            helm dependency update "$chart" 2>/dev/null || true
+            helm package "$chart" --destination .cr-release-packages
+            echo "Packaged: $chart"
+          done
+          ls -la .cr-release-packages/
+
+      - name: Generate release notes
+        run: |
+          current_tag="${{ steps.check-tag.outputs.tag }}"
+          previous_tag=$(git tag -l "r*" --sort=-version:refname | sed -n '2p' || echo "")
+          
+          echo "# Release $current_tag" > release-notes.md
+          echo "" >> release-notes.md
+          echo "## Charts in this release" >> release-notes.md
+          
+          for chart in ${{ steps.find-charts.outputs.charts }}; do
+            name=$(basename "$chart")
+            version=$(grep '^version:' "$chart/Chart.yaml" | awk '{print $2}')
+            app_version=$(grep '^appVersion:' "$chart/Chart.yaml" | awk '{print $2}' | tr -d '"')
+            echo "- **$name** v$version (app: $app_version)" >> release-notes.md
+          done
+          
+          if [[ -n "$previous_tag" ]]; then
+            echo "" >> release-notes.md
+            echo "## Changes since $previous_tag" >> release-notes.md
+            git log --oneline --pretty=format:"- %s" $previous_tag..HEAD >> release-notes.md
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.check-tag.outputs.tag }}
+          name: Release ${{ steps.check-tag.outputs.tag }}
+          body_path: release-notes.md
+          files: .cr-release-packages/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-pages:
+    needs: build-release
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Package charts for gh-pages
+        run: |
+          mkdir -p .cr-release-packages
+          charts=$(find . -name 'Chart.yaml' -not -path './.*' | xargs dirname | sed 's|^\./||' | sort | tr '\n' ' ')
+          for chart in $charts; do
+            helm dependency update "$chart" 2>/dev/null || true
+            helm package "$chart" --destination .cr-release-packages
+            echo "Packaged: $chart"
+          done
+          ls -la .cr-release-packages/
+
+      - name: Verify packaged charts
+        run: |
+          echo "Packaged charts:"
+          ls -la .cr-release-packages/ || echo "No .cr-release-packages directory"
+          
+          # Look for .tgz files in .cr-release-packages directory  
+          if ! ls .cr-release-packages/*.tgz 1> /dev/null 2>&1; then
+            echo "❌ No .tgz files found in .cr-release-packages/"
+            echo "Available files:"
+            find ./ -name "*.tgz" || echo "No .tgz files found anywhere"
+            exit 1
+          fi
+          
+          echo "✅ Found .tgz files in .cr-release-packages/:"
+          ls -la .cr-release-packages/*.tgz
+          
+          # Copy them to current directory for easier handling
+          cp .cr-release-packages/*.tgz ./
+          echo "✅ Copied .tgz files to current directory:"
+          ls -la *.tgz
+
+      - name: Checkout gh-pages branch
+        run: |
+          # First, save any .tgz files that exist
+          echo "💾 Saving .tgz files temporarily..."
+          mkdir -p /tmp/chart-packages
+          if ls *.tgz 1> /dev/null 2>&1; then
+            cp *.tgz /tmp/chart-packages/
+            echo "✅ Saved .tgz files:"
+            ls -la /tmp/chart-packages/
+          else
+            echo "ℹ️  No .tgz files to save"
+          fi
+          
+          # Clean up any untracked files that might conflict
+          echo "🧹 Cleaning up untracked files..."
+          git clean -fd
+          
+          # Remove any existing gh-pages branch locally to avoid conflicts
+          git branch -D gh-pages 2>/dev/null || true
+          
+          # Try to fetch and checkout existing gh-pages branch, or create new orphan branch
+          if git fetch origin gh-pages 2>/dev/null && git checkout -b gh-pages origin/gh-pages; then
+            echo "✅ Checked out existing gh-pages branch"
+            # Keep existing files - don't clean the working directory
+            echo "� Existing charts in repository:"
+            ls -la charts/ 2>/dev/null || echo "No existing charts directory"
+          else
+            echo "�📄 Creating new orphan gh-pages branch"
+            git checkout --orphan gh-pages
+            # Clean only for new branch
+            git rm -rf . 2>/dev/null || true
+          fi
+          
+          # Create charts directory if it doesn't exist
+          mkdir -p charts
+          
+          # Restore the NEW .tgz files and add them to existing charts
+          if [ -d "/tmp/chart-packages" ] && ls /tmp/chart-packages/*.tgz 1> /dev/null 2>&1; then
+            echo "📦 Adding new chart packages to repository:"
+            for new_chart in /tmp/chart-packages/*.tgz; do
+              chart_name=$(basename "$new_chart")
+              echo "  Adding: $chart_name"
+              cp "$new_chart" charts/
+            done
+            echo "✅ New charts added to repository"
+          else
+            echo "❌ No new .tgz files found to add"
+            exit 1
+          fi
+          
+          echo "📋 All charts now in repository:"
+          ls -la charts/
+
+      - name: Generate Helm repository index
+        run: |
+          # Create or update the Helm repository index (includes ALL chart versions)
+          echo "🔍 Generating Helm repository index for all chart versions..."
+          helm repo index charts --url https://${{ github.repository_owner }}.github.io/helm-charts/charts
+          
+          echo "📊 Repository index contents:"
+          if [ -f charts/index.yaml ]; then
+            echo "Charts in index:"
+            cat charts/index.yaml | grep -A5 "entries:" || echo "No entries found"
+          fi
+          
+          # Move index.yaml to root for easier access
+          cp charts/index.yaml .
+
+      - name: Create repository README
+        run: |
+          cat > README.md << 'EOF'
+          # Helm Charts Repository
+          
+          This is the Helm charts repository for ${{ github.repository_owner }}.
+          
+          ## Usage
+          
+          Add this repository to your Helm client:
+          
+          \`\`\`bash
+          helm repo add ${{ github.repository_owner }} https://${{ github.repository_owner }}.github.io/helm-charts
+          helm repo update
+          \`\`\`
+          
+          ## Available Charts
+          
+          \`\`\`bash
+          helm search repo ${{ github.repository_owner }}
+          \`\`\`
+          
+          ## Install a Chart
+          
+          \`\`\`bash
+          # Install the generic chart
+          helm install my-release ${{ github.repository_owner }}/generic
+          
+          # Install with custom values
+          helm install my-release ${{ github.repository_owner }}/generic --values my-values.yaml
+          \`\`\`
+          
+          ## Repository Information
+          
+          - **Repository URL**: https://${{ github.repository_owner }}.github.io/helm-charts
+          - **Index File**: https://${{ github.repository_owner }}.github.io/helm-charts/index.yaml
+          - **Source Code**: https://github.com/${{ github.repository }}
+          
+          ## Charts
+          
+          EOF
+          
+          # Add chart information to README
+          echo "📦 Current repository contents:" >> README.md
+          echo "" >> README.md
+          for chart_file in charts/*.tgz; do
+            if [ -f "$chart_file" ]; then
+              chart_name=$(basename "$chart_file" | sed 's/-[0-9].*.tgz$//')
+              chart_version=$(basename "$chart_file" | sed "s/$chart_name-//" | sed 's/.tgz$//')
+              echo "- **$chart_name** v$chart_version" >> README.md
+            fi
+          done
+          
+          echo "" >> README.md
+          echo "Generated on: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> README.md
+          echo "Repository tag: ${{ needs.build-release.outputs.tag-created }}" >> README.md
+          echo "Total chart packages: $(ls charts/*.tgz 2>/dev/null | wc -l)" >> README.md
+
+      - name: Create simple index.html
+        run: |
+          cat > index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Helm Charts Repository - ${{ github.repository_owner }}</title>
+              <style>
+                  body { font-family: Arial, sans-serif; margin: 40px; background-color: #f5f5f5; }
+                  .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+                  .header { text-align: center; margin-bottom: 30px; }
+                  .header h1 { color: #326ce5; margin-bottom: 10px; }
+                  .header p { color: #666; }
+                  .section { margin-bottom: 30px; }
+                  .section h2 { color: #333; border-bottom: 2px solid #326ce5; padding-bottom: 5px; }
+                  .command { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 4px; padding: 15px; margin: 10px 0; font-family: monospace; }
+                  .chart-list { list-style: none; padding: 0; }
+                  .chart-list li { background: #f8f9fa; margin: 5px 0; padding: 10px; border-radius: 4px; border-left: 4px solid #326ce5; }
+                  .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 12px; }
+                  a { color: #326ce5; text-decoration: none; }
+                  a:hover { text-decoration: underline; }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <div class="header">
+                      <h1>🏠 Helm Charts Repository</h1>
+                      <p>${{ github.repository_owner }}'s Kubernetes Helm Charts</p>
+                  </div>
+                  
+                  <div class="section">
+                      <h2>📦 Quick Start</h2>
+                      <p>Add this repository to your Helm client:</p>
+                      <div class="command">helm repo add ${{ github.repository_owner }} https://${{ github.repository_owner }}.github.io/helm-charts</div>
+                      <div class="command">helm repo update</div>
+                  </div>
+                  
+                  <div class="section">
+                      <h2>🔍 Search Charts</h2>
+                      <div class="command">helm search repo ${{ github.repository_owner }}</div>
+                  </div>
+                  
+                  <div class="section">
+                      <h2>📋 Available Charts</h2>
+                      <ul class="chart-list">
+          EOF
+          
+          # Add chart information to HTML
+          for chart_file in charts/*.tgz; do
+            if [ -f "$chart_file" ]; then
+              chart_name=$(basename "$chart_file" | sed 's/-[0-9].*.tgz$//')
+              chart_version=$(basename "$chart_file" | sed "s/$chart_name-//" | sed 's/.tgz$//')
+              echo "                          <li><strong>$chart_name</strong> v$chart_version</li>" >> index.html
+            fi
+          done
+          
+          cat >> index.html << 'EOF'
+                      </ul>
+                  </div>
+                  
+                  <div class="section">
+                      <h2>🚀 Install a Chart</h2>
+                      <div class="command">helm install my-release ${{ github.repository_owner }}/generic</div>
+                  </div>
+                  
+                  <div class="section">
+                      <h2>🔗 Links</h2>
+                      <ul>
+                          <li><a href="https://github.com/${{ github.repository }}">📖 Source Code</a></li>
+                          <li><a href="./index.yaml">📄 Repository Index</a></li>
+                          <li><a href="./charts/">📁 Chart Files</a></li>
+                      </ul>
+                  </div>
+                  
+                  <div class="footer">
+                      <p>Generated on $(date -u '+%Y-%m-%d %H:%M:%S UTC') | Repository tag: ${{ needs.build-release.outputs.tag-created }}</p>
+                  </div>
+              </div>
+          </body>
+          </html>
+          EOF
+
+      - name: Commit and push to gh-pages
+        run: |
+          git add .
+          
+          if git diff --staged --quiet; then
+            echo "ℹ️  No changes to commit (no new chart versions added)"
+          else
+            git commit -m "Release ${{ needs.build-release.outputs.tag-created }} - Add new chart versions to Helm repository"
+            # Push to gh-pages which will automatically trigger GitHub Pages
+            git push origin gh-pages
+            echo "✅ Successfully pushed new chart versions to gh-pages branch"
+            echo "📊 Repository now contains all historical chart versions"
+          fi
+
+  summary:
+    runs-on: ubuntu-latest
+    needs: [build-release, publish-pages]
+    if: always()
+    steps:
+      - name: Job Summary
+        run: |
+          echo "## 🚀 Continuous Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag:** ${{ needs.build-release.outputs.tag-created }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ needs.build-release.result }}" == "success" ]]; then
+            echo "### ✅ Release: Success" >> $GITHUB_STEP_SUMMARY
+            echo "GitHub release created with packaged charts" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ❌ Release: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ needs.publish-pages.result }}" == "success" ]]; then
+            echo "### ✅ GitHub Pages: Published" >> $GITHUB_STEP_SUMMARY
+            echo "Helm repository available at: https://${{ github.repository_owner }}.github.io/helm-charts" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ❌ GitHub Pages: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Charts Published" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "All charts in repository were packaged" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
