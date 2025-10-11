@@ -85,6 +85,9 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+nvidia:
+  enabled: false
+
 # Environment variables configuration
 # For more information: https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/
 env: []

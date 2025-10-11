@@ -30,6 +30,9 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.nvidia.enabled }}
+      runtimeClassName: nvidia
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           {{- with .Values.securityContext }}
@@ -45,6 +48,10 @@ spec:
           {{- with .Values.env }}
           env:
             {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.nvidia.enabled }}
+            - NVIDIA_VISIBLE_DEVICES:      all
+            - NVIDIA_DRIVER_CAPABILITIES:  all
           {{- end }}
           {{- with .Values.envFrom }}
           envFrom:
