@@ -44,10 +44,11 @@ helm install my-release damfle/generic --values my-values.yaml
 - **ittools** v0.1.4
 - **loki** v0.1.26
 - **ollama** v0.1.4
+- **ollama** v0.1.5
 - **shlink** v0.1.7
 - **shlink-ui** v0.1.9
 - **webdav** v0.1.3
 
-Generated on: 2025-10-11 09:13:29 UTC
-Repository tag: r4
-Total chart packages: 10
+Generated on: 2025-10-11 09:16:27 UTC
+Repository tag: r5
+Total chart packages: 11
