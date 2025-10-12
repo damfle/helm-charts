@@ -47,10 +47,6 @@ spec:
               protocol: TCP
           {{- with .Values.env }}
           env:
-          {{- if .Values.nvidia.enabled }}
-            - NVIDIA_VISIBLE_DEVICES:      all
-            - NVIDIA_DRIVER_CAPABILITIES:  all
-          {{- end }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.envFrom }}
