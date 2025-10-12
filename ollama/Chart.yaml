@@ -18,5 +18,5 @@ maintainers:
     email: damfle+github@proton.me
 dependencies:
   - name: generic
-    version: "1.0.5"
+    version: "1.0.6"
     repository: https://damfle.github.io/helm-charts
