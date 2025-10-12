@@ -137,25 +137,3 @@ generic:
     path: /metrics
     labels: {}
 
-# Additional configuration specific to Ollama (not passed to generic chart)
-ollama:
-  # Models to pre-download during startup (optional)
-  models: []
-    # - llama2
-    # - codellama
-    # - mistral
-
-  # Configuration for model management
-  modelManagement:
-    # Whether to enable automatic model management
-    enabled: false
-    # Init container to pre-download models
-    initContainer:
-      image: ollama/ollama:latest
-      resources:
-        limits:
-          cpu: 500m
-          memory: 1Gi
-        requests:
-          cpu: 100m
-          memory: 256Mi
