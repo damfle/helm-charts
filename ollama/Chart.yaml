@@ -2,7 +2,7 @@ apiVersion: v2
 name: ollama
 description: A Helm chart for deploying Ollama - a tool to run large language models locally
 type: application
-version: 0.1.7
+version: 0.1.8
 appVersion: "0.12.3"
 home: https://github.com/ollama/ollama
 sources:
