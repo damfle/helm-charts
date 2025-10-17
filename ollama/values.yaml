@@ -83,11 +83,13 @@ generic:
     accessModes:
       - ReadWriteOnce
     size: 16Gi
-    mountPath: /root/.ollama
+    mountPath: /models
     annotations: {}
 
   # Environment variables
-  env: []
+  env:
+    - name: OLLAMA_MODELS
+      value: /models
     # Add any environment variables here if needed
     # - name: OLLAMA_HOST
     #   value: "0.0.0.0"
