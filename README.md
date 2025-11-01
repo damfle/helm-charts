@@ -68,6 +68,7 @@ This repository contains multiple Helm charts for Kubernetes deployments, manage
 | [**ittools**](./ittools/) | IT Tools - Collection of handy online tools for developers |
 | [**loki**](./loki/) | Grafana Loki log aggregation system |
 | [**ollama**](./ollama/) | Ollama local large language model inference engine |
+| [**rustfs**](./rustfs/) | RustFS server for S3-compatible object storage protocol |
 | [**shlink**](./shlink/) | Shlink self-hosted URL shortener with analytics |
 | [**shlink-ui**](./shlink-ui/) | Shlink Web Client UI for managing URL shortener |
 | [**webdav**](./webdav/) | WebDAV server for HTTP-based file sharing and collaboration |

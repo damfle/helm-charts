@@ -1,0 +1,29 @@
+apiVersion: v2
+name: rustfs
+description: A Helm chart for RustFS server - HTTP-based file sharing protocol. Licensed under ISC License.
+
+type: application
+version: 0.1.0
+appVersion: "1.0.0-alpha.66"
+
+maintainers:
+  - name: Damien FLETY
+    email: damfle+github@proton.me
+
+keywords:
+  - rustfs
+  - s3
+  - minio
+  - file-sharing
+  - http
+  - storage
+  - collaboration
+
+home: https://github.com/damfle/helm-charts
+sources:
+  - https://github.com/damfle/helm-charts
+
+dependencies:
+  - name: generic
+    version: "1.0.6"
+    repository: "https://damfle.github.io/helm-charts"
