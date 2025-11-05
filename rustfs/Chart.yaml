@@ -3,7 +3,7 @@ name: rustfs
 description: A Helm chart for RustFS server - HTTP-based file sharing protocol. Licensed under ISC License.
 
 type: application
-version: 0.1.1
+version: 0.1.2
 appVersion: "1.0.0-alpha.66"
 
 maintainers:
