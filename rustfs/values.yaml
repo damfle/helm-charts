@@ -51,17 +51,6 @@ podAnnotations: {}
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 podLabels: {}
 
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
 service:
   type: ClusterIP
   ep_port: 9000
@@ -71,18 +60,12 @@ service:
 ingress:
   enabled: true
   className: "" # Specify the classname, traefik or nginx. Different classname has different annotations for session sticky.
-  traefikAnnotations:
+  annotations:
     traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
     traefik.ingress.kubernetes.io/service.sticky.cookie.httponly: "true"
     traefik.ingress.kubernetes.io/service.sticky.cookie.name: rustfs
     traefik.ingress.kubernetes.io/service.sticky.cookie.samesite: none
     traefik.ingress.kubernetes.io/service.sticky.cookie.secure: "true"
-  nginxAnnotations:
-    nginx.ingress.kubernetes.io/affinity: cookie
-    nginx.ingress.kubernetes.io/session-cookie-expires: "3600"
-    nginx.ingress.kubernetes.io/session-cookie-hash: sha1
-    nginx.ingress.kubernetes.io/session-cookie-max-age: "3600"
-    nginx.ingress.kubernetes.io/session-cookie-name: rustfs
   hosts:
     - host: xmg.rustfs.com
       paths:

@@ -5,11 +5,9 @@ metadata:
   name: {{ include "rustfs.fullname" . }}
   labels:
     {{- include "rustfs.labels" . | nindent 4 }}
-  {{- if eq .Values.ingress.className "nginx" }}
-  {{- with .Values.ingress.nginxAnnotations }}
+  {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
-  {{- end }}
   {{- end }}
 spec:
   {{- with .Values.ingress.className }}
