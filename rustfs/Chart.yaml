@@ -22,8 +22,3 @@ keywords:
 home: https://github.com/damfle/helm-charts
 sources:
   - https://github.com/damfle/helm-charts
-
-dependencies:
-  - name: generic
-    version: "1.0.6"
-    repository: "https://damfle.github.io/helm-charts"
