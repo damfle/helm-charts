@@ -5,9 +5,11 @@ metadata:
   name: {{ include "rustfs.fullname" . }}
   labels:
     {{- include "rustfs.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
+  {{- if eq .Values.ingress.className "nginx" }}
+  {{- with .Values.ingress.nginxAnnotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- end }}
 spec:
   {{- with .Values.ingress.className }}
@@ -28,23 +30,16 @@ spec:
     - host: {{ .host | quote }}
       http:
         paths:
-          - path: /
+          {{- range .paths }}
+          - path: {{ .path }}
             {{- with .pathType }}
             pathType: {{ . }}
             {{- end }}
             backend:
               service:
-                name: {{ include "rustfs.fullname" $ }}
+                name: {{ include "rustfs.fullname" $ }}-svc
                 port:
-                  number: 9000
-          - path: /ui
-            {{- with .pathType }}
-            pathType: {{ . }}
-            {{- end }}
-            backend:
-              service:
-                name: {{ include "rustfs.fullname" $ }}
-                port:
-                  number: 9001
+                  name: console
+          {{- end }}
     {{- end }}
 {{- end }}
