@@ -58,39 +58,22 @@ spec:
             successThreshold: 1
             failureThreshold: 3
           volumeMounts:
-            - name: logs
-              mountPath: /logs
-            {{- if eq (int .Values.replicaCount) 4 }}
-            {{- range $i := until (int .Values.replicaCount) }}
-            - name: data-rustfs-{{ $i }}
-              mountPath: /data/rustfs{{ $i }}
+            {{- if .Values.persistence.enabled }}
+            - name: {{ include "rustfs.fullname" . }}-storage
+              mountPath: {{ .Values.persistence.mountPath | default "/data" }}
+              {{- if .Values.persistence.subPath }}
+              subPath: {{ .Values.persistence.subPath }}
+              {{- end }}
             {{- end }}
-            {{- else if eq (int .Values.replicaCount) 16 }}
-            - name: data
-              mountPath: /data
+            {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
       volumes:
-        - name: logs
-          emptyDir: {}
-  volumeClaimTemplates:
-  {{- if eq (int .Values.replicaCount) 4 }}
-  {{- range $i := until (int .Values.replicaCount) }}
-    - metadata:
-        name: data-rustfs-{{ $i }}
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        storageClassName: {{ $.Values.storageclass.name }}
-        resources:
-          requests:
-            storage: {{ $.Values.storageclass.size}}
-  {{- end }}
-  {{- else if eq (int .Values.replicaCount) 16 }}
-    - metadata:
-        name: data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        storageClassName: {{ $.Values.storageclass.name }}
-        resources:
-          requests:
-            storage: {{ $.Values.storageclass.size}}
-  {{- end }}
+        {{- if .Values.persistence.enabled }}
+        - name: {{ include "rustfs.fullname" . }}-storage
+          persistentVolumeClaim:
+            claimName: {{ include "rustfs.fullname" . }}
+        {{- end }}
+        {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}

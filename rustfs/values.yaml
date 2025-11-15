@@ -108,6 +108,25 @@ tolerations: []
 
 affinity: {}
 
-storageclass:
-  name: local-path
-  size: 256Mi
+# This section is for setting up Persistent Volume Claims
+# more information can be found here: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+# Note: Reclaim policy is controlled by the StorageClass, not the PVC
+persistence:
+  # Enable persistence
+  enabled: false
+  # Storage class name (leave empty for default)
+  # The reclaim policy (Retain, Delete, Recycle) is defined by the StorageClass
+  storageClassName: ""
+  # Access modes
+  accessModes:
+    - ReadWriteOnce
+  # Storage size
+  size: 8Gi
+  # PVC annotations
+  annotations: {}
+  # PVC labels
+  labels: {}
+  # Mount path in the container
+  mountPath: /data
+  # Subpath within the volume
+  subPath: ""
