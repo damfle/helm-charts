@@ -1,13 +1,13 @@
-# Default values for minigit.
+# Default values for cgit.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 # Configuration for the generic subchart
 generic:
-  # Override naming to use "minigit" instead of "generic"
-  nameOverride: "minigit"
+  # Override naming to use "cgit" instead of "generic"
+  nameOverride: "cgit"
 
-  # Override image settings for minigit (using damfle/minigit)
+  # Override image settings for cgit (using damfle/cgit)
   image:
     repository: ghcr.io/damfle/minigit
     pullPolicy: IfNotPresent
@@ -31,7 +31,7 @@ generic:
     annotations: {}
     name: ""
 
-  # Single replica for minigit
+  # Single replica for cgit
   replicaCount: 1
 
   # Pod configuration
@@ -44,7 +44,7 @@ generic:
   tolerations: []
   affinity: {}
 
-  # Configure persistence for minigit data
+  # Configure persistence for cgit data
   persistence:
     enabled: true
     accessModes:
@@ -95,7 +95,7 @@ generic:
     runAsUser: 1000
     fsGroup: 1000
 
-  # ServiceMonitor for Prometheus monitoring (disabled by default for minigit)
+  # ServiceMonitor for Prometheus monitoring (disabled by default for cgit)
   serviceMonitor:
     enabled: false
     portName: http
@@ -105,23 +105,23 @@ generic:
     labels: {}
     annotations: {}
 
-  # Ingress configuration (recommended for minigit external access)
+  # Ingress configuration (recommended for cgit external access)
   ingress:
     enabled: false
     className: ""
     annotations: {}
-      # Common annotations for minigit
+      # Common annotations for cgit
       # nginx.ingress.kubernetes.io/proxy-body-size: "0"
       # nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
       # For Traefik (as per your setup):
       # traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
       # traefik.ingress.kubernetes.io/router.middlewares: authentik-ak-outpost-authentik-embedded-outpost@kubernetescrd
     hosts:
-      - host: minigit.local
+      - host: cgit.local
         paths:
           - path: /
             pathType: Prefix
     tls: []
-      # - secretName: minigit-tls
+      # - secretName: cgit-tls
       #   hosts:
-      #     - minigit.local
+      #     - cgit.local
