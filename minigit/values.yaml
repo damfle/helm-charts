@@ -1,0 +1,127 @@
+# Default values for minigit.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Configuration for the generic subchart
+generic:
+  # Override naming to use "minigit" instead of "generic"
+  nameOverride: "minigit"
+
+  # Override image settings for minigit (using damfle/minigit)
+  image:
+    repository: ghcr.io/damfle/minigit
+    pullPolicy: IfNotPresent
+    tag: "v0.1.1" # Must be explicit for dependency charts
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: http
+    protocol: TCP
+    portName: http
+
+  # Container port configuration
+  containerPort: 8080
+
+  # ServiceAccount configuration
+  serviceAccount:
+    create: true
+    automount: true
+    annotations: {}
+    name: ""
+
+  # Single replica for minigit
+  replicaCount: 1
+
+  # Pod configuration
+  podAnnotations: {}
+  podLabels: {}
+  imagePullSecrets: []
+
+  # Node scheduling
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  # Configure persistence for minigit data
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    mountPath: /data
+    annotations: {}
+    labels: {}
+
+  # Resource limits and requests
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  # Health checks
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+
+  # ServiceMonitor for Prometheus monitoring (disabled by default for minigit)
+  serviceMonitor:
+    enabled: false
+    portName: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
+    labels: {}
+    annotations: {}
+
+  # Ingress configuration (recommended for minigit external access)
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # Common annotations for minigit
+      # nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      # nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+      # For Traefik (as per your setup):
+      # traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+      # traefik.ingress.kubernetes.io/router.middlewares: authentik-ak-outpost-authentik-embedded-outpost@kubernetescrd
+    hosts:
+      - host: minigit.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+      # - secretName: minigit-tls
+      #   hosts:
+      #     - minigit.local
