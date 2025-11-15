@@ -3,7 +3,7 @@ name: minigit
 description: A Helm chart for minigit server - Simple, authless git.
 
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "v0.1.1"
 
 maintainers:
