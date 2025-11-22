@@ -1,8 +1,12 @@
-# MiniGit Helm Chart
+# cGit Helm Chart
 
-A Helm chart for deploying MiniGit - a lightweight Alpine container for git hosting with nginx+cgit that provides HTTP-only git access.
+## ⚠️ Deprecation Notice
 
-This chart extends the [generic chart](../generic/README.md) to provide a ready-to-use MiniGit deployment with sensible defaults.
+**This helm chart is deprecated and is no longer actively maintained.**
+
+A Helm chart for deploying cGit - a lightweight Alpine container for git hosting with nginx+cgit that provides HTTP-only git access.
+
+This chart extends the [generic chart](../generic/README.md) to provide a ready-to-use cGit deployment with sensible defaults.
 
 ## Features
 
@@ -50,8 +54,8 @@ helm install minigit damfle/minigit \
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `generic.image.repository` | MiniGit image repository | `ghcr.io/damfle/minigit` |
-| `generic.image.tag` | MiniGit image tag | `v0.1.1` |
+| `generic.image.repository` | cGit image repository | `ghcr.io/damfle/minigit` |
+| `generic.image.tag` | cGit image tag | `v0.1.1` |
 | `generic.service.port` | Service port | `8080` |
 | `generic.persistence.enabled` | Enable persistent storage | `true` |
 | `generic.persistence.size` | Storage size | `1Gi` |
@@ -72,7 +76,7 @@ helm install minigit damfle/minigit \
 
 ## Storage Configuration
 
-MiniGit requires persistent storage for Git repositories:
+cGit requires persistent storage for Git repositories:
 
 ```yaml
 generic:
@@ -89,7 +93,7 @@ generic:
 
 ### ClusterIP (Default)
 
-Access MiniGit within the cluster:
+Access cGit within the cluster:
 
 ```bash
 kubectl port-forward svc/minigit 8080:8080
@@ -182,7 +186,7 @@ generic:
 
 ## Security Considerations
 
-- **Rootless Operation**: MiniGit runs as non-root user (gituser) for enhanced security
+- **Rootless Operation**: cGit runs as non-root user (gituser) for enhanced security
 - **HTTPS**: Use TLS/SSL for external access to protect credentials and data
 - **Network Policies**: Consider restricting network access as needed
 - **File Permissions**: Repositories are owned by gituser:gituser (UID/GID 1000)
@@ -230,7 +234,7 @@ chown gituser:gituser /data/myproject.git/git-daemon-export-ok
 
 ### Standard Git Operations
 
-MiniGit works with standard Git clients:
+cGit works with standard Git clients:
 
 ```bash
 # Clone
@@ -285,7 +289,7 @@ This chart is licensed under the ISC License. See the [LICENSE](../LICENSE) file
 
 ## Links
 
-- [MiniGit Source Code](https://github.com/damfle/minigit)
+- [cGit Source Code](https://github.com/damfle/minigit)
 - [cgit Documentation](https://git.zx2c4.com/cgit/)
 - [Git HTTP Protocol](https://git-scm.com/docs/http-protocol)
 - [Generic Chart Documentation](../generic/README.md)

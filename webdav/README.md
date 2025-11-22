@@ -1,5 +1,9 @@
 # WebDAV Helm Chart
 
+## ⚠️ Deprecation Notice
+
+**This helm chart is deprecated and is no longer actively maintained.**
+
 A Helm chart for deploying a WebDAV server - an HTTP-based file sharing protocol that allows remote editing and management of files on web servers.
 
 This chart extends the [generic chart](../generic/README.md) to provide a ready-to-use WebDAV deployment with sensible defaults.
