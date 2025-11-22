@@ -7,7 +7,7 @@ generic:
   image:
     repository: ghcr.io/shlinkio/shlink
     pullPolicy: IfNotPresent
-    tag: "4.5.2"  # Must be explicit for dependency charts
+    tag: "4.6.0" # Must be explicit for dependency charts
 
   # Replica count
   replicaCount: 1
@@ -24,12 +24,12 @@ generic:
     - name: IS_HTTPS_ENABLED
       value: "true"
     - name: GEOLITE_LICENSE_KEY
-      value: ""  # Optional: Add your MaxMind GeoLite2 license key
+      value: "" # Optional: Add your MaxMind GeoLite2 license key
     # Database configuration (PostgreSQL)
     - name: DB_DRIVER
       value: "postgres"
     - name: DB_HOST
-      value: "postgres.databases.svc.cluster.local"  # Change to your PostgreSQL service
+      value: "postgres.databases.svc.cluster.local" # Change to your PostgreSQL service
     - name: DB_PORT
       value: "5432"
     - name: DB_NAME
@@ -66,7 +66,7 @@ generic:
       # traefik.ingress.kubernetes.io/router.tls: "true"
       # cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - host: shlink.example.com  # Change this to your domain
+      - host: shlink.example.com # Change this to your domain
         paths:
           - path: /
             pathType: Prefix

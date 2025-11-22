@@ -3,7 +3,7 @@ name: shlink
 description: A Helm chart for Shlink - A self-hosted URL shortener with analytics. Licensed under ISC License.
 type: application
 version: 0.1.7
-appVersion: "4.5.2"
+appVersion: "4.6.0"
 home: https://shlink.io/
 sources:
   - https://github.com/shlinkio/shlink
