@@ -7,6 +7,12 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      force_all_charts:
+        description: "Force process all charts (ignore change detection)"
+        required: false
+        default: false
+        type: boolean
 
 env:
   HELM_VERSION: v3.13.0
@@ -28,6 +34,16 @@ jobs:
       - name: Detect changed charts
         id: changes
         run: |
+          # Check if force all charts is enabled
+          if [[ "${{ github.event.inputs.force_all_charts }}" == "true" ]]; then
+            echo "Force all charts mode enabled - processing all charts"
+            all_charts=$(find . -name 'Chart.yaml' -not -path './.*' | xargs dirname | sed 's|^\./||' | sort | tr '\n' ' ' | sed 's/ $//')
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "charts=$all_charts" >> "$GITHUB_OUTPUT"
+            echo "All charts: $all_charts"
+            exit 0
+          fi
+
           changed_charts=""
 
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
