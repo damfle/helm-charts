@@ -4,26 +4,26 @@ description: A Helm chart for Shlink Web Client UI - Web client for Shlink URL s
 
 type: application
 version: 0.1.9
-appVersion: "4.5.1"
+appVersion: "4.6.1"
 
 maintainers:
-- name: Damien FLETY
-  email: damfle+github@proton.me
+  - name: Damien FLETY
+    email: damfle+github@proton.me
 
 keywords:
-- shlink
-- shlink-ui
-- url-shortener
-- web-client
-- ui
-- frontend
+  - shlink
+  - shlink-ui
+  - url-shortener
+  - web-client
+  - ui
+  - frontend
 
 home: https://github.com/damfle/helm-charts
 sources:
-- https://github.com/damfle/helm-charts
-- https://github.com/shlinkio/shlink-web-client
+  - https://github.com/damfle/helm-charts
+  - https://github.com/shlinkio/shlink-web-client
 
 dependencies:
-- name: generic
-  version: "1.0.2"
-  repository: "https://damfle.github.io/helm-charts"
+  - name: generic
+    version: "1.0.2"
+    repository: "https://damfle.github.io/helm-charts"

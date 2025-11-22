@@ -7,7 +7,7 @@ generic:
   image:
     repository: ghcr.io/shlinkio/shlink-web-client
     pullPolicy: IfNotPresent
-    tag: "4.5.1"  # Must be explicit for dependency charts
+    tag: "4.6S.1" # Must be explicit for dependency charts
 
   # Replica count
   replicaCount: 1
@@ -22,7 +22,7 @@ generic:
   env:
     # Shlink server configuration
     - name: SHLINK_SERVER_NAME
-      value: "shlink"  # Display name for your Shlink server
+      value: "shlink" # Display name for your Shlink server
     # - name: SHLINK_SERVER_URL
     #   value: "https://shlink.example.com"
     # - name: SHLINK_SERVER_API_KEY
@@ -62,7 +62,7 @@ generic:
       # cert-manager.io/cluster-issuer: letsencrypt-prod
       # traefik.ingress.kubernetes.io/router.middlewares: authentik-ak-outpost-authentik-embedded-outpost@kubernetescrd
     hosts:
-      - host: shlink-ui.example.com  # Change this to your domain
+      - host: shlink-ui.example.com # Change this to your domain
         paths:
           - path: /
             pathType: Prefix
