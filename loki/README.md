@@ -195,34 +195,6 @@ Add Loki as a data source in Grafana:
 - No authentication enabled by default (suitable for internal clusters)
 - Consider enabling authentication for production deployments
 
-## Troubleshooting
-
-### Check Pod Status
-
-```bash
-kubectl get pods -l app.kubernetes.io/name=loki
-kubectl describe pod <pod-name>
-kubectl logs <pod-name>
-```
-
-### Verify Configuration
-
-```bash
-# Check ConfigMap
-kubectl get configmap loki-config -o yaml
-
-# Test Loki API
-kubectl port-forward svc/loki 3100:3100
-curl http://localhost:3100/ready
-curl http://localhost:3100/metrics
-```
-
-### Common Issues
-
-1. **Pod stuck in Pending**: Check PVC and storage class
-2. **Pod CrashLoopBackOff**: Check logs and configuration
-3. **Can't query logs**: Verify log ingestion and retention settings
-
 ## Upgrading
 
 ```bash
