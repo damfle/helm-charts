@@ -174,59 +174,6 @@ generic:
           - rustfs.example.com
 ```
 
-## Usage Examples
-
-### Basic File Operations
-
-Once deployed, you can access RustFS via:
-
-**Web Console:**
-- Navigate to `http://rustfs.example.com`
-- Use the built-in web interface for file management
-
-**S3 API (AWS CLI):**
-```bash
-# Configure AWS CLI with RustFS credentials
-aws configure set aws_access_key_id rustfsadmin
-aws configure set aws_secret_access_key rustfsadmin
-aws configure set default.region us-east-1
-
-# List buckets (volumes)
-aws --endpoint-url http://rustfs.example.com s3 ls
-
-# List objects in bucket
-aws --endpoint-url http://rustfs.example.com s3 ls s3://data/
-
-# Upload file
-aws --endpoint-url http://rustfs.example.com s3 cp localfile.txt s3://data/
-
-# Download file
-aws --endpoint-url http://rustfs.example.com s3 cp s3://data/filename.txt ./
-
-# Create bucket/directory
-aws --endpoint-url http://rustfs.example.com s3 mb s3://newbucket
-```
-
-**S3 SDK (Python/boto3):**
-```python
-import boto3
-
-# Initialize S3 client
-s3 = boto3.client(
-    's3',
-    endpoint_url='http://rustfs.example.com',
-    aws_access_key_id='rustfsadmin',
-    aws_secret_access_key='rustfsadmin'
-)
-
-# List buckets
-response = s3.list_buckets()
-print(response['Buckets'])
-
-# Upload file
-s3.upload_file('localfile.txt', 'data', 'remotefile.txt')
-```
-
 ### Advanced Configuration Example
 
 ```yaml
