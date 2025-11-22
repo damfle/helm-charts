@@ -63,6 +63,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.9
 - **webdav** v0.1.3
 
-Generated on: 2025-11-22 09:00:44 UTC
-Repository tag: r19
+Generated on: 2025-11-22 09:03:48 UTC
+Repository tag: manual-20251122-090334
 Total chart packages: 25
