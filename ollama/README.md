@@ -516,15 +516,4 @@ This chart is licensed under the ISC License. See the [LICENSE](../LICENSE) file
 
 ## Available Models
 
-Popular models you can download with Ollama:
-
-| Model | Size | Description |
-|-------|------|-------------|
-| llama2 | ~3.8GB | Meta's Llama 2 model |
-| codellama | ~3.8GB | Code-focused variant of Llama 2 |
-| mistral | ~4.1GB | Mistral 7B model |
-| neural-chat | ~4.1GB | Intel's neural chat model |
-| starling-lm | ~4.1GB | Starling language model |
-| orca-mini | ~1.9GB | Smaller model, good for testing |
-
 Visit [Ollama Models](https://ollama.ai/library) for the complete list.
