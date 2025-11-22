@@ -6,17 +6,17 @@
 generic:
   # Override naming to use "ollama" instead of "generic"
   nameOverride: "ollama"
-  
+
   # Override image settings for Ollama
   image:
     repository: ollama/ollama
     pullPolicy: IfNotPresent
-    tag: "0.12.3"  # Must be explicit for dependency charts
+    tag: "0.13.0" # Must be explicit for dependency charts
 
-  # Service configuration 
+  # Service configuration
   service:
     type: ClusterIP
-    port: 11434  # Ollama runs on port 11434
+    port: 11434 # Ollama runs on port 11434
     targetPort: http
     protocol: TCP
     portName: http
@@ -51,8 +51,8 @@ generic:
   # Resource limits and requests
   resources:
     limits:
-      cpu: 2000m      # Higher CPU for AI inference
-      memory: 4Gi     # Higher memory for large models
+      cpu: 2000m # Higher CPU for AI inference
+      memory: 4Gi # Higher memory for large models
     requests:
       cpu: 1000m
       memory: 2Gi
@@ -138,4 +138,3 @@ generic:
     interval: 30s
     path: /metrics
     labels: {}
-
