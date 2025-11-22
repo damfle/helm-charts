@@ -232,38 +232,6 @@ Shlink provides health check endpoints:
 - Health check: `http://your-domain/rest/health`
 - API docs: `http://your-domain/rest/docs`
 
-## 🚨 Troubleshooting
-
-### Common Issues
-
-1. **Database connection errors**
-   - Verify database credentials and connectivity
-   - Check if database service is running
-
-2. **Migration failures**
-   - Ensure database user has sufficient privileges
-   - Check Shlink logs for specific error messages
-
-3. **Ingress not working**
-   - Verify ingress controller is installed
-   - Check DNS configuration
-
-### Debug Commands
-
-```bash
-# Check pod status
-kubectl get pods -l app.kubernetes.io/name=shlink
-
-# View pod logs
-kubectl logs -l app.kubernetes.io/name=shlink
-
-# Check service endpoints
-kubectl get endpoints shlink
-
-# Test database connectivity
-kubectl exec -it deployment/shlink -- nc -zv postgres.databases.svc.cluster.local 5432
-```
-
 ## 📈 Scaling
 
 To scale Shlink horizontally:
