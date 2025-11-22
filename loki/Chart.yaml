@@ -4,25 +4,25 @@ description: A Helm chart for Grafana Loki - Log aggregation system. Licensed un
 
 type: application
 version: 0.1.26
-appVersion: "2.9.0"
+appVersion: "3.5.8"
 
 maintainers:
-- name: Damien FLETY
-  email: damfle+github@proton.me
+  - name: Damien FLETY
+    email: damfle+github@proton.me
 
 keywords:
-- loki
-- grafana
-- logging
-- observability
-- monitoring
+  - loki
+  - grafana
+  - logging
+  - observability
+  - monitoring
 
 home: https://github.com/damfle/helm-charts
 sources:
-- https://github.com/damfle/helm-charts
-- https://github.com/grafana/loki
+  - https://github.com/damfle/helm-charts
+  - https://github.com/grafana/loki
 
 dependencies:
-- name: generic
-  version: "1.0.2"
-  repository: "https://damfle.github.io/helm-charts"
+  - name: generic
+    version: "1.0.2"
+    repository: "https://damfle.github.io/helm-charts"

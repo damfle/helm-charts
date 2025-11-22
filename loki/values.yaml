@@ -7,11 +7,11 @@ config:
   enabled: true
   data:
     auth_enabled: false
-    
+
     server:
       http_listen_port: 3100
       grpc_listen_port: 9096
-    
+
     common:
       path_prefix: /loki
       storage:
@@ -23,10 +23,10 @@ config:
         instance_addr: 127.0.0.1
         kvstore:
           store: inmemory
-    
+
     query_scheduler:
       max_outstanding_requests_per_tenant: 32768
-    
+
     schema_config:
       configs:
         - from: 2020-10-24
@@ -36,7 +36,7 @@ config:
           index:
             prefix: index_
             period: 24h
-    
+
     ruler:
       alertmanager_url: http://localhost:9093
 
@@ -44,12 +44,12 @@ config:
 generic:
   # Override naming to use "loki" instead of "generic"
   nameOverride: "loki"
-  
+
   # Override image settings for Loki
   image:
     repository: grafana/loki
     pullPolicy: IfNotPresent
-    tag: "2.9.0"
+    tag: "3.5.8"
 
   # Service configuration
   service:
