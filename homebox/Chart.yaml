@@ -3,7 +3,7 @@ name: homebox
 description: A Helm chart for Homebox - Inventory and organization system for the home. Licensed under ISC License.
 
 type: application
-version: 0.1.5
+version: 0.1.6
 appVersion: "0.21.0-rootless"
 
 maintainers:
