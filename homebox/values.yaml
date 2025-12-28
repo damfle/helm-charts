@@ -6,17 +6,17 @@
 generic:
   # Override naming to use "homebox" instead of "generic"
   nameOverride: "homebox"
-  
+
   # Override image settings for Homebox
   image:
     repository: ghcr.io/sysadminsmedia/homebox
     pullPolicy: IfNotPresent
-    tag: "0.21.0-rootless"  # Must be explicit for dependency charts
+    tag: "0.22.3-rootless" # Must be explicit for dependency charts
 
-  # Service configuration 
+  # Service configuration
   service:
     type: ClusterIP
-    port: 7745  # Homebox runs on port 7745
+    port: 7745 # Homebox runs on port 7745
     targetPort: http
     protocol: TCP
     portName: http

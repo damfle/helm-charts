@@ -7,22 +7,22 @@ version: 0.1.5
 appVersion: "0.21.0-rootless"
 
 maintainers:
-- name: Damien FLETY
-  email: damfle+github@proton.me
+  - name: Damien FLETY
+    email: damfle+github@proton.me
 
 keywords:
-- homebox
-- inventory
-- organization
-- home-management
-- productivity
+  - homebox
+  - inventory
+  - organization
+  - home-management
+  - productivity
 
 home: https://github.com/damfle/helm-charts
 sources:
-- https://github.com/damfle/helm-charts
-- https://github.com/sysadminsmedia/homebox
+  - https://github.com/damfle/helm-charts
+  - https://github.com/sysadminsmedia/homebox
 
 dependencies:
-- name: generic
-  version: "1.0.2"
-  repository: "https://damfle.github.io/helm-charts"
+  - name: generic
+    version: "1.0.6"
+    repository: "https://damfle.github.io/helm-charts"
