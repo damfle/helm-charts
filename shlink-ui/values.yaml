@@ -7,7 +7,7 @@ generic:
   image:
     repository: ghcr.io/shlinkio/shlink-web-client
     pullPolicy: IfNotPresent
-    tag: "4.6S.1" # Must be explicit for dependency charts
+    tag: "4.6.2" # Must be explicit for dependency charts
 
   # Replica count
   replicaCount: 1
