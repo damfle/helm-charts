@@ -4,7 +4,7 @@ description: A Helm chart for Shlink Web Client UI - Web client for Shlink URL s
 
 type: application
 version: 0.1.11
-appVersion: "4.6.1"
+appVersion: "4.6.2"
 
 maintainers:
   - name: Damien FLETY
