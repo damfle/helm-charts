@@ -4,7 +4,7 @@ description: A Helm chart for Grafana Loki - Log aggregation system. Licensed un
 
 type: application
 version: 0.1.26
-appVersion: "3.5.8"
+appVersion: "3.6.7"
 
 maintainers:
   - name: Damien FLETY
