@@ -11,7 +11,7 @@ generic:
   image:
     repository: ghcr.io/sysadminsmedia/homebox
     pullPolicy: IfNotPresent
-    tag: "0.22.3-rootless" # Must be explicit for dependency charts
+    tag: "0.24.0-rootless" # Must be explicit for dependency charts
 
   # Service configuration
   service:
