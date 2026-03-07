@@ -49,6 +49,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **minigit** v0.1.1
 - **minigit** v0.1.2
 - **ollama** v0.1.10
+- **ollama** v0.1.11
 - **ollama** v0.1.4
 - **ollama** v0.1.5
 - **ollama** v0.1.6
@@ -68,6 +69,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.9
 - **webdav** v0.1.3
 
-Generated on: 2025-12-29 10:03:36 UTC
-Repository tag: r24
-Total chart packages: 30
+Generated on: 2026-03-07 11:03:04 UTC
+Repository tag: r25
+Total chart packages: 31
