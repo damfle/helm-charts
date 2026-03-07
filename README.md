@@ -44,6 +44,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **generic** v1.0.6
 - **homebox** v0.1.5
 - **homebox** v0.1.6
+- **homebox** v0.1.7
 - **ittools** v0.1.4
 - **loki** v0.1.26
 - **minigit** v0.1.1
@@ -69,6 +70,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.9
 - **webdav** v0.1.3
 
-Generated on: 2026-03-07 11:03:04 UTC
-Repository tag: r25
-Total chart packages: 31
+Generated on: 2026-03-07 15:07:44 UTC
+Repository tag: r26
+Total chart packages: 32
