@@ -66,12 +66,13 @@ helm install my-release damfle/generic --values my-values.yaml
 - **rustfs** v0.1.6
 - **rustfs** v0.1.7
 - **shlink** v0.1.7
+- **shlink** v0.1.8
 - **shlink-ui** v0.1.10
 - **shlink-ui** v0.1.11
 - **shlink-ui** v0.1.12
 - **shlink-ui** v0.1.9
 - **webdav** v0.1.3
 
-Generated on: 2026-03-07 15:13:34 UTC
-Repository tag: r28
-Total chart packages: 34
+Generated on: 2026-03-07 15:19:44 UTC
+Repository tag: r29
+Total chart packages: 35
