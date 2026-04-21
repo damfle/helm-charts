@@ -2,24 +2,14 @@
 
 A Helm chart for deploying [Pterodactyl Panel](https://pterodactyl.io) - a game management panel.
 
-This chart deploys Pterodactyl Panel with options for embedded MariaDB and Redis as separate pods in the same namespace, or it can connect to external database and Redis services.
-
-## Features
-
-- 🎮 **Game Server Management**: Full Pterodactyl Panel functionality
-- 🐬 ** MariaDB Database**: Embedded MariaDB pod or external database support
-- 🔴 **Redis Cache**: Embedded Redis pod or external Redis support
-- 🌐 **Traefik Integration**: Pre-configured for Traefik ingress
-- 📦 **Persistent Storage**: PVCs for panel data, MariaDB, and Redis
-- 🔒 **Security**: Runs as non-root, secret-based authentication
-- 🚀 **Production Ready**: Health checks, resource limits, and security contexts
+This chart deploys Pterodactyl Panel with optional embedded MariaDB and Redis as separate pods in the same namespace, or connects to external database and Redis services.
 
 ## Prerequisites
 
 - Kubernetes 1.19+
 - Helm 3.0+
-- Persistent Volume provisioner support in the underlying infrastructure
-- Ingress controller (Traefik recommended)
+- Persistent Volume provisioner support
+- Ingress controller (Traefik recommended, but any will work)
 
 ## Installation
 
@@ -28,24 +18,6 @@ This chart deploys Pterodactyl Panel with options for embedded MariaDB and Redis
 ```bash
 helm repo add damfle https://damfle.github.io/helm-charts
 helm repo update
-```
-
-### Install the chart with embedded MariaDB and external Redis
-
-```bash
-helm install pterodactyl damfle/pterodactyl \
-  --set mariadb.enabled=true \
-  --set redis.enabled=false
-```
-
-### Install with external database and Redis
-
-```bash
-helm install pterodactyl damfle/pterodactyl \
-  --set mariadb.enabled=false \
-  --set redis.enabled=false \
-  --set externalDatabase.host=my-mariadb.example.com \
-  --set externalRedis.host=my-redis.example.com
 ```
 
 ### Install with embedded MariaDB and Redis
@@ -57,136 +29,147 @@ helm install pterodactyl damfle/pterodactyl \
   --set redis.auth.enabled=true
 ```
 
-## Configuration
+### Install with external database and Redis
 
-### Quick Start with Custom Values
-
-```yaml
-# values.yaml
-mariadb:
-  enabled: true
-  persistence:
-    size: 5Gi
-  env:
-    - name: MYSQL_ROOT_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: pterodactyl-secrets
-          key: mariadb-root-password
-
-redis:
-  enabled: true
-  auth:
-    enabled: true
-    password:
-      secretKeyRef:
-        name: pterodactyl-secrets
-        key: redis-password
-
-ingress:
-  enabled: true
-  hosts:
-    - host: pterodactyl.example.com
-      paths:
-        - path: /
-          pathType: Prefix
+```bash
+helm install pterodactyl damfle/pterodactyl \
+  --set mariadb.enabled=false \
+  --set redis.enabled=false
 ```
+
+### Install with embedded MariaDB only
+
+```bash
+helm install pterodactyl damfle/pterodactyl \
+  --set mariadb.enabled=true \
+  --set redis.enabled=false
+```
+
+## Configuration
 
 ### Database Configuration
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
+| `pterodactyl.database.name` | Database name | `pterodactyl` |
+| `pterodactyl.database.host` | Database host (defaults to embedded mariadb) | `` |
+| `pterodactyl.database.port` | Database port | `3306` |
+| `pterodactyl.database.user` | Database user | `pterodactyl` |
+| `pterodactyl.database.password` | Database password | `` |
 | `mariadb.enabled` | Deploy embedded MariaDB | `true` |
-| `mariadb.image.repository` | MariaDB image repository | `mariadb` |
+| `mariadb.rootPassword` | MariaDB root password (random if empty) | `` |
+| `mariadb.image.repository` | MariaDB image | `mariadb` |
 | `mariadb.image.tag` | MariaDB image tag | `11` |
-| `mariadb.persistence.enabled` | Enable PVC for MariaDB | `true` |
-| `mariadb.persistence.size` | Storage size | `1Gi` |
-| `externalDatabase.host` | External DB hostname | `mariadb.databases.svc.cluster.local` |
-| `externalDatabase.port` | External DB port | `3306` |
-| `externalDatabase.type` | Database type | `mysql` |
-| `externalDatabase.database` | Database name | `panel` |
-| `externalDatabase.username` | Database username | `pterodactyl` |
+| `mariadb.persistence.size` | MariaDB PVC size | `1Gi` |
 
 ### Redis Configuration
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
+| `pterodactyl.redis.host` | Redis host (defaults to embedded redis) | `` |
+| `pterodactyl.redis.port` | Redis port | `6379` |
+| `pterodactyl.redis.password` | Redis password | `` |
 | `redis.enabled` | Deploy embedded Redis | `false` |
-| `redis.image.repository` | Redis image repository | `redis` |
-| `redis.image.tag` | Redis image tag | `alpine` |
 | `redis.auth.enabled` | Enable Redis authentication | `false` |
-| `redis.persistence.enabled` | Enable PVC for Redis | `true` |
-| `redis.persistence.size` | Storage size | `1Gi` |
-| `externalRedis.host` | External Redis hostname | `redis.databases.svc.cluster.local` |
-| `externalRedis.port` | External Redis port | `6379` |
+| `redis.image.repository` | Redis image | `redis` |
+| `redis.image.tag` | Redis image tag | `alpine` |
+| `redis.persistence.size` | Redis PVC size | `1Gi` |
 
 ### Panel Configuration
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `image.repository` | Panel image repository | `ghcr.io/pterodactyl/panel` |
-| `image.tag` | Panel image tag | `latest` |
-| `service.port` | Service port | `80` |
-| `persistence.enabled` | Enable PVC for panel data | `true` |
-| `persistence.size` | Storage size | `1Gi` |
-| `persistence.mountPath` | Mount path | `/app/var` |
+| `panel.replicaCount` | Number of panel pods | `1` |
+| `panel.image.repository` | Panel image | `ghcr.io/pterodactyl/panel` |
+| `panel.image.tag` | Panel image tag | `v1.12.2` |
+| `panel.image.pullPolicy` | Image pull policy | `IfNotPresent` |
+| `panel.service.type` | Service type | `ClusterIP` |
+| `panel.service.port` | Service port | `80` |
+| `panel.persistence.enabled` | Enable panel PVC | `true` |
+| `panel.persistence.size` | Panel PVC size | `1Gi` |
+| `panel.persistence.mountPath` | Panel data mount path | `/app/var` |
+| `panel.resources.requests.cpu` | CPU request | `200m` |
+| `panel.resources.requests.memory` | Memory request | `256Mi` |
+| `panel.resources.limits.cpu` | CPU limit | `500m` |
+| `panel.resources.limits.memory` | Memory limit | `512Mi` |
 
 ### Ingress Configuration
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `ingress.enabled` | Enable ingress | `false` |
-| `ingress.className` | Ingress class | `traefik` |
-| `ingress.hosts[0].host` | Hostname | `pterodactyl.example.com` |
+| `panel.ingress.enabled` | Enable ingress | `false` |
+| `panel.ingress.className` | Ingress class | `traefik` |
+| `panel.ingress.hosts[0].host` | Hostname | `pterodactyl.example.com` |
 
-### Resource Limits
+### Application Configuration
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `resources.requests.cpu` | CPU request | `200m` |
-| `resources.requests.memory` | Memory request | `256Mi` |
-| `resources.limits.cpu` | CPU limit | `500m` |
-| `resources.limits.memory` | Memory limit | `512Mi` |
+| `pterodactyl.app.url` | Application URL | `https://pterodactyl.example.com` |
+| `pterodactyl.app.env` | Application environment | `production` |
+| `pterodactyl.app.timezone` | Timezone | `UTC` |
+| `pterodactyl.app.adminEmail` | Admin email | `noreply@example.com` |
 
-## Secrets Configuration
+## Secrets
 
-Create a single Kubernetes secret for all password configuration:
+All passwords can be configured directly in values or via secretKeyRef.
+
+### Using Kubernetes Secrets
+
+Create a secret:
 
 ```bash
 kubectl create secret generic pterodactyl-secrets \
-  --from-literal=mariadb-root-password=CHANGE_ME \
-  --from-literal=mariadb-password=CHANGE_ME_TOO \
-  --from-literal=redis-password=CHANGE_ME_REDIS \
-  --from-literal=db-password=CHANGE_ME_EXTERNAL_DB
+  --from-literal=mariadb-root-password=<root_password> \
+  --from-literal=mariadb-password=<user_password> \
+  --from-literal=redis-password=<redis_password>
 ```
 
-### Required Secret Keys
-
-| Key | Used By | Description |
-|-----|---------|-------------|
-| `mariadb-root-password` | MariaDB | Root password for MariaDB |
-| `mariadb-password` | MariaDB, Panel | User password for MariaDB |
-| `redis-password` | Redis, Panel | Password for Redis (when auth enabled) |
-| `db-password` | Panel | Password for external database |
-
-Then reference the secret in your values:
+Reference it in values.yaml:
 
 ```yaml
-secret:
-  name: "pterodactyl-secrets"
+mariadb:
+  rootPassword:
+    secretKeyRef:
+      name: pterodactyl-secrets
+      key: mariadb-root-password
+
+pterodactyl:
+  database:
+    password:
+      secretKeyRef:
+        name: pterodactyl-secrets
+        key: mariadb-password
+  redis:
+    password:
+      secretKeyRef:
+        name: pterodactyl-secrets
+        key: redis-password
 ```
 
-## Usage Examples
-
-### Production Setup with Embedded Database and Redis
+### Using Plain Values
 
 ```yaml
-# values-prod.yaml
-secret:
-  name: "pterodactyl-secrets"
+mariadb:
+  rootPassword: "my-secure-root-pass"
 
+pterodactyl:
+  database:
+    password: "my-db-password"
+  redis:
+    password: "my-redis-password"
+```
+
+If no password is provided for MariaDB root, a random 32-character password is generated automatically.
+
+## Example Values
+
+### Production with embedded services
+
+```yaml
 mariadb:
   enabled: true
+  rootPassword: ""
   persistence:
     size: 10Gi
     storageClassName: "fast-ssd"
@@ -198,256 +181,89 @@ redis:
   persistence:
     size: 2Gi
 
-persistence:
-  size: 5Gi
-  storageClassName: "fast-ssd"
+panel:
+  persistence:
+    size: 5Gi
+    storageClassName: "fast-ssd"
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+  ingress:
+    enabled: true
+    className: "traefik"
+    hosts:
+      - host: pterodactyl.yourdomain.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: pterodactyl-tls
+        hosts:
+          - pterodactyl.yourdomain.com
 
-resources:
-  requests:
-    cpu: 500m
-    memory: 512Mi
-  limits:
-    cpu: 1000m
-    memory: 1Gi
-
-ingress:
-  enabled: true
-  className: "traefik"
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-  hosts:
-    - host: pterodactyl.yourdomain.com
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: pterodactyl-tls
-      hosts:
-        - pterodactyl.yourdomain.com
+pterodactyl:
+  app:
+    url: "https://pterodactyl.yourdomain.com"
+    adminEmail: "admin@yourdomain.com"
 ```
 
-Install with:
-```bash
-helm install pterodactyl damfle/pterodactyl -f values-prod.yaml
-```
-
-### Development Setup with External Services
+### Development with external services
 
 ```yaml
-# values-dev.yaml
 mariadb:
   enabled: false
 
 redis:
   enabled: false
 
-externalDatabase:
-  host: "mariadb.dev.svc.cluster.local"
-  port: "3306"
-  type: "mysql"
-  database: "panel_dev"
-  username: "pterodactyl"
-
-externalRedis:
-  host: "redis.dev.svc.cluster.local"
-  port: "6379"
-
-persistence:
-  enabled: false
-
-service:
-  type: NodePort
+pterodactyl:
+  database:
+    host: "mysql.external.svc"
+    user: "pterodactyl"
+    password: "external-db-password"
+  redis:
+    host: "redis.external.svc"
+    password: "external-redis-password"
 ```
 
-### Minimal Setup (External Everything)
+## Usage
+
+### Access the Panel
+
+Get the application URL:
 
 ```bash
-helm install pterodactyl damfle/pterodactyl \
-  --set mariadb.enabled=false \
-  --set redis.enabled=false \
-  --set externalDatabase.host=my-mysql.example.com \
-  --set externalRedis.host=my-redis.example.com
+# If ingress enabled
+kubectl get ingress
+
+# If NodePort
+kubectl get svc
+
+# If ClusterIP
+kubectl port-forward svc/<release-name>-pterodactyl 8080:80
 ```
 
-## Database Migration
-
-If you need to migrate from an external database to embedded MariaDB or vice versa:
-
-1. Backup your existing database
-2. Update your values to switch the configuration
-3. The panel will connect to the new database on restart
-
-## Troubleshooting
-
-### Check Pod Status
+### Check Pods
 
 ```bash
 kubectl get pods -l app.kubernetes.io/name=pterodactyl
-kubectl describe pod <pod-name>
-kubectl logs <pod-name>
 ```
 
-### Check Services
+### View Logs
 
 ```bash
-kubectl get svc -l app.kubernetes.io/name=pterodactyl
-```
-
-### Check MariaDB Connection
-
-```bash
-kubectl exec -it <pterodactyl-pod> -- mysql -h <mariadb-service> -u pterodactyl -p
-```
-
-### Check Redis Connection
-
-```bash
-kubectl exec -it <pterodactyl-pod> -- redis-cli -h <redis-service> ping
-```
-
-### Common Issues
-
-1. **Database connection failures**: Verify MariaDB pod is running and credentials are correct
-2. **Redis connection failures**: Verify Redis pod is running and network is accessible
-3. **Pod crash loops**: Check logs for authentication or configuration errors
-4. **PVC issues**: Verify storage class is available and PVCs are bound
-
-### Database Connection Test
-
-```bash
-# If using embedded MariaDB
-kubectl exec -it <pterodactyl-panel-pod> -- mysql -h pterodactyl-mariadb -u pterodactyl -p
-
-# If using external database
-kubectl exec -it <pterodactyl-pod> -- mysql -h <external-host> -u pterodactyl -p
-```
-
-## Architecture
-
-When `mariadb.enabled: true`:
-```
-┌─────────────────────────────────────────────────────┐
-│                    Namespace                            │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────┐ │
-│  │  Pterodactyl│    │   MariaDB   │    │  Redis   │ │
-│  │    Panel    │    │   (Pod)     │    │  (Pod)   │ │
-│  └──────┬──────┘    └──────┬──────┘    └────┬────┘ │
-│         │                   │                │        │
-│  ┌──────▼──────┐    ┌──────▼──────┐         │        │
-│  │ pterodactyl │    │pterodactyl-  │         │        │
-│  │   (Svc)    │    │  mariadb    │         │        │
-│  │   :80      │    │   :3306     │         │        │
-│  └─────────────┘    └─────────────┘         │        │
-│                                     ┌──────▼──────┐ │
-│                                     │pterodactyl-  │ │
-│                                     │  redis      │ │
-│                                     │   :6379     │ │
-│                                     └─────────────┘ │
-└─────────────────────────────────────────────────────┘
-```
-
-When `mariadb.enabled: false` and `redis.enabled: false`:
-```
-┌─────────────────────────────────────────────────────┐
-│                    Namespace                            │
-│  ┌─────────────┐                                        │
-│  │  Pterodactyl│                                        │
-│  │    Panel    │                                        │
-│  └──────┬──────┘                                        │
-│         │                                               │
-│  ┌──────▼──────┐                                        │
-│  │ pterodactyl │──────────────► External DB             │
-│  │   (Svc)    │         (mariadb.databases.svc)        │
-│  │   :80      │──────────────► External Redis           │
-│  └─────────────┘         (redis.databases.svc)         │
-└─────────────────────────────────────────────────────┘
-```
-
-## Security Considerations
-
-- **Database Security**: Always use strong passwords and secrets
-- **Redis Security**: Enable authentication when deploying embedded Redis
-- **Network Isolation**: Consider NetworkPolicies for production deployments
-- **TLS**: Use TLS/SSL for external database connections
-- **HTTPS**: Use ingress with TLS for external access
-- **Data Backup**: Regularly backup PVC data and databases
-
-## Performance Tuning
-
-### Resource Optimization
-
-```yaml
-# For small deployments
-resources:
-  requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
-    cpu: 200m
-    memory: 256Mi
-
-# For production deployments
-resources:
-  requests:
-    cpu: 500m
-    memory: 512Mi
-  limits:
-    cpu: 1000m
-    memory: 1Gi
-
-mariadb:
-  resources:
-    requests:
-      cpu: 200m
-      memory: 256Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-
-redis:
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 200m
-      memory: 256Mi
-```
-
-### Storage Optimization
-
-Use appropriate storage classes for different workloads:
-
-```yaml
-persistence:
-  storageClassName: "fast-ssd"
-  size: 10Gi
-
-mariadb:
-  persistence:
-    storageClassName: "fast-ssd"
-    size: 10Gi
-
-redis:
-  persistence:
-    storageClassName: "fast-ssd"
-    size: 2Gi
+kubectl logs -l app.kubernetes.io/name=pterodactyl -c panel
 ```
 
 ## Upgrading
 
 ```bash
-# Check current version
-helm list
-
-# Upgrade to latest version
 helm upgrade pterodactyl damfle/pterodactyl
-
-# Upgrade with new values
-helm upgrade pterodactyl damfle/pterodactyl -f new-values.yaml
 ```
-
-**Note**: Always backup your database and persistent volumes before upgrading.
 
 ## Uninstalling
 
@@ -455,26 +271,99 @@ helm upgrade pterodactyl damfle/pterodactyl -f new-values.yaml
 helm uninstall pterodactyl
 ```
 
-**Important**: This will not delete the PVCs automatically. Remove them manually if needed:
+Note: PVCs are not automatically deleted. Delete them manually if needed:
 
 ```bash
 kubectl delete pvc -l app.kubernetes.io/name=pterodactyl
+kubectl delete pvc -l app.kubernetes.io/component=mariadb
+kubectl delete pvc -l app.kubernetes.io/component=redis
 ```
 
-## Contributing
+## Architecture
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test the chart
-5. Submit a pull request
+### Embedded Services (mariadb.enabled=true, redis.enabled=true)
 
-## License
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      Kubernetes Namespace                       │
+│                                                                  │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────────┐ │
+│  │  Pterodactyl │    │   MariaDB   │    │      Redis       │ │
+│  │    Panel    │    │   (Pod)     │    │     (Pod)        │ │
+│  └──────┬──────┘    └──────┬──────┘    └─────────┬───────┘ │
+│         │                   │                  │           │
+│   ┌─────▼─────┐      ┌─────▼─────┐          ┌────▼────────┐  │
+│   │ pterodactyl │      │pterodactyl- │          │pterodactyl- │  │
+│   │   (Service)│      │  mariadb    │          │   redis    │  │
+│   │   :80      │      │   :3306    │          │   :6379    │  │
+│   └─────────────┘      └─────────────┘          └─────────────┘  │
+│                                                          │
+│                    All running in same namespace                │
+└─────────────────────────────────────────────────────────────┘
+```
 
-This chart is licensed under the ISC License. See the [LICENSE](../LICENSE) file for details.
+### External Services (mariadb.enabled=false, redis.enabled=false)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      Kubernetes Namespace                       │
+│                                                                  │
+│  ┌─────────────┐                                        │
+│  │  Pterodactyl │█─────────────┐                           │
+│  │    Panel    │═════════════╪═► External MariaDB           │
+│  └──────┬──────┘           │                           │
+│         │                 │                           │
+│   ┌─────▼─────┐           │                           │
+│   │ pterodactyl │           │                           │
+│   │   (Service)│           ▼                           │
+│   │   :80      │█─────────────┐                           │
+│   └─────────────┘           ► External Redis               │
+│                                (or embedded if enabled)     │
+│                                                                  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## Troubleshooting
+
+### Pods not starting
+
+```bash
+kubectl describe pod <pod-name>
+kubectl logs <pod-name>
+```
+
+### Database connection issues
+
+Check that:
+- MariaDB pod is running
+- Credentials are correct in values
+- Host is reachable from panel pod
+
+### Redis connection issues
+
+Check that:
+- Redis pod is running (if embedded)
+- Authentication is enabled if required
+- Host is reachable from panel pod
+
+### Persistent Volume issues
+
+```bash
+kubectl get pvc
+kubectl describe pvc <pvc-name>
+```
+
+## Security
+
+- Use strong passwords or secrets
+- Enable Redis authentication when deploying embedded Redis
+- Use TLS for external database connections
+- Use ingress with TLS for public access
+- Regularly backup your data
 
 ## Links
 
-- [Pterodactyl Panel Documentation](https://pterodactyl.io/panel/1.0/getting_started.html)
-- [Pterodactyl Repository](https://github.com/pterodactyl/panel)
-- [Helm Charts Repository](https://github.com/damfle/helm-charts)
+- [Pterodactyl Panel](https://pterodactyl.io)
+- [Pterodactyl Documentation](https://pterodactyl.io/panel/1.0/getting_started.html)
+- [Pterodactyl GitHub](https://github.com/pterodactyl/panel)
+- [Helm Chart Repository](https://github.com/damfle/helm-charts)

@@ -9,7 +9,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 6379
+    - port: {{ .Values.pterodactyl.redis.port }}
       targetPort: redis
       protocol: TCP
       name: redis
