@@ -25,13 +25,6 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.podSecurityContext }}
-      securityContext:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- if .Values.nvidia.enabled }}
-      runtimeClassName: nvidia
-      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           {{- with .Values.securityContext }}
@@ -44,7 +37,7 @@ spec:
             - "--models-dir"
             - "/root/.cache/llama.cpp/models"
             - "--slot-save-path"
-            - "/root/.cache/llama.cpp/slot"                  path to save slot kv cache (default: disabled)
+            - "/root/.cache/llama.cpp/slot"
             - "--media-path"
             - "/root/.cache/llama.cpp/media"
           ports:
