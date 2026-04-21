@@ -1,5 +1,7 @@
 # Ollama Helm Chart
 
+# THIS CHART IS NOW DEPRECATED
+
 A Helm chart for deploying [Ollama](https://github.com/ollama/ollama) - a tool to run large language models locally on Kubernetes.
 
 This chart extends the [generic chart](../generic/README.md) to provide a ready-to-use Ollama deployment with sensible defaults for AI workloads.
