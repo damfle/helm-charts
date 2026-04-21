@@ -37,8 +37,6 @@ helm install my-release damfle/generic --values my-values.yaml
 
 📦 Current repository contents:
 
-- **generic** v1.0.2
-- **generic** v1.0.3
 - **generic** v1.0.4
 - **generic** v1.0.5
 - **generic** v1.0.6
@@ -51,29 +49,18 @@ helm install my-release damfle/generic --values my-values.yaml
 - **llamacpp** v0.1.1
 - **loki** v0.1.26
 - **loki** v0.1.27
+- **loki** v0.1.28
 - **ollama** v0.1.10
 - **ollama** v0.1.11
-- **ollama** v0.1.4
-- **ollama** v0.1.5
-- **ollama** v0.1.6
-- **ollama** v0.1.7
-- **ollama** v0.1.8
 - **ollama** v0.1.9
-- **rustfs** v0.1.1
-- **rustfs** v0.1.2
-- **rustfs** v0.1.3
-- **rustfs** v0.1.4
-- **rustfs** v0.1.5
 - **rustfs** v0.1.6
 - **rustfs** v0.1.7
 - **shlink** v0.1.7
 - **shlink** v0.1.8
-- **shlink-ui** v0.1.10
-- **shlink-ui** v0.1.11
 - **shlink-ui** v0.1.12
 - **shlink-ui** v0.1.13
-- **shlink-ui** v0.1.9
+- **shlink-ui** v0.1.14
 
-Generated on: 2026-04-21 08:03:00 UTC
-Repository tag: r33
-Total chart packages: 36
+Generated on: 2026-04-21 08:13:39 UTC
+Repository tag: r35
+Total chart packages: 23
