@@ -43,6 +43,10 @@ spec:
           args:
             - "--models-dir"
             - "/workspace/models"
+            - "--slot-save-path"
+            - "/workspace/slot"                  path to save slot kv cache (default: disabled)
+            - "--media-path"
+            - "/workspace/media"
           ports:
             - name: http
               containerPort: 8080
