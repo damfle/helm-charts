@@ -136,21 +136,21 @@ mariadb:
     allowPrivilegeEscalation: false
 
   env:
-    - name: MYSQL_ROOT_PASSWORD
+    - name: MARIADB_ROOT_PASSWORD
       valueFrom:
         secretKeyRef:
           name: "pterodactyl-secrets"
           key: mariadb-root-password
           optional: true
-    - name: MYSQL_PASSWORD
+    - name: MARIADB_PASSWORD
       valueFrom:
         secretKeyRef:
           name: "pterodactyl-secrets"
           key: mariadb-password
           optional: true
-    - name: MYSQL_DATABASE
+    - name: MARIADB_DATABASE
       value: "pterodactyl"
-    - name: MYSQL_USER
+    - name: MARIADB_USER
       value: "pterodactyl"
 
   envFrom: []
@@ -181,7 +181,7 @@ mariadb:
 externalDatabase:
   host: "mariadb.databases.svc.cluster.local"
   port: "3306"
-  type: "mysql" # mysql or pgsql
+  type: "mariadb"
   database: "panel"
   username: "pterodactyl"
   # Use secret for password
