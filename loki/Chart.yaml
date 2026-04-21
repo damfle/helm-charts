@@ -3,7 +3,7 @@ name: loki
 description: A Helm chart for Grafana Loki - Log aggregation system. Licensed under ISC License.
 
 type: application
-version: 0.1.27
+version: 0.1.28
 appVersion: "3.6.7"
 
 maintainers:
