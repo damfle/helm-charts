@@ -107,20 +107,6 @@ spec:
             - name: QUEUE_DRIVER
               value: "redis"
 
-            {{- /* Application settings */}}
-            - name: APP_URL
-              value: "http://example.com"
-            - name: APP_TIMEZONE
-              value: "UTC"
-            - name: APP_SERVICE_AUTHOR
-              value: "noreply@example.com"
-            - name: APP_ENV
-              value: "production"
-            - name: APP_ENVIRONMENT_ONLY
-              value: "false"
-            - name: HASHIDS_LENGTH
-              value: "8"
-
             {{- /* Mail configuration */}}
             - name: MAIL_FROM
               value: "noreply@example.com"
