@@ -85,19 +85,6 @@ dependencies:
 - **🏷️ Uniform** naming and labeling conventions
 - **🔧 Easy maintenance** and updates through base chart
 
-### Chart Types Overview
-
-| Chart | Type | Port | Storage | Use Case |
-|-------|------|------|---------|----------|
-| **generic** | Base chart | Configurable | Optional | Foundation for other charts |
-| **loki** | Log aggregation | 3100 | 8Gi | Centralized logging with Grafana |
-| **webdav** | File sharing | 6065 | 128Gi | HTTP-based file server and sharing |
-| **ittools** | Developer tools | 80 | None | Web-based utilities for developers |
-| **homebox** | Inventory | 7745 | 1Gi | Home inventory management system |
-| **ollama** | AI inference | 11434 | 16Gi | Local LLM model serving |
-| **shlink** | URL shortener | 80 | 1Gi | Self-hosted URL shortening with analytics |
-| **shlink-ui** | Web client | 80 | None | Web interface for Shlink URL shortener |
-
 ## CI/CD Pipeline
 
 The repository uses GitHub Actions for automated testing, building, and deployment.
