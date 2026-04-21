@@ -214,9 +214,7 @@ redis:
 
   podSecurityContext: {}
 
-  securityContext:
-    runAsNonRoot: true
-    allowPrivilegeEscalation: false
+  securityContext: {}
 
   # Redis authentication (optional)
   auth:

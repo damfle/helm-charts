@@ -36,18 +36,14 @@ spec:
         - name: redis
           image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
           imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
-          {{- if .Values.redis.auth.enabled }}
-          command:
-            - "redis-server"
-            - "--requirepass"
-            - "$(REDIS_PASSWORD)"
-          env:
-            - name: REDIS_PASSWORD
-              valueFrom: {{- toYaml .Values.redis.auth.password | nindent 14 }}
-          {{- end }}
+
           {{- with .Values.redis.env }}
           env:
             {{- toYaml . | nindent 12 }}
+            {{- if .Values.redis.auth.enabled }}
+              - name: REDIS_PASSWORD
+                valueFrom: {{- toYaml .Values.redis.auth.password | nindent 14 }}
+            {{- end }}
           {{- end }}
           {{- with .Values.redis.envFrom }}
           envFrom:
