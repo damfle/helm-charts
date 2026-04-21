@@ -1,0 +1,20 @@
+{{- if .Values.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "llamacpp.fullname" . }}
+  labels:
+    {{- include "llamacpp.labels" . | nindent 4 }}
+  {{- with .Values.serviceMonitor.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "llamacpp.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - interval: {{ .Values.serviceMonitor.interval }}
+      targetPort: 8080
+      path: {{ .Values.serviceMonitor.path }}
+{{- end }}

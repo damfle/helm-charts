@@ -1,0 +1,27 @@
+apiVersion: v2
+name: llamacpp
+description: A Helm chart for llama.cpp LLM inference server with GPU support
+
+type: application
+
+version: 0.1.0
+
+appVersion: "0.1.0"
+
+maintainers:
+  - name: Damien FLETY
+    email: damfle+github@proton.me
+
+keywords:
+  - llamacpp
+  - llama.cpp
+  - llm
+  - inference
+  - gpu
+  - nvidia
+  - ai
+
+home: https://github.com/damfle/helm-charts
+sources:
+  - https://github.com/damfle/helm-charts
+  - https://github.com/ggml-org/llama.cpp
