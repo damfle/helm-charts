@@ -56,6 +56,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **ollama** v0.1.11
 - **ollama** v0.1.9
 - **pterodactyl** v0.1.1
+- **pterodactyl** v0.1.2
 - **rustfs** v0.1.6
 - **rustfs** v0.1.7
 - **shlink** v0.1.7
@@ -64,6 +65,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.13
 - **shlink-ui** v0.1.14
 
-Generated on: 2026-04-21 10:42:33 UTC
-Repository tag: r38
-Total chart packages: 26
+Generated on: 2026-04-21 11:24:50 UTC
+Repository tag: r39
+Total chart packages: 27
