@@ -51,13 +51,13 @@ spec:
             {{- /* Database configuration */}}
             {{- if .Values.mariadb.enabled }}
             - name: DB_DRIVER
-              value: "mysql"
+              value: "mariadb"
             - name: DB_HOST
               value: "{{ include "pterodactyl.fullname" . }}-mariadb"
             - name: DB_PORT
               value: "3306"
             - name: DB_DATABASE
-              value: "panel"
+              value: "pterodactyl"
             - name: DB_USERNAME
               value: "pterodactyl"
             - name: DB_PASSWORD
@@ -84,7 +84,7 @@ spec:
               value: ""
               {{- end }}
             {{- end }}
-            
+
             {{- /* Redis configuration */}}
             {{- if .Values.redis.enabled }}
             - name: REDIS_HOST
@@ -95,7 +95,7 @@ spec:
             {{- end }}
             - name: REDIS_PORT
               value: {{ .Values.externalRedis.port | default .Values.redis.port | quote }}
-            
+
             {{- /* Redis password - from embedded or external */}}
             {{- if .Values.redis.enabled }}
             {{- if .Values.redis.auth.enabled }}
@@ -110,14 +110,14 @@ spec:
               value: ""
               {{- end }}
             {{- end }}
-            
+
             - name: CACHE_DRIVER
               value: "redis"
             - name: SESSION_DRIVER
               value: "redis"
             - name: QUEUE_DRIVER
               value: "redis"
-            
+
             {{- /* Application settings */}}
             - name: APP_URL
               value: "http://example.com"
@@ -131,7 +131,7 @@ spec:
               value: "false"
             - name: HASHIDS_LENGTH
               value: "8"
-            
+
             {{- /* Mail configuration */}}
             - name: MAIL_FROM
               value: "noreply@example.com"
@@ -147,7 +147,7 @@ spec:
               value: ""
             - name: MAIL_ENCRYPTION
               value: "true"
-            
+
             {{- /* Additional user-defined environment variables */}}
             {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}
