@@ -1,0 +1,160 @@
+# Default values for jupyter.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# This will set the replicaset count
+replicaCount: 1
+
+# This sets the container image
+image:
+  repository: git.flety.net/damien/docker-jupyter
+  # This sets the pull policy for images.
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "0.1.2"
+
+# This is for the secrets for pulling an image from a private repository
+imagePullSecrets: []
+# This is to override the chart name.
+nameOverride: ""
+fullnameOverride: ""
+
+# This section builds out the service account
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# This is for setting Kubernetes Annotations to a Pod.
+podAnnotations: {}
+# This is for setting Kubernetes Labels to a Pod.
+podLabels: {}
+
+# Security context for the pod
+podSecurityContext: {}
+
+# Security context for the container
+securityContext: {}
+
+# This is for setting up a service
+service:
+  # This sets the service type
+  type: ClusterIP
+  # This sets the ports
+  port: 8888
+
+# This block is for setting up the ingress
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+# Resources configuration
+resources: {}
+
+# NVIDIA GPU configuration
+nvidia:
+  enabled: true
+
+# Environment variables configuration
+env:
+  - name: JUPYTER_ENABLE_LAB
+    value: "yes"
+  - name: MLFLOW_TRACKING_URI
+    value: "http://mlflow.mlflow.svc.cluster.local"
+  - name: PYTORCH_CUDA_ALLOC_CONF
+    value: "expandable_segments:True"
+  - name: TOKENIZERS_PARALLELISM
+    value: "false"
+  - name: HF_DATASETS_CACHE
+    value: "/tmp/hf_cache"
+
+# Environment variables from external sources (Secrets)
+envFrom:
+  - secretRef:
+      name: jupyter-env-secrets
+
+# This is to setup the liveness and readiness probes
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /api
+    port: 8888
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 10
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /api
+    port: 8888
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+
+# Tolerations for GPU nodes
+tolerations:
+  - key: nvidia.com/gpu
+    operator: Exists
+    effect: NoSchedule
+
+# Node selector
+nodeSelector: {}
+
+# Affinity
+affinity: {}
+
+# Persistent Volume Claims configuration
+# Jupyter uses 3 separate PVCs for different purposes
+persistence:
+  # Workspace PVC - for notebooks
+  workspace:
+    enabled: true
+    name: ""
+    annotations: {}
+    labels: {}
+    storageClassName: "local-path"
+    accessModes:
+      - ReadWriteOnce
+    size: 120Gi
+    mountPath: /home/jupyter/notebooks
+    subPath: ""
+
+  # Settings PVC - for jupyter configuration
+  settings:
+    enabled: true
+    name: ""
+    annotations: {}
+    labels: {}
+    storageClassName: "local-path"
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    mountPath: /home/jupyter/.jupyter
+    subPath: ""
+
+  # Share PVC - for jupyter shared data
+  share:
+    enabled: true
+    name: ""
+    annotations: {}
+    labels: {}
+    storageClassName: "local-path"
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    mountPath: /home/jupyter/.local/share/jupyter/
+    subPath: ""

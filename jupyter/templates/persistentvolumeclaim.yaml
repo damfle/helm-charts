@@ -1,0 +1,80 @@
+{{- if .Values.persistence.workspace.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "jupyter.fullname" . }}-workspace
+  labels:
+    {{- include "jupyter.labels" . | nindent 4 }}
+    {{- with .Values.persistence.workspace.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.persistence.workspace.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- range .Values.persistence.workspace.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.workspace.size | quote }}
+  {{- if .Values.persistence.workspace.storageClassName }}
+  storageClassName: {{ .Values.persistence.workspace.storageClassName | quote }}
+  {{- end }}
+{{- end }}
+---
+{{- if .Values.persistence.settings.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "jupyter.fullname" . }}-settings
+  labels:
+    {{- include "jupyter.labels" . | nindent 4 }}
+    {{- with .Values.persistence.settings.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.persistence.settings.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- range .Values.persistence.settings.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.settings.size | quote }}
+  {{- if .Values.persistence.settings.storageClassName }}
+  storageClassName: {{ .Values.persistence.settings.storageClassName | quote }}
+  {{- end }}
+{{- end }}
+---
+{{- if .Values.persistence.share.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "jupyter.fullname" . }}-share
+  labels:
+    {{- include "jupyter.labels" . | nindent 4 }}
+    {{- with .Values.persistence.share.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.persistence.share.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- range .Values.persistence.share.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.share.size | quote }}
+  {{- if .Values.persistence.share.storageClassName }}
+  storageClassName: {{ .Values.persistence.share.storageClassName | quote }}
+  {{- end }}
+{{- end }}

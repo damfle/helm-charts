@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "jupyter.fullname" . }}
+  labels:
+    {{- include "jupyter.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "jupyter.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "jupyter.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "jupyter.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.nvidia.enabled }}
+      runtimeClassName: nvidia
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8888
+              protocol: TCP
+          {{- with .Values.env }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.livenessProbe.httpGet.path }}
+              port: {{ .Values.livenessProbe.httpGet.port }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.readinessProbe.httpGet.path }}
+              port: {{ .Values.readinessProbe.httpGet.port }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            {{- if .Values.persistence.workspace.enabled }}
+            - name: workspace
+              mountPath: {{ .Values.persistence.workspace.mountPath }}
+              {{- if .Values.persistence.workspace.subPath }}
+              subPath: {{ .Values.persistence.workspace.subPath }}
+              {{- end }}
+            {{- end }}
+            {{- if .Values.persistence.settings.enabled }}
+            - name: jupyter
+              mountPath: {{ .Values.persistence.settings.mountPath }}
+              {{- if .Values.persistence.settings.subPath }}
+              subPath: {{ .Values.persistence.settings.subPath }}
+              {{- end }}
+            {{- end }}
+            {{- if .Values.persistence.share.enabled }}
+            - name: share
+              mountPath: {{ .Values.persistence.share.mountPath }}
+              {{- if .Values.persistence.share.subPath }}
+              subPath: {{ .Values.persistence.share.subPath }}
+              {{- end }}
+            {{- end }}
+      volumes:
+        {{- if .Values.persistence.workspace.enabled }}
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: {{ include "jupyter.fullname" . }}-workspace
+        {{- end }}
+        {{- if .Values.persistence.settings.enabled }}
+        - name: jupyter
+          persistentVolumeClaim:
+            claimName: {{ include "jupyter.fullname" . }}-settings
+        {{- end }}
+        {{- if .Values.persistence.share.enabled }}
+        - name: share
+          persistentVolumeClaim:
+            claimName: {{ include "jupyter.fullname" . }}-share
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
