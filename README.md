@@ -50,8 +50,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **llamacpp** v0.1.1
 - **loki** v0.1.26
 - **loki** v0.1.27
-- **minigit** v0.1.1
-- **minigit** v0.1.2
 - **ollama** v0.1.10
 - **ollama** v0.1.11
 - **ollama** v0.1.4
@@ -74,7 +72,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.12
 - **shlink-ui** v0.1.13
 - **shlink-ui** v0.1.9
-- **webdav** v0.1.3
 
 Generated on: 2026-04-21 07:51:28 UTC
 Repository tag: r32
