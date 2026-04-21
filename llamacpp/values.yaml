@@ -82,7 +82,7 @@ envFrom: []
 livenessProbe:
   enabled: true
   httpGet:
-    path: /health
+    path: /
     port: 8080
   initialDelaySeconds: 1800
   periodSeconds: 30
@@ -91,7 +91,7 @@ livenessProbe:
 readinessProbe:
   enabled: true
   httpGet:
-    path: /metrics
+    path: /
     port: 8080
   initialDelaySeconds: 10
   periodSeconds: 10
