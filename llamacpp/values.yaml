@@ -2,123 +2,144 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# This will set the replicaset count
-replicaCount: 1
+# Configuration for the generic subchart
+generic:
+  # Override naming to use "llamacpp" instead of "generic"
+  nameOverride: "llamacpp"
 
-# This sets the container image
-image:
-  repository: ghcr.io/ggml-org/llama.cpp
-  # This sets the pull policy for images.
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: "server-cuda"
+  # Override image settings for llamacpp
+  image:
+    repository: ghcr.io/ggml-org/llama.cpp
+    pullPolicy: IfNotPresent
+    tag: "server-cuda-b8864" # Must be explicit for dependency charts
 
-# This is for the secrets for pulling an image from a private repository
-imagePullSecrets: []
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 8080 # llamacpp runs on port 8888
+    targetPort: http
+    protocol: TCP
+    portName: http
 
-# This is to override the chart name.
-nameOverride: ""
-fullnameOverride: ""
+  # Remove containerPort as it's not supported in current generic chart
 
-# Namespace configuration
-namespace:
-  create: false
-  name: ""
-
-# This is for setting Kubernetes Annotations to a Pod.
-podAnnotations: {}
-# This is for setting Kubernetes Labels to a Pod.
-podLabels: {}
-
-# Security context for the pod
-podSecurityContext: {}
-
-# Security context for the container
-securityContext: {}
-
-# This is for setting up a service
-service:
-  # This sets the service type
-  type: ClusterIP
-  # This sets the ports
-  port: 8080
-
-# ServiceMonitor for Prometheus monitoring
-serviceMonitor:
-  enabled: true
-  interval: 30s
-  path: /metrics
-
-# Resources configuration
-resources: {}
-
-# NVIDIA GPU configuration
-nvidia:
-  enabled: true
-
-# Environment variables configuration
-env:
-  - name: HOME
-    value: "/workspace"
-  - name: LLAMA_CPP_CACHE_DIR
-    value: "/workspace/cache"
-  - name: LLAMA_ARG_CTX_SIZE
-    value: "262144"
-  - name: LLAMA_ARG_HF_REPO
-    value: "unsloth/Qwen3.5-9B-GGUF:UD-Q4_K_XL"
-  - name: LLAMA_ARG_HOST
-    value: "0.0.0.0"
-  - name: LLAMA_ARG_PORT
-    value: "8080"
-  - name: LLAMA_ARG_ENDPOINT_METRICS
-    value: "true"
-  - name: LLAMA_ARG_MODELS_DIR
-    value: "/workspace/models"
-
-# Environment variables from external sources (Secrets)
-envFrom: []
-
-# This is to setup the liveness and readiness probes
-livenessProbe:
-  enabled: true
-  httpGet:
-    path: /
-    port: 8080
-  initialDelaySeconds: 1800
-  periodSeconds: 30
-  timeoutSeconds: 10
-
-readinessProbe:
-  enabled: true
-  httpGet:
-    path: /
-    port: 8080
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 5
-
-# Tolerations for GPU nodes
-tolerations:
-  - key: nvidia.com/gpu
-    operator: Exists
-    effect: NoSchedule
-
-# Node selector
-nodeSelector: {}
-
-# Affinity
-affinity: {}
-
-# Persistent Volume Claims configuration
-persistence:
-  workspace:
-    enabled: true
-    name: ""
+  # ServiceAccount configuration
+  serviceAccount:
+    create: true
+    automount: true
     annotations: {}
-    labels: {}
-    storageClassName: "local-path"
+    name: ""
+
+  # Single replica for llamacpp
+  replicaCount: 1
+
+  # Pod configuration
+  podAnnotations: {}
+  podLabels: {}
+  imagePullSecrets: []
+
+  # Node scheduling
+  nodeSelector: {}
+
+  # NVIDIA GPU configuration
+  nvidia:
+    enabled: true
+
+  tolerations:
+    - key: nvidia.com/gpu
+      operator: Exists
+      effect: NoSchedule
+  affinity: {}
+
+  # llamacpp specific environment variables
+  env:
+    - name: HOME
+      value: "/root/"
+    - name: LLAMA_CPP_CACHE_DIR
+      value: "/root/.cache/llama.cpp/cache"
+    - name: LLAMA_ARG_CTX_SIZE
+      value: "262144"
+    - name: LLAMA_ARG_HF_REPO
+      value: "unsloth/Qwen3.5-9B-GGUF:UD-Q4_K_XL"
+    - name: LLAMA_ARG_HOST
+      value: "0.0.0.0"
+    - name: LLAMA_ARG_PORT
+      value: "8080"
+    - name: LLAMA_ARG_ENDPOINT_METRICS
+      value: "true"
+    - name: LLAMA_ARG_MODELS_DIR
+      value: "/root/.cache/llama.cpp/models"
+
+  # Configure persistence for llamacpp data
+  persistence:
+    enabled: true
     accessModes:
       - ReadWriteOnce
     size: 120Gi
-    mountPath: /workspace
-    subPath: ""
+    mountPath: /root/.cache/llama.cpp/
+    storageClassName: "local-path"
+    annotations: {}
+    labels: {}
+
+  # Resource limits and requests
+  resources: {}
+
+  # Health checks
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 8080
+    initialDelaySeconds: 15
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+  # Security context
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+    fsGroup: 0
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+
+  podSecurityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+    fsGroup: 0
+
+  # ServiceMonitor for Prometheus monitoring (disabled by default)
+  serviceMonitor:
+    enabled: true
+    portName: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
+    labels: {}
+    annotations: {}
+
+  # Ingress configuration (recommended for external access)
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # For Traefik (as per your setup):
+      # traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+      # traefik.ingress.kubernetes.io/router.middlewares: authentik-ak-outpost-authentik-embedded-outpost@kubernetescrd
+    hosts:
+      - host: llamacpp.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+      # - secretName: llamacpp-tls
+      #   hosts:
+      #     - llamacpp.local

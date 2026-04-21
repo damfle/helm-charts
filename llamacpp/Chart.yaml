@@ -3,10 +3,8 @@ name: llamacpp
 description: A Helm chart for llama.cpp LLM inference server with GPU support
 
 type: application
-
 version: 0.1.6
-
-appVersion: "0.1.0"
+appVersion: "server-cuda-b8864"
 
 maintainers:
   - name: Damien FLETY
@@ -14,14 +12,19 @@ maintainers:
 
 keywords:
   - llamacpp
-  - llama.cpp
-  - llm
-  - inference
+  - notebook
+  - lab
+  - python
+  - data-science
+  - ml
   - gpu
   - nvidia
-  - ai
 
 home: https://github.com/damfle/helm-charts
 sources:
   - https://github.com/damfle/helm-charts
-  - https://github.com/ggml-org/llama.cpp
+
+dependencies:
+  - name: generic
+    version: "1.0.6"
+    repository: "https://damfle.github.io/helm-charts"
