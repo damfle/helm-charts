@@ -21,10 +21,6 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.mariadb.podSecurityContext }}
-      securityContext:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       containers:
         - name: mariadb
           image: "{{ .Values.mariadb.image.repository }}:{{ .Values.mariadb.image.tag }}"
@@ -43,10 +39,6 @@ spec:
               protocol: TCP
           {{- with .Values.mariadb.resources }}
           resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.mariadb.securityContext }}
-          securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
