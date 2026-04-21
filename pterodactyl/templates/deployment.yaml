@@ -1,0 +1,207 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pterodactyl.fullname" . }}
+  labels:
+    {{- include "pterodactyl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: panel
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "pterodactyl.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "pterodactyl.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: panel
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "pterodactyl.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.nvidia.enabled }}
+      runtimeClassName: nvidia
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+            {{- /* Database configuration */}}
+            {{- if .Values.mariadb.enabled }}
+            - name: DB_DRIVER
+              value: "mysql"
+            - name: DB_HOST
+              value: "{{ include "pterodactyl.fullname" . }}-mariadb"
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_DATABASE
+              value: "panel"
+            - name: DB_USERNAME
+              value: "pterodactyl"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.secret.name }}"
+                  key: mariadb-password
+                  optional: true
+            {{- else }}
+            - name: DB_DRIVER
+              value: {{ .Values.externalDatabase.type | quote }}
+            - name: DB_HOST
+              value: {{ .Values.externalDatabase.host | quote }}
+            - name: DB_PORT
+              value: {{ .Values.externalDatabase.port | quote }}
+            - name: DB_DATABASE
+              value: {{ .Values.externalDatabase.database | quote }}
+            - name: DB_USERNAME
+              value: {{ .Values.externalDatabase.username | quote }}
+            - name: DB_PASSWORD
+              {{- if .Values.externalDatabase.password }}
+              valueFrom: {{- toYaml .Values.externalDatabase.password | nindent 16 }}
+              {{- else }}
+              value: ""
+              {{- end }}
+            {{- end }}
+            
+            {{- /* Redis configuration */}}
+            {{- if .Values.redis.enabled }}
+            - name: REDIS_HOST
+              value: "{{ include "pterodactyl.fullname" . }}-redis"
+            {{- else }}
+            - name: REDIS_HOST
+              value: {{ .Values.externalRedis.host | quote }}
+            {{- end }}
+            - name: REDIS_PORT
+              value: {{ .Values.externalRedis.port | default .Values.redis.port | quote }}
+            
+            {{- /* Redis password - from embedded or external */}}
+            {{- if .Values.redis.enabled }}
+            {{- if .Values.redis.auth.enabled }}
+            - name: REDIS_PASSWORD
+              valueFrom: {{- toYaml .Values.redis.auth.password | nindent 16 }}
+            {{- end }}
+            {{- else }}
+            - name: REDIS_PASSWORD
+              {{- if .Values.externalRedis.password }}
+              valueFrom: {{- toYaml .Values.externalRedis.password | nindent 16 }}
+              {{- else }}
+              value: ""
+              {{- end }}
+            {{- end }}
+            
+            - name: CACHE_DRIVER
+              value: "redis"
+            - name: SESSION_DRIVER
+              value: "redis"
+            - name: QUEUE_DRIVER
+              value: "redis"
+            
+            {{- /* Application settings */}}
+            - name: APP_URL
+              value: "http://example.com"
+            - name: APP_TIMEZONE
+              value: "UTC"
+            - name: APP_SERVICE_AUTHOR
+              value: "noreply@example.com"
+            - name: APP_ENV
+              value: "production"
+            - name: APP_ENVIRONMENT_ONLY
+              value: "false"
+            - name: HASHIDS_LENGTH
+              value: "8"
+            
+            {{- /* Mail configuration */}}
+            - name: MAIL_FROM
+              value: "noreply@example.com"
+            - name: MAIL_DRIVER
+              value: "smtp"
+            - name: MAIL_HOST
+              value: "mail"
+            - name: MAIL_PORT
+              value: "1025"
+            - name: MAIL_USERNAME
+              value: ""
+            - name: MAIL_PASSWORD
+              value: ""
+            - name: MAIL_ENCRYPTION
+              value: "true"
+            
+            {{- /* Additional user-defined environment variables */}}
+            {{- with .Values.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
+          {{- with (omit .Values.livenessProbe "enabled") }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          {{- with (omit .Values.readinessProbe "enabled") }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            {{- if .Values.persistence.enabled }}
+            - name: {{ include "pterodactyl.fullname" . }}-storage
+              mountPath: {{ .Values.persistence.mountPath | default "/data" }}
+              {{- if .Values.persistence.subPath }}
+              subPath: {{ .Values.persistence.subPath }}
+              {{- end }}
+            {{- end }}
+            {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+
+      volumes:
+        {{- if .Values.persistence.enabled }}
+        - name: {{ include "pterodactyl.fullname" . }}-storage
+          persistentVolumeClaim:
+            claimName: {{ include "pterodactyl.fullname" . }}
+        {{- end }}
+        {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pterodactyl.fullname" . }}
+  labels:
+    {{- include "pterodactyl.labels" . | nindent 4 }}
+  {{- if .Values.serviceMonitor.enabled }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: {{ .Values.service.port | quote }}
+    prometheus.io/path: {{ .Values.serviceMonitor.path | default "/metrics" }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "pterodactyl.selectorLabels" . | nindent 4 }}

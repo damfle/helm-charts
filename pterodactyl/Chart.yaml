@@ -1,0 +1,22 @@
+apiVersion: v2
+name: pterodactyl
+description: A Helm chart for Pterodactyl Panel - A game management panel
+
+type: application
+version: 0.1.0
+appVersion: "latest"
+
+maintainers:
+  - name: Damien FLETY
+    email: damfle+github@proton.me
+
+keywords:
+  - pterodactyl
+  - game
+  - panel
+  - management
+
+home: https://github.com/damfle/helm-charts
+sources:
+  - https://github.com/damfle/helm-charts
+  - https://pterodactyl.io
