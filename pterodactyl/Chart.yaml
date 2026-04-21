@@ -3,7 +3,7 @@ name: pterodactyl
 description: A Helm chart for Pterodactyl Panel - A game management panel
 
 type: application
-version: 0.1.3
+version: 0.1.4
 appVersion: "latest"
 
 maintainers:
