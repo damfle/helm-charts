@@ -42,11 +42,11 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - "--models-dir"
-            - "/workspace/models"
+            - "/root/.cache/llama.cpp/models"
             - "--slot-save-path"
-            - "/workspace/slot"                  path to save slot kv cache (default: disabled)
+            - "/root/.cache/llama.cpp/slot"                  path to save slot kv cache (default: disabled)
             - "--media-path"
-            - "/workspace/media"
+            - "/root/.cache/llama.cpp/media"
           ports:
             - name: http
               containerPort: 8080
@@ -84,10 +84,7 @@ spec:
           volumeMounts:
             {{- if .Values.persistence.workspace.enabled }}
             - name: workspace
-              mountPath: {{ .Values.persistence.workspace.mountPath }}
-              {{- if .Values.persistence.workspace.subPath }}
-              subPath: {{ .Values.persistence.workspace.subPath }}
-              {{- end }}
+              mountPath: /root/.cache/llama.cpp
             {{- end }}
       volumes:
         {{- if .Values.persistence.workspace.enabled }}
