@@ -97,7 +97,7 @@ serviceMonitor:
 # Secrets Configuration
 # ================================================================
 # Single secret for all components (panel, mariadb, redis)
-# Create with: kubectl create secret generic pterodactyl-secrets --from-literal=... 
+# Create with: kubectl create secret generic pterodactyl-secrets --from-literal=...
 secret:
   name: "pterodactyl-secrets"
   # Keys expected in the secret:
@@ -119,42 +119,42 @@ mariadb:
     pullPolicy: IfNotPresent
     tag: "11"
   imagePullSecrets: []
-  
+
   replicaCount: 1
-  
+
   podAnnotations: {}
   podLabels: {}
-  
+
   podSecurityContext:
     runAsNonRoot: true
     runAsUser: 1000
     fsGroup: 1000
-  
+
   securityContext:
     runAsNonRoot: true
     runAsUser: 1000
     allowPrivilegeEscalation: false
-  
+
   env:
     - name: MYSQL_ROOT_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: "{{ .Values.secret.name }}"
+          name: "pterodactyl-secrets"
           key: mariadb-root-password
           optional: true
-    - name: MYSQL_DATABASE
-      value: "panel"
-    - name: MYSQL_USER
-      value: "pterodactyl"
     - name: MYSQL_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: "{{ .Values.secret.name }}"
+          name: "pterodactyl-secrets"
           key: mariadb-password
           optional: true
-  
+    - name: MYSQL_DATABASE
+      value: "pterodactyl"
+    - name: MYSQL_USER
+      value: "pterodactyl"
+
   envFrom: []
-  
+
   persistence:
     enabled: true
     size: 1Gi
@@ -163,7 +163,7 @@ mariadb:
       - ReadWriteOnce
     annotations: {}
     labels: {}
-  
+
   resources:
     limits:
       cpu: 500m
@@ -171,7 +171,7 @@ mariadb:
     requests:
       cpu: 200m
       memory: 256Mi
-  
+
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -181,13 +181,13 @@ mariadb:
 externalDatabase:
   host: "mariadb.databases.svc.cluster.local"
   port: "3306"
-  type: "mysql"    # mysql or pgsql
+  type: "mysql" # mysql or pgsql
   database: "panel"
   username: "pterodactyl"
   # Use secret for password
   password:
     secretKeyRef:
-      name: "{{ .Values.secret.name }}"
+      name: "pterodactyl-secrets"
       key: db-password
       optional: true
 
@@ -204,33 +204,33 @@ redis:
     pullPolicy: IfNotPresent
     tag: "alpine"
   imagePullSecrets: []
-  
+
   replicaCount: 1
-  
+
   port: "6379"
-  
+
   podAnnotations: {}
   podLabels: {}
-  
+
   podSecurityContext: {}
-  
+
   securityContext:
     runAsNonRoot: true
     allowPrivilegeEscalation: false
-  
+
   # Redis authentication (optional)
   auth:
     enabled: false
     # Use secret for password when enabled
     password:
       secretKeyRef:
-        name: "{{ .Values.secret.name }}"
+        name: "pterodactyl-secrets"
         key: redis-password
         optional: true
-  
+
   env: []
   envFrom: []
-  
+
   persistence:
     enabled: true
     size: 1Gi
@@ -240,7 +240,7 @@ redis:
     subPath: ""
     annotations: {}
     labels: {}
-  
+
   resources:
     limits:
       cpu: 200m
@@ -248,7 +248,7 @@ redis:
     requests:
       cpu: 100m
       memory: 128Mi
-  
+
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -260,7 +260,7 @@ externalRedis:
   # Use secret for password
   password:
     secretKeyRef:
-      name: "{{ .Values.secret.name }}"
+      name: "pterodactyl-secrets"
       key: redis-password
       optional: true
 
