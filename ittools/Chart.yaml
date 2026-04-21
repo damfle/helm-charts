@@ -7,22 +7,22 @@ version: 0.1.4
 appVersion: "2024.10.22-7ca5933"
 
 maintainers:
-- name: Damien FLETY
-  email: damfle+github@proton.me
+  - name: Damien FLETY
+    email: damfle+github@proton.me
 
 keywords:
-- it-tools
-- developer-tools
-- utilities
-- web-tools
-- productivity
+  - it-tools
+  - developer-tools
+  - utilities
+  - web-tools
+  - productivity
 
 home: https://github.com/damfle/helm-charts
 sources:
-- https://github.com/damfle/helm-charts
-- https://github.com/CorentinTh/it-tools
+  - https://github.com/damfle/helm-charts
+  - https://github.com/CorentinTh/it-tools
 
 dependencies:
-- name: generic
-  version: "1.0.2"
-  repository: "https://damfle.github.io/helm-charts"
+  - name: generic
+    version: "1.0.6"
+    repository: "https://damfle.github.io/helm-charts"
