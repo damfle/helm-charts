@@ -26,7 +26,7 @@ generic:
   # ServiceAccount configuration
   serviceAccount:
     create: false
-    automount: false
+    automount: true
     annotations: {}
     name: ""
 
@@ -75,8 +75,8 @@ generic:
     enabled: true
     accessModes:
       - ReadWriteOnce
-    size: 32Gi
-    mountPath: /root/.cache/llama.cpp/
+    size: 30Gi
+    mountPath: /root/
     storageClassName: "local-path"
     annotations: {}
     labels: {}
@@ -85,9 +85,23 @@ generic:
   resources: {}
 
   # Health checks
-  livenessProbe: {}
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
 
-  readinessProbe: {}
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 8080
+    initialDelaySeconds: 120
+    periodSeconds: 60
+    timeoutSeconds: 60
+    failureThreshold: 3
 
   # Security context
   securityContext:
