@@ -66,6 +66,16 @@ spec:
             - name: mariadb
               containerPort: {{ .Values.pterodactyl.database.port }}
               protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.pterodactyl.database.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.pterodactyl.database.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
           {{- with .Values.mariadb.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
