@@ -3,7 +3,7 @@ name: llamacpp
 description: A Helm chart for llama.cpp LLM inference server with GPU support
 
 type: application
-version: 0.1.10
+version: 0.1.11
 appVersion: "server-cuda-b8864"
 
 maintainers:
