@@ -9,10 +9,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 3306
-      targetPort: mysql
+    - port: {{ .Values.pterodactyl.database.port }}
+      targetPort: mariadb
       protocol: TCP
-      name: mysql
+      name: mariadb
   selector:
     {{- include "pterodactyl.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: mariadb

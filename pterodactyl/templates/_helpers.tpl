@@ -49,14 +49,3 @@ Selector labels for Pterodactyl
 app.kubernetes.io/name: {{ include "pterodactyl.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "pterodactyl.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "pterodactyl.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}

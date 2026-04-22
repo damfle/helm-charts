@@ -4,7 +4,7 @@ description: A Helm chart for Pterodactyl Panel - A game management panel
 
 type: application
 version: 0.1.7
-appVersion: "latest"
+appVersion: "v1.12.2"
 
 maintainers:
   - name: Damien FLETY

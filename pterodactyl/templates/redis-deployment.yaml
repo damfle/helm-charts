@@ -28,16 +28,27 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      podSecurityContext:
+        runAsUser: 999
+        runAsGroup: 1000
       containers:
         - name: redis
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 1000
           image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
           imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
-          {{- with .Values.redis.env }}
           env:
+          {{- with .Values.redis.env }}
             {{- toYaml . | nindent 12 }}
-            {{- if .Values.redis.auth.enabled }}
-              - name: REDIS_PASSWORD
-                valueFrom: {{- toYaml .Values.redis.auth.password | nindent 14 }}
+          {{- end }}
+          {{- if .Values.redis.auth.enabled }}
+            {{- if .Values.pterodactyl.redis.password }}
+            - name: REDIS_PASSWORD
+              value: "{{ .Values.pterodactyl.redis.password }}"
+            {{- else if .Values.redis.auth.password }}
+            - name: REDIS_PASSWORD
+              valueFrom: {{- toYaml .Values.redis.auth.password | nindent 14 }}
             {{- end }}
           {{- end }}
           {{- with .Values.redis.envFrom }}
@@ -46,14 +57,20 @@ spec:
           {{- end }}
           ports:
             - name: redis
-              containerPort: 6379
+              containerPort: {{ .Values.pterodactyl.redis.port }}
               protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.pterodactyl.redis.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.pterodactyl.redis.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
           {{- with .Values.redis.resources }}
           resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.redis.securityContext }}
-          securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:

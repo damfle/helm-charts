@@ -21,12 +21,41 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      podSecurityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
       containers:
         - name: mariadb
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 999
           image: "{{ .Values.mariadb.image.repository }}:{{ .Values.mariadb.image.tag }}"
           imagePullPolicy: {{ .Values.mariadb.image.pullPolicy }}
-          {{- with .Values.mariadb.env }}
           env:
+            - name: MARIADB_DATABASE
+              value: "{{ .Values.pterodactyl.database.name }}"
+            - name: MARIADB_USER
+              value: "{{ .Values.pterodactyl.database.user }}"
+            {{- if .Values.pterodactyl.database.password }}
+            - name: MARIADB_PASSWORD
+              value: "{{ .Values.pterodactyl.database.password }}"
+            {{- else }}
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "pterodactyl.fullname" . }}-secrets
+                  key: mariadb-password
+                  optional: true
+            {{- end }}
+            {{- if .Values.mariadb.rootPassword }}
+            - name: MARIADB_ROOT_PASSWORD
+              value: "{{ .Values.mariadb.rootPassword }}"
+            {{- else }}
+            - name: MARIADB_ROOT_PASSWORD
+              value: {{ randAlphaNum 32 | quote }}
+            {{- end }}
+          {{- with .Values.mariadb.env }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.mariadb.envFrom }}
@@ -34,9 +63,19 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           ports:
-            - name: mysql
-              containerPort: 3306
+            - name: mariadb
+              containerPort: {{ .Values.pterodactyl.database.port }}
               protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.pterodactyl.database.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.pterodactyl.database.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
           {{- with .Values.mariadb.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -46,12 +85,8 @@ spec:
               mountPath: /var/lib/mysql
       volumes:
         - name: mariadb-data
-          {{- if .Values.mariadb.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ include "pterodactyl.fullname" . }}-mariadb
-          {{- else }}
-          emptyDir: {}
-          {{- end }}
       {{- with .Values.mariadb.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
