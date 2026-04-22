@@ -109,7 +109,7 @@ envFrom: []
 # - configMapRef:
 #     name: my-configmap
 
-# This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+# This is to setup the liveness, readiness, and startup probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
   enabled: true
   httpGet:
@@ -117,6 +117,11 @@ livenessProbe:
     port: http
 readinessProbe:
   enabled: true
+  httpGet:
+    path: /
+    port: http
+startupProbe:
+  enabled: false
   httpGet:
     path: /
     port: http
