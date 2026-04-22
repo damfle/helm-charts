@@ -11,7 +11,7 @@ generic:
   image:
     repository: git.flety.net/damien/docker-jupyter
     pullPolicy: IfNotPresent
-    tag: "0.1.2" # Must be explicit for dependency charts
+    tag: "0.1.4" # Must be explicit for dependency charts
 
   # Service configuration
   service:
