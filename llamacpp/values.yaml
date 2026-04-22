@@ -84,6 +84,11 @@ generic:
   # Resource limits and requests
   resources: {}
 
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
   # Health checks
   livenessProbe:
     httpGet:
