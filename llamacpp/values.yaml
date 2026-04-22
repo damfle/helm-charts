@@ -104,6 +104,7 @@ generic:
     failureThreshold: 3
 
   startupProbe:
+    enabled: true
     httpGet:
       path: /
       port: 8080
