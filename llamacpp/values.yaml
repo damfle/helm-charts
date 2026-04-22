@@ -89,16 +89,25 @@ generic:
     httpGet:
       path: /
       port: 8080
-    initialDelaySeconds: 120
-    periodSeconds: 60
-    timeoutSeconds: 60
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
     failureThreshold: 3
 
   readinessProbe:
     httpGet:
       path: /
       port: 8080
-    initialDelaySeconds: 120
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  startupProbe:
+    httpGet:
+      path: /
+      port: 8080
+    initialDelaySeconds: 160
     periodSeconds: 60
     timeoutSeconds: 60
     failureThreshold: 3
