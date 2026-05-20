@@ -70,6 +70,11 @@ generic:
     - name: LLAMA_ARG_MODELS_DIR
       value: "/root/.cache/llama.cpp/models"
 
+  args:
+    - --metrics
+    - --embeddings
+    - --jinja
+
   # Configure persistence for llamacpp data
   persistence:
     enabled: true
@@ -92,7 +97,7 @@ generic:
   # Health checks
   livenessProbe:
     httpGet:
-      path: /
+      path: /metrics
       port: 8080
     initialDelaySeconds: 30
     periodSeconds: 10
@@ -101,7 +106,7 @@ generic:
 
   readinessProbe:
     httpGet:
-      path: /
+      path: /metrics
       port: 8080
     initialDelaySeconds: 30
     periodSeconds: 10
@@ -111,9 +116,9 @@ generic:
   startupProbe:
     enabled: true
     httpGet:
-      path: /
+      path: /metrics
       port: 8080
-    initialDelaySeconds: 160
+    initialDelaySeconds: 60
     periodSeconds: 60
     timeoutSeconds: 60
     failureThreshold: 3
