@@ -37,6 +37,7 @@ helm install my-release damfle/generic --values my-values.yaml
 
 📦 Current repository contents:
 
+- **agentwhisker** v0.0.2
 - **generic** v1.0.4
 - **generic** v1.0.5
 - **generic** v1.0.6
@@ -77,6 +78,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.13
 - **shlink-ui** v0.1.14
 
-Generated on: 2026-05-20 07:53:56 UTC
-Repository tag: r65
-Total chart packages: 39
+Generated on: 2026-05-24 08:46:01 UTC
+Repository tag: r66
+Total chart packages: 40
