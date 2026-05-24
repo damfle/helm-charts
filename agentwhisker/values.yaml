@@ -1,0 +1,84 @@
+# Default values for agentwhisker URL shortener
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+generic:
+  # Image configuration
+  image:
+    repository: git.flety.net/vibe/agentwhisker
+    pullPolicy: IfNotPresent
+    tag: "0.4.0" # Must be explicit for dependency charts
+
+  # Replica count
+  replicaCount: 1
+
+  # Service configuration
+  service: {}
+
+  # Environment variables for agentwhisker configuration
+  env: {}
+
+  # Resource limits and requests
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1024Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+  # Security context
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 1001
+    runAsGroup: 1001
+    fsGroup: 1001
+
+  # Ingress configuration
+  ingress:
+    enabled: false
+
+  # Service account configuration
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+
+  # Pod annotations
+  podAnnotations: {}
+
+  # Pod security context
+  podSecurityContext:
+    fsGroup: 1001
+
+  # Node selector
+  nodeSelector: {}
+
+  # Tolerations
+  tolerations: []
+
+  # Affinity
+  affinity: {}
+
+  livenessProbe:
+    enabled: true
+    httpGet:
+      path: /metrics
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  readinessProbe:
+    enabled: true
+    httpGet:
+      path: /metrics
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  # Persistence for agentwhisker data
+  persistence:
+    enabled: false
