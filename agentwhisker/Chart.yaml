@@ -2,7 +2,7 @@ apiVersion: v2
 name: agentwhisker
 description: A Helm chart for AgentWhisker - A Telegram bot that uses Kittlib to provide LLM-powered conversations with advanced features like multimodal support, PostgreSQL storage, scratchpad notes, and sub-agents. Licensed under ISC License.
 type: application
-version: 0.0.1
+version: 0.0.2
 appVersion: "0.4.0"
 home: https://git.flety.net/vibe/agentwhisker
 sources:
