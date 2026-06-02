@@ -4,7 +4,7 @@ description: A Helm chart for Shlink Web Client UI - Web client for Shlink URL s
 
 type: application
 version: 0.1.14
-appVersion: "4.7.0"
+appVersion: "4.7.1"
 
 maintainers:
   - name: Damien FLETY
@@ -25,5 +25,5 @@ sources:
 
 dependencies:
   - name: generic
-    version: "1.0.6"
+    version: "1.0.9"
     repository: "https://damfle.github.io/helm-charts"
