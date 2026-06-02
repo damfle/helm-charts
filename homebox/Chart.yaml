@@ -4,7 +4,7 @@ description: A Helm chart for Homebox - Inventory and organization system for th
 
 type: application
 version: 0.1.7
-appVersion: "0.24.0-rootless"
+appVersion: "0.25.0-rootless"
 
 maintainers:
   - name: Damien FLETY
@@ -24,5 +24,5 @@ sources:
 
 dependencies:
   - name: generic
-    version: "1.0.6"
+    version: "1.0.9"
     repository: "https://damfle.github.io/helm-charts"
