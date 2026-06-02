@@ -3,7 +3,7 @@ name: ollama
 description: A Helm chart for deploying Ollama - a tool to run large language models locally
 type: application
 version: 0.1.11
-appVersion: "0.17.7"
+appVersion: "0.30.0"
 home: https://github.com/ollama/ollama
 sources:
   - https://github.com/ollama/ollama
@@ -18,5 +18,5 @@ maintainers:
     email: damfle+github@proton.me
 dependencies:
   - name: generic
-    version: "1.0.6"
+    version: "1.0.9"
     repository: https://damfle.github.io/helm-charts
