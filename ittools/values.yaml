@@ -26,8 +26,8 @@ generic:
 
   # ServiceAccount configuration
   serviceAccount:
-    create: true
-    automount: true
+    create: false
+    automount: false
     annotations: {}
     name: ""
 
@@ -57,8 +57,8 @@ generic:
       cpu: 100m
       memory: 128Mi
     requests:
-      cpu: 50m
-      memory: 64Mi
+      cpu: 10m
+      memory: 32Mi
 
   # Health checks
   livenessProbe:
