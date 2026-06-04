@@ -21,15 +21,15 @@ generic:
   # Resource limits and requests
   resources:
     limits:
-      cpu: 500m
-      memory: 1024Mi
-    requests:
       cpu: 100m
-      memory: 256Mi
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 32Mi
 
   # Security context
   securityContext:
-    runAsNonRoot: false
+    runAsNonRoot: true
     runAsUser: 999
     runAsGroup: 999
     fsGroup: 999
@@ -40,7 +40,7 @@ generic:
 
   # Service account configuration
   serviceAccount:
-    create: true
+    create: false
     annotations: {}
     name: ""
 
