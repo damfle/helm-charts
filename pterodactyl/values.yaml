@@ -109,10 +109,10 @@ panel:
   resources:
     limits:
       cpu: 500m
-      memory: 512Mi
-    requests:
-      cpu: 200m
       memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 128Mi
 
   # Node scheduling
   nodeSelector: {}
@@ -196,7 +196,7 @@ mariadb:
       cpu: 500m
       memory: 512Mi
     requests:
-      cpu: 200m
+      cpu: 10m
       memory: 256Mi
 
   nodeSelector: {}
@@ -245,8 +245,8 @@ redis:
       cpu: 200m
       memory: 256Mi
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 10m
+      memory: 32Mi
 
   nodeSelector: {}
   tolerations: []
