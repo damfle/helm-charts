@@ -99,9 +99,9 @@ generic:
     httpGet:
       path: /metrics
       port: 8080
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
+    initialDelaySeconds: 120
+    periodSeconds: 60
+    timeoutSeconds: 60
     failureThreshold: 3
 
   readinessProbe:
@@ -109,8 +109,8 @@ generic:
       path: /metrics
       port: 8080
     initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
+    periodSeconds: 30
+    timeoutSeconds: 30
     failureThreshold: 3
 
   startupProbe:
@@ -118,9 +118,9 @@ generic:
     httpGet:
       path: /metrics
       port: 8080
-    initialDelaySeconds: 60
-    periodSeconds: 60
-    timeoutSeconds: 60
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 30
     failureThreshold: 3
 
   # Security context
