@@ -1,0 +1,156 @@
+# Default values for sdcpp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Configuration for the generic subchart
+generic:
+  # Override naming to use "sdcpp" instead of "generic"
+  nameOverride: "sdcpp"
+
+  # Override image settings for sdcpp
+  image:
+    repository: docker pull ghcr.io/leejet/stable-diffusion.cpp:master-musa
+    pullPolicy: Always
+    tag: "master-vulkan" # Must be explicit for dependency charts
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 1234 # sdcpp runs on port 1234
+    targetPort: http
+    protocol: TCP
+    portName: http
+
+  # Remove containerPort as it's not supported in current generic chart
+
+  # ServiceAccount configuration
+  serviceAccount:
+    create: false
+    automount: true
+    annotations: {}
+    name: ""
+
+  # Single replica for sdcpp
+  replicaCount: 1
+
+  # Pod configuration
+  podAnnotations: {}
+  podLabels: {}
+  imagePullSecrets: []
+
+  # Node scheduling
+  nodeSelector: {}
+
+  affinity: {}
+
+  args:
+    - --listen-ip
+    - "0.0.0.0"
+    - --listen-port
+    - "1234"
+    - --color
+    - --offload-to-cpu
+    - --qwen-image-zero-cond-t
+    - --diffusion-fa
+    - --flow-shift
+    - "3"
+    - -H
+    - "1024"
+    - -W
+    - "1024"
+    - -v
+    - --sampling-method
+    - euler
+    - --cfg-scale
+    - "2.5"
+
+  # Configure persistence for sdcpp data
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 30Gi
+    mountPath: /models/
+    storageClassName: "local-path"
+    annotations: {}
+    labels: {}
+
+  # Resource limits and requests
+  resources: {}
+
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
+  # Health checks
+  livenessProbe:
+    enabled: false
+    httpGet:
+      path: /
+      port: 1324
+    initialDelaySeconds: 120
+    periodSeconds: 60
+    timeoutSeconds: 60
+    failureThreshold: 3
+
+  readinessProbe:
+    enabled: false
+    httpGet:
+      path: /
+      port: 1234
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 30
+    failureThreshold: 3
+
+  startupProbe:
+    enabled: false
+    httpGet:
+      path: /
+      port: 1324
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 30
+    failureThreshold: 3
+
+  # Security context
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+    fsGroup: 0
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+
+  podSecurityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+    fsGroup: 0
+
+  # ServiceMonitor for Prometheus monitoring (disabled by default)
+  serviceMonitor:
+    enabled: false
+    portName: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
+    labels: {}
+    annotations: {}
+
+  # Ingress configuration (recommended for external access)
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # For Traefik (as per your setup):
+      # traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+      # traefik.ingress.kubernetes.io/router.middlewares: authentik-ak-outpost-authentik-embedded-outpost@kubernetescrd
+    hosts:
+      - host: sdcpp.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+      # - secretName: sdcpp-tls
+      #   hosts:
+      #     - sdcpp.local
