@@ -9,7 +9,7 @@ generic:
 
   # Override image settings for sdcpp
   image:
-    repository: docker pull ghcr.io/leejet/stable-diffusion.cpp:master-musa
+    repository: ghcr.io/leejet/stable-diffusion.cpp
     pullPolicy: Always
     tag: "master-vulkan" # Must be explicit for dependency charts
 
@@ -42,7 +42,8 @@ generic:
   nodeSelector: {}
 
   affinity: {}
-
+  command:
+    - /sd-server
   args:
     - --listen-ip
     - "0.0.0.0"
