@@ -82,17 +82,9 @@ generic:
   affinity: {}
 
   readinessProbe:
-    tcpSocket:
-      port: 6667
-    initialDelaySeconds: 15
-    periodSeconds: 10
-    httpGet: {}
+    enabled: false
   livenessProbe:
-    tcpSocket:
-      port: 6667
-    initialDelaySeconds: 15
-    periodSeconds: 10
-    httpGet: {}
+    enabled: false
 
   # Persistence for ngIRCd data
   persistence:
