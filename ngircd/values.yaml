@@ -5,9 +5,9 @@
 generic:
   # Image configuration
   image:
-    repository: lscr.io/linuxserver/ngircd
+    repository: git.flety.net/damien/docker-ngircd:latest
     pullPolicy: IfNotPresent
-    tag: "version-27-r1" # Must be explicit for dependency charts
+    tag: "latest" # Must be explicit for dependency charts
 
   # Replica count
   replicaCount: 1
@@ -22,9 +22,9 @@ generic:
   env:
     # ngIRCd configuration
     - name: PUID
-      value: "1000"
+      value: "39"
     - name: PGID
-      value: "1000" # Optional: Add your MaxMind GeoLite2 license key
+      value: "39" # Optional: Add your MaxMind GeoLite2 license key
     - name: TZ
       value: "Etc/UTC"
 
@@ -39,10 +39,10 @@ generic:
 
   # Security context
   securityContext:
-    runAsNonRoot: false
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 39
+    runAsGroup: 39
+    fsGroup: 39
 
   # Ingress configuration
   ingress:
@@ -70,7 +70,7 @@ generic:
 
   # Pod security context
   podSecurityContext:
-    fsGroup: 1000
+    fsGroup: 39
 
   # Node selector
   nodeSelector: {}
