@@ -80,6 +80,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **ngircd** v0.1.5
 - **ngircd** v0.1.6
 - **ngircd** v0.1.7
+- **ngircd** v0.1.8
 - **ollama** v0.1.10
 - **ollama** v0.1.11
 - **ollama** v0.1.12
@@ -103,6 +104,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.15
 - **shlink-ui** v0.1.16
 
-Generated on: 2026-06-19 11:13:11 UTC
-Repository tag: r90
-Total chart packages: 65
+Generated on: 2026-06-19 11:33:39 UTC
+Repository tag: r91
+Total chart packages: 66
