@@ -1,0 +1,22 @@
+apiVersion: v2
+name: mlflowtoprom
+description: A Helm chart for MlFlow To Prow - Dump bridge from MLflow to Prometheus
+type: application
+version: 0.0.1
+appVersion: "0.1.2"
+home: https://git.flety.net/vibe/mlflowtoprom
+sources:
+  - https://git.flety.net/vibe/mlflowtoprom
+keywords:
+  - mlflow
+  - prometheus
+  - llm
+  - ai
+  - rust
+maintainers:
+  - name: damfle
+    email: damfle+github@proton.me
+dependencies:
+  - name: generic
+    version: "1.0.10"
+    repository: https://damfle.github.io/helm-charts
