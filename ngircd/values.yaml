@@ -21,10 +21,6 @@ generic:
   # Environment variables for ngIRCd configuration
   env:
     # ngIRCd configuration
-    - name: PUID
-      value: "39"
-    - name: PGID
-      value: "39" # Optional: Add your MaxMind GeoLite2 license key
     - name: TZ
       value: "Etc/UTC"
 
@@ -82,11 +78,13 @@ generic:
   affinity: {}
 
   readinessProbe:
+    enabled: true
     tcpSocket:
       port: 6667
     initialDelaySeconds: 15
     periodSeconds: 10
   livenessProbe:
+    enabled: true
     tcpSocket:
       port: 6667
     initialDelaySeconds: 15
