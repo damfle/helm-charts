@@ -70,7 +70,7 @@ generic:
 
   # Pod security context
   podSecurityContext:
-    fsGroup: 1001
+    fsGroup: 1000
 
   # Node selector
   nodeSelector: {}
@@ -86,11 +86,13 @@ generic:
       port: 6667
     initialDelaySeconds: 15
     periodSeconds: 10
+    httpGet: {}
   livenessProbe:
     tcpSocket:
       port: 6667
     initialDelaySeconds: 15
     periodSeconds: 10
+    httpGet: {}
 
   # Persistence for ngIRCd data
   persistence:
