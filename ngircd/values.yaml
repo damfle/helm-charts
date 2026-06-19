@@ -1,0 +1,101 @@
+# Default values for ngIRCd URL shortener
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+generic:
+  # Image configuration
+  image:
+    repository: lscr.io/linuxserver/ngircd
+    pullPolicy: IfNotPresent
+    tag: "version-27-r1" # Must be explicit for dependency charts
+
+  # Replica count
+  replicaCount: 1
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 6667
+    targetPort: 6667
+
+  # Environment variables for ngIRCd configuration
+  env:
+    # ngIRCd configuration
+    - name: PUID
+      value: "1000"
+    - name: PGID
+      value: "1000" # Optional: Add your MaxMind GeoLite2 license key
+    - name: TZ
+      value: "Etc/UTC"
+
+  # Resource limits and requests
+  resources:
+    limits:
+      cpu: 500m
+      memory: 2048Mi
+    requests:
+      cpu: 100m
+      memory: 1024Mi
+
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+
+  # Ingress configuration
+  ingress:
+    enabled: false
+    className: "traefik"
+    annotations: {}
+      # traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      # traefik.ingress.kubernetes.io/router.tls: "true"
+      # cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - host: ngircd.example.com # Change this to your domain
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+
+  # Service account configuration
+  serviceAccount:
+    create: false
+    annotations: {}
+    name: ""
+
+  # Pod annotations
+  podAnnotations: {}
+
+  # Pod security context
+  podSecurityContext:
+    fsGroup: 1001
+
+  # Node selector
+  nodeSelector: {}
+
+  # Tolerations
+  tolerations: []
+
+  # Affinity
+  affinity: {}
+
+  readinessProbe:
+    tcpSocket:
+      port: 6667
+    initialDelaySeconds: 15
+    periodSeconds: 10
+  livenessProbe:
+    tcpSocket:
+      port: 6667
+    initialDelaySeconds: 15
+    periodSeconds: 10
+
+  # Persistence for ngIRCd data
+  persistence:
+    enabled: true
+    mountPath: "/config"
+    storageClass: "local-path"
+    accessMode: ReadWriteOnce
+    size: 1Gi
