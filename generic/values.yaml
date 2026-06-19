@@ -126,20 +126,11 @@ envFrom: []
 
 # This is to setup the liveness, readiness, and startup probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
-  enabled: true
-  httpGet:
-    path: /
-    port: http
+  enabled: false
 readinessProbe:
-  enabled: true
-  httpGet:
-    path: /
-    port: http
+  enabled: false
 startupProbe:
   enabled: false
-  httpGet:
-    path: /
-    port: http
 
 # Additional volumes on the output Deployment definition.
 volumes: []
