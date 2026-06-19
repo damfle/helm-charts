@@ -73,6 +73,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **loki** v0.1.27
 - **loki** v0.1.28
 - **loki** v0.1.29
+- **mlflowtoprom** v0.0.2
 - **ngircd** v0.1.1
 - **ngircd** v0.1.2
 - **ngircd** v0.1.3
@@ -104,6 +105,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.15
 - **shlink-ui** v0.1.16
 
-Generated on: 2026-06-19 11:33:39 UTC
-Repository tag: r91
-Total chart packages: 66
+Generated on: 2026-06-19 14:53:19 UTC
+Repository tag: r92
+Total chart packages: 67
