@@ -3,7 +3,7 @@ name: ngircd
 description: A Helm chart for ngIRCd - A self-hosted IRC server.
 type: application
 version: 0.1.5
-appVersion: "27-r1"
+appVersion: "latest"
 home: https://ngircd.barton.de/
 sources:
   - https://github.com/ngircd/ngircd
@@ -17,5 +17,5 @@ maintainers:
     email: damfle+github@proton.me
 dependencies:
   - name: generic
-    version: "1.0.9"
+    version: "1.0.10"
     repository: https://damfle.github.io/helm-charts

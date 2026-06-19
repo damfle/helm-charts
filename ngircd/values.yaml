@@ -5,7 +5,7 @@
 generic:
   # Image configuration
   image:
-    repository: git.flety.net/damien/docker-ngircd:latest
+    repository: git.flety.net/damien/docker-ngircd
     pullPolicy: IfNotPresent
     tag: "latest" # Must be explicit for dependency charts
 
@@ -82,9 +82,15 @@ generic:
   affinity: {}
 
   readinessProbe:
-    enabled: false
+    tcpSocket:
+      port: 6667
+    initialDelaySeconds: 15
+    periodSeconds: 10
   livenessProbe:
-    enabled: false
+    tcpSocket:
+      port: 6667
+    initialDelaySeconds: 15
+    periodSeconds: 10
 
   # Persistence for ngIRCd data
   persistence:
