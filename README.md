@@ -42,6 +42,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **agentwhisker** v0.0.4
 - **forgejo-runner** v0.7.5
 - **forgejo-runner** v0.7.6
+- **generic** v1.0.10
 - **generic** v1.0.4
 - **generic** v1.0.5
 - **generic** v1.0.6
@@ -100,6 +101,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.15
 - **shlink-ui** v0.1.16
 
-Generated on: 2026-06-19 10:48:51 UTC
-Repository tag: r87
-Total chart packages: 62
+Generated on: 2026-06-19 10:52:26 UTC
+Repository tag: r88
+Total chart packages: 63
