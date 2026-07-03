@@ -5,7 +5,7 @@
 generic:
   # Image configuration
   image:
-    repository: git.flety.net/damien/mcp-luanti/gateway:latest
+    repository: git.flety.net/damien/mcp-luanti/gateway
     pullPolicy: IfNotPresent
     tag: "latest" # Must be explicit for dependency charts
 
