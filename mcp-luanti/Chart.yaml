@@ -1,0 +1,26 @@
+apiVersion: v2
+name: mcp-luanti
+description: A Helm chart for mcp-luanti gateway. Gateway that allow to use mcp-luanti with the mod accross servers.
+
+type: application
+version: 0.1.0
+appVersion: "latest"
+
+maintainers:
+  - name: Damien FLETY
+    email: damfle+github@proton.me
+
+keywords:
+  - mcp-luanti
+  - gateway
+  - luanti
+
+home: https://github.com/damfle/helm-charts
+sources:
+  - https://github.com/damfle/helm-charts
+  - https://git.flety.net/damien/mcp-luanti
+
+dependencies:
+  - name: generic
+    version: "1.0.9"
+    repository: "https://damfle.github.io/helm-charts"
