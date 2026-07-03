@@ -3,7 +3,7 @@ name: mcp-luanti
 description: A Helm chart for mcp-luanti gateway. Gateway that allow to use mcp-luanti with the mod accross servers.
 
 type: application
-version: 0.1.1
+version: 0.1.2
 appVersion: "latest"
 
 maintainers:
