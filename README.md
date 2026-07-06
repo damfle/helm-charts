@@ -115,7 +115,8 @@ helm install my-release damfle/generic --values my-values.yaml
 - **unsloth** v0.1.3
 - **unsloth** v0.1.4
 - **unsloth** v0.1.5
+- **unsloth** v0.1.6
 
-Generated on: 2026-07-06 20:16:23 UTC
-Repository tag: r104
-Total chart packages: 78
+Generated on: 2026-07-06 20:25:00 UTC
+Repository tag: r105
+Total chart packages: 79
