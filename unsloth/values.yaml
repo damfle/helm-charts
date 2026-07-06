@@ -46,7 +46,7 @@ env:
   - name: HF_DATASETS_CACHE
     value: "/tmp/hf_cache"
   - name: HF_HOME
-    value: "/tmp/hf_home"
+    value: "/workspace/work/hf_home"
 
 # Environment variables from existing secrets (optional)
 # Reference existing Kubernetes secrets to load as environment variables
