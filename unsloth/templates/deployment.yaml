@@ -54,15 +54,13 @@ spec:
             {{- $jupyterEnv := .Values.jupyter.env | default list }}
             {{- $allEnv := concat $mainEnv $jupyterEnv }}
             {{- toYaml $allEnv | nindent 12 }}
-          {{- with .Values.envFrom }}
+          {{- /* Combine main envFrom with jupyter extraEnvFrom */}}
+          {{- $mainEnvFrom := .Values.envFrom | default list }}
+          {{- $jupyterEnvFrom := .Values.jupyter.extraEnvFrom | default list }}
+          {{- $allEnvFrom := concat $mainEnvFrom $jupyterEnvFrom }}
+          {{- if $allEnvFrom }}
           envFrom:
-            {{- /* Combine main envFrom with jupyter extraEnvFrom */}}
-            {{- $mainEnvFrom := .Values.envFrom | default list }}
-            {{- $jupyterEnvFrom := .Values.jupyter.extraEnvFrom | default list }}
-            {{- $allEnvFrom := concat $mainEnvFrom $jupyterEnvFrom }}
-            {{- if $allEnvFrom }}
             {{- toYaml $allEnvFrom | nindent 12 }}
-            {{- end }}
           {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:

@@ -6,9 +6,9 @@ metadata:
   labels:
     {{- include "unsloth.labels" . | nindent 4 }}
     app.kubernetes.io/component: unsloth
-  {{- with .Values.ingress.unsloth.annotations }}
+  {{- if .Values.ingress.unsloth.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- toYaml .Values.ingress.unsloth.annotations | nindent 4 }}
   {{- end }}
 spec:
   {{- if .Values.ingress.unsloth.className }}
@@ -43,9 +43,9 @@ metadata:
   labels:
     {{- include "unsloth.labels" . | nindent 4 }}
     app.kubernetes.io/component: jupyter
-  {{- with .Values.ingress.jupyter.annotations }}
+  {{- if .Values.ingress.jupyter.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- toYaml .Values.ingress.jupyter.annotations | nindent 4 }}
   {{- end }}
 spec:
   {{- if .Values.ingress.jupyter.className }}
