@@ -110,7 +110,8 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.14
 - **shlink-ui** v0.1.15
 - **shlink-ui** v0.1.16
+- **unsloth** v0.1.1
 
-Generated on: 2026-07-06 08:19:05 UTC
-Repository tag: r98
-Total chart packages: 73
+Generated on: 2026-07-06 17:11:17 UTC
+Repository tag: r99
+Total chart packages: 74
