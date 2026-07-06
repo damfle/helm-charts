@@ -144,6 +144,7 @@ resources:
 
 # Health checks - Unsloth provides an HTTP health endpoint
 livenessProbe:
+  enabled: true
   httpGet:
     path: /api/health
     port: unsloth
@@ -153,6 +154,7 @@ livenessProbe:
   failureThreshold: 3
 
 readinessProbe:
+  enabled: true
   httpGet:
     path: /api/health
     port: unsloth

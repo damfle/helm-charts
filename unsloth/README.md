@@ -78,6 +78,13 @@ The chart supports loading environment variables from existing Kubernetes secret
 | `envFrom` | List of secret/configmap references | `[]` |
 | `jupyter.extraEnvFrom` | Additional secrets specific to Jupyter | `[]` |
 
+### Health Checks Configuration
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `livenessProbe.enabled` | Enable liveness probe | `true` |
+| `readinessProbe.enabled` | Enable readiness probe | `true` |
+
 ### Jupyter Configuration
 
 The chart includes JupyterLab environment variables:
@@ -309,6 +316,23 @@ tolerations:
   - key: nvidia.com/gpu
     operator: Exists
     effect: NoSchedule
+
+# Health check probes configuration
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /api/health
+    port: unsloth
+  initialDelaySeconds: 60
+  periodSeconds: 15
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /api/health
+    port: unsloth
+  initialDelaySeconds: 30
+  periodSeconds: 10
 ```
 
 ## Accessing Services
@@ -339,6 +363,18 @@ The chart includes built-in health checks for the Unsloth service:
 
 - **Liveness Probe**: HTTP GET on `/health` with 60s initial delay, 15s period
 - **Readiness Probe**: HTTP GET on `/health` with 30s initial delay, 10s period
+
+Both probes can be disabled independently by setting their `enabled` flag to `false`:
+
+```yaml
+# Disable liveness probe
+livenessProbe:
+  enabled: false
+
+# Disable readiness probe  
+readinessProbe:
+  enabled: false
+```
 
 ## Troubleshooting
 
