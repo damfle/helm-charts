@@ -87,17 +87,17 @@ generic:
 
   # Health checks
   livenessProbe:
-    enabled: true
+    enabled: false
     httpGet:
       path: /
       port: 1324
-    initialDelaySeconds: 120
-    periodSeconds: 60
-    timeoutSeconds: 60
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 30
     failureThreshold: 3
 
   readinessProbe:
-    enabled: true
+    enabled: false
     httpGet:
       path: /
       port: 1234
@@ -107,7 +107,7 @@ generic:
     failureThreshold: 3
 
   startupProbe:
-    enabled: true
+    enabled: false
     httpGet:
       path: /
       port: 1324
