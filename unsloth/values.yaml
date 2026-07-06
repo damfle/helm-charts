@@ -144,8 +144,10 @@ securityContext:
   runAsNonRoot: true
   runAsUser: 1001
   fsGroup: 1001
-  allowPrivilegeEscalation: false
+  allowPrivilegeEscalation: true
   readOnlyRootFilesystem: false
+  capabilities:
+    add: ["SYS_ADMIN"]
 
 podSecurityContext:
   runAsNonRoot: true
