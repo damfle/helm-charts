@@ -23,7 +23,7 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
-
+---
 {{- if .Values.jupyterConfig.enabled -}}
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -50,7 +50,7 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
-
+---
 {{- if .Values.studio.enabled -}}
 apiVersion: v1
 kind: PersistentVolumeClaim
