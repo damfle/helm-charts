@@ -60,7 +60,7 @@ envFrom: []
 serviceMonitor:
   enabled: false
   portName: unsloth
-  path: /metrics
+  path: /api/train/metrics
   interval: 30s
   scrapeTimeout: 10s
   labels: {}
@@ -100,15 +100,6 @@ jupyter:
     - name: JUPYTER_ENABLE_LAB
       value: "yes"
 
-  # Additional environment variables from existing secrets for Jupyter (optional)
-  # These are combined with the main envFrom
-  extraEnvFrom: []
-# Example:
-# jupyter:
-#   extraEnvFrom:
-#     - secretRef:
-#         name: jupyter-secrets
-
 # Configure persistence for unsloth data (model cache, etc.)
 persistence:
   enabled: true
@@ -119,11 +110,6 @@ persistence:
   storageClassName: "local-path"
   annotations: {}
   labels: {}
-  # Volume permissions init container (useful if your storage backend doesn't support fsGroup)
-  volumePermissions:
-    enabled: false
-    image: alpine
-    command: ["/bin/sh", "-c", "chown -R 1000:1000 /workspace/work && chmod -R 775 /workspace/work"]
 
 # Resource limits and requests - Unsloth needs more resources for AI inference
 resources:
@@ -137,7 +123,7 @@ resources:
 # Health checks - Unsloth provides an HTTP health endpoint
 livenessProbe:
   httpGet:
-    path: /health
+    path: /api/health
     port: unsloth
   initialDelaySeconds: 60
   periodSeconds: 15
@@ -146,7 +132,7 @@ livenessProbe:
 
 readinessProbe:
   httpGet:
-    path: /health
+    path: /api/health
     port: unsloth
   initialDelaySeconds: 30
   periodSeconds: 10
@@ -156,14 +142,15 @@ readinessProbe:
 # Security context
 securityContext:
   runAsNonRoot: true
-  runAsUser: 1000
-  fsGroup: 1000
+  runAsUser: 1001
+  fsGroup: 1001
   allowPrivilegeEscalation: false
   readOnlyRootFilesystem: false
 
 podSecurityContext:
   runAsNonRoot: true
-  fsGroup: 1000
+  fsGroup: 1001
+  runAsUser: 1001
 
 # Ingress configuration for Unsloth (recommended for external access)
 ingress:

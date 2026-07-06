@@ -166,8 +166,7 @@ ingress:
 The chart supports loading environment variables from existing Kubernetes secrets using the `envFrom` configuration. This allows you to use the same secret for both Unsloth and Jupyter containers.
 
 **Supported secret references:**
-- `envFrom` - Main environment variables from secrets (shared by both containers)
-- `jupyter.extraEnvFrom` - Additional secrets specific to Jupyter
+- `envFrom` - Main environment variables from secrets (shared by both containers and Jupyter)
 
 Example of creating a secret and referencing it:
 
@@ -186,12 +185,6 @@ Then reference it in your values:
 envFrom:
   - secretRef:
       name: unsloth-env-secrets
-
-# Optionally add Jupyter-specific secrets
-jupyter:
-  extraEnvFrom:
-    - secretRef:
-        name: jupyter-secrets
 ```
 
 You can also reference ConfigMaps:
@@ -200,11 +193,16 @@ You can also reference ConfigMaps:
 envFrom:
   - configMapRef:
       name: unsloth-config
+```
 
-jupyter:
-  extraEnvFrom:
-    - configMapRef:
-        name: jupyter-config
+To use multiple secrets or configmaps:
+
+```yaml
+envFrom:
+  - secretRef:
+      name: unsloth-env-secrets
+  - configMapRef:
+      name: unsloth-config
 ```
 
 ## Complete Example

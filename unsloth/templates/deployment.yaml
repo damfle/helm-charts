@@ -33,15 +33,6 @@ spec:
       {{- if .Values.nvidia.enabled }}
       runtimeClassName: nvidia
       {{- end }}
-      {{- if and .Values.persistence.enabled .Values.persistence.volumePermissions.enabled }}
-      initContainers:
-        - name: volume-permissions
-          image: {{ .Values.persistence.volumePermissions.image }}
-          command: {{ .Values.persistence.volumePermissions.command }}
-          volumeMounts:
-            - name: {{ include "unsloth.fullname" . }}-data
-              mountPath: {{ .Values.persistence.mountPath }}
-      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           {{- with .Values.securityContext }}
@@ -63,13 +54,9 @@ spec:
             {{- $jupyterEnv := .Values.jupyter.env | default list }}
             {{- $allEnv := concat $mainEnv $jupyterEnv }}
             {{- toYaml $allEnv | nindent 12 }}
-          {{- /* Combine main envFrom with jupyter extraEnvFrom */}}
-          {{- $mainEnvFrom := .Values.envFrom | default list }}
-          {{- $jupyterEnvFrom := .Values.jupyter.extraEnvFrom | default list }}
-          {{- $allEnvFrom := concat $mainEnvFrom $jupyterEnvFrom }}
-          {{- if $allEnvFrom }}
+          {{- if .Values.envFrom }}
           envFrom:
-            {{- toYaml $allEnvFrom | nindent 12 }}
+            {{- toYaml .Values.envFrom | nindent 12 }}
           {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
