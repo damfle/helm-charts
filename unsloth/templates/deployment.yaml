@@ -78,6 +78,20 @@ spec:
               subPath: {{ .Values.persistence.subPath }}
               {{- end }}
             {{- end }}
+            {{- if .Values.jupyterConfig.enabled }}
+            - name: {{ include "unsloth.fullname" . }}-jupyter-config
+              mountPath: {{ .Values.jupyterConfig.mountPath }}
+              {{- if .Values.jupyterConfig.subPath }}
+              subPath: {{ .Values.jupyterConfig.subPath }}
+              {{- end }}
+            {{- end }}
+            {{- if .Values.studio.enabled }}
+            - name: {{ include "unsloth.fullname" . }}-studio
+              mountPath: {{ .Values.studio.mountPath }}
+              {{- if .Values.studio.subPath }}
+              subPath: {{ .Values.studio.subPath }}
+              {{- end }}
+            {{- end }}
             {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -86,6 +100,16 @@ spec:
         - name: {{ include "unsloth.fullname" . }}-data
           persistentVolumeClaim:
             claimName: {{ include "unsloth.fullname" . }}
+        {{- end }}
+        {{- if .Values.jupyterConfig.enabled }}
+        - name: {{ include "unsloth.fullname" . }}-jupyter-config
+          persistentVolumeClaim:
+            claimName: {{ include "unsloth.fullname" . }}-jupyter-config
+        {{- end }}
+        {{- if .Values.studio.enabled }}
+        - name: {{ include "unsloth.fullname" . }}-studio
+          persistentVolumeClaim:
+            claimName: {{ include "unsloth.fullname" . }}-studio
         {{- end }}
         {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}

@@ -23,3 +23,57 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
+
+{{- if .Values.jupyterConfig.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "unsloth.fullname" . }}-jupyter-config
+  labels:
+    {{- include "unsloth.labels" . | nindent 4 }}
+    app.kubernetes.io/component: jupyter-config
+  {{- with .Values.jupyterConfig.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- toYaml .Values.jupyterConfig.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.jupyterConfig.size | quote }}
+  {{- if .Values.jupyterConfig.storageClassName }}
+  storageClassName: {{ .Values.jupyterConfig.storageClassName | quote }}
+  {{- end }}
+  {{- with .Values.jupyterConfig.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+
+{{- if .Values.studio.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "unsloth.fullname" . }}-studio
+  labels:
+    {{- include "unsloth.labels" . | nindent 4 }}
+    app.kubernetes.io/component: studio
+  {{- with .Values.studio.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- toYaml .Values.studio.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.studio.size | quote }}
+  {{- if .Values.studio.storageClassName }}
+  storageClassName: {{ .Values.studio.storageClassName | quote }}
+  {{- end }}
+  {{- with .Values.studio.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}

@@ -111,6 +111,28 @@ persistence:
   annotations: {}
   labels: {}
 
+# Additional volume for Jupyter configuration
+jupyterConfig:
+  enabled: true
+  size: 1Gi
+  mountPath: /home/unsloth/.jupyter
+  storageClassName: "local-path"
+  accessModes:
+    - ReadWriteOnce
+  annotations: {}
+  labels: {}
+
+# Additional volume for Studio workspace
+studio:
+  enabled: true
+  size: 1Gi
+  mountPath: /workspace/studio
+  storageClassName: "local-path"
+  accessModes:
+    - ReadWriteOnce
+  annotations: {}
+  labels: {}
+
 # Resource limits and requests - Unsloth needs more resources for AI inference
 resources:
   limits:
