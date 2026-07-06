@@ -3,7 +3,7 @@ name: unsloth
 description: A Helm chart for Unsloth AI inference server with GPU support
 
 type: application
-version: 0.1.4
+version: 0.1.5
 appVersion: "latest"
 
 maintainers:
