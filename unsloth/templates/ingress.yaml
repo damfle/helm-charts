@@ -1,0 +1,73 @@
+{{- if .Values.ingress.unsloth.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "unsloth.fullname" . }}-unsloth
+  labels:
+    {{- include "unsloth.labels" . | nindent 4 }}
+    app.kubernetes.io/component: unsloth
+  {{- with .Values.ingress.unsloth.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.ingress.unsloth.className }}
+  ingressClassName: {{ .Values.ingress.unsloth.className | quote }}
+  {{- end }}
+  rules:
+    {{- range .Values.ingress.unsloth.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType | default "Prefix" }}
+            backend:
+              service:
+                name: {{ include "unsloth.fullname" $ }}-unsloth
+                port:
+                  name: unsloth
+          {{- end }}
+    {{- end }}
+  {{- if .Values.ingress.unsloth.tls }}
+  tls:
+    {{- toYaml .Values.ingress.unsloth.tls | nindent 4 }}
+  {{- end }}
+{{- end }}
+---
+{{- if .Values.ingress.jupyter.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "unsloth.fullname" . }}-jupyter
+  labels:
+    {{- include "unsloth.labels" . | nindent 4 }}
+    app.kubernetes.io/component: jupyter
+  {{- with .Values.ingress.jupyter.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.ingress.jupyter.className }}
+  ingressClassName: {{ .Values.ingress.jupyter.className | quote }}
+  {{- end }}
+  rules:
+    {{- range .Values.ingress.jupyter.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType | default "Prefix" }}
+            backend:
+              service:
+                name: {{ include "unsloth.fullname" $ }}-jupyter
+                port:
+                  name: jupyter
+          {{- end }}
+    {{- end }}
+  {{- if .Values.ingress.jupyter.tls }}
+  tls:
+    {{- toYaml .Values.ingress.jupyter.tls | nindent 4 }}
+  {{- end }}
+{{- end }}

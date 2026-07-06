@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "unsloth.fullname" . }}-unsloth
+  labels:
+    {{- include "unsloth.labels" . | nindent 4 }}
+    app.kubernetes.io/component: unsloth
+spec:
+  type: {{ .Values.service.unsloth.type }}
+  {{- if eq .Values.service.unsloth.type "LoadBalancer" }}
+  loadBalancerIP: {{ .Values.service.unsloth.loadBalancerIP | default "" | quote }}
+  {{- end }}
+  {{- if .Values.service.unsloth.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.service.unsloth.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.service.unsloth.port }}
+      targetPort: {{ .Values.service.unsloth.targetPort }}
+      protocol: {{ .Values.service.unsloth.protocol }}
+      name: {{ .Values.service.unsloth.portName }}
+      {{- if and (eq .Values.service.unsloth.type "NodePort") (.Values.service.unsloth.nodePort) }}
+      nodePort: {{ .Values.service.unsloth.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "unsloth.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "unsloth.fullname" . }}-jupyter
+  labels:
+    {{- include "unsloth.labels" . | nindent 4 }}
+    app.kubernetes.io/component: jupyter
+spec:
+  type: {{ .Values.jupyter.service.type }}
+  {{- if eq .Values.jupyter.service.type "LoadBalancer" }}
+  loadBalancerIP: {{ .Values.jupyter.service.loadBalancerIP | default "" | quote }}
+  {{- end }}
+  {{- if .Values.jupyter.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.jupyter.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.jupyter.service.port }}
+      targetPort: {{ .Values.jupyter.service.targetPort }}
+      protocol: {{ .Values.jupyter.service.protocol }}
+      name: {{ .Values.jupyter.service.portName }}
+      {{- if and (eq .Values.jupyter.service.type "NodePort") (.Values.jupyter.service.nodePort) }}
+      nodePort: {{ .Values.jupyter.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "unsloth.selectorLabels" . | nindent 4 }}

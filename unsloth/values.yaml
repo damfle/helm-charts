@@ -1,0 +1,196 @@
+# Default values for unsloth.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Number of replicas
+replicaCount: 1
+
+# Image configuration
+image:
+  repository: unsloth/unsloth
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+# ServiceAccount configuration
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+# Pod configuration
+podAnnotations: {}
+podLabels: {}
+imagePullSecrets: []
+
+# Node scheduling
+nodeSelector: {}
+tolerations:
+  - key: nvidia.com/gpu
+    operator: Exists
+    effect: NoSchedule
+affinity: {}
+
+# NVIDIA GPU support
+nvidia:
+  enabled: true
+
+# Unsloth AI specific environment variables
+env:
+  - name: TZ
+    value: "Europe/Paris"
+  - name: UNSLOTH_MAX_MEMORY
+    value: "auto"
+  - name: PYTORCH_CUDA_ALLOC_CONF
+    value: "expandable_segments:True"
+  - name: HF_DATASETS_CACHE
+    value: "/tmp/hf_cache"
+  - name: HF_HOME
+    value: "/tmp/hf_home"
+
+# Environment variables from existing secrets (optional)
+# Reference existing Kubernetes secrets to load as environment variables
+envFrom: []
+# Example:
+# envFrom:
+#   - secretRef:
+#       name: unsloth-env-secrets
+
+# ServiceMonitor for Prometheus monitoring (disabled by default)
+serviceMonitor:
+  enabled: false
+  portName: unsloth
+  path: /metrics
+  interval: 30s
+  scrapeTimeout: 10s
+  labels: {}
+  annotations: {}
+
+# Unsloth AI service configuration (port 8000)
+service:
+  unsloth:
+    type: ClusterIP
+    port: 8000
+    targetPort: unsloth
+    protocol: TCP
+    portName: unsloth
+    # Node port for external access (optional)
+    nodePort: null
+    # Load balancer IP for external access (optional)
+    loadBalancerIP: ""
+    # Load balancer source ranges for external access (optional)
+    loadBalancerSourceRanges: []
+
+# Jupyter service configuration (port 8888)
+jupyter:
+  service:
+    type: ClusterIP
+    port: 8888
+    targetPort: jupyter
+    protocol: TCP
+    portName: jupyter
+    # Node port for external access (optional)
+    nodePort: null
+    # Load balancer IP for external access (optional)
+    loadBalancerIP: ""
+    # Load balancer source ranges for external access (optional)
+    loadBalancerSourceRanges: []
+  # Jupyter specific environment variables
+  env:
+    - name: JUPYTER_ENABLE_LAB
+      value: "yes"
+
+  # Additional environment variables from existing secrets for Jupyter (optional)
+  # These are combined with the main envFrom
+  extraEnvFrom: []
+# Example:
+# jupyter:
+#   extraEnvFrom:
+#     - secretRef:
+#         name: jupyter-secrets
+
+# Configure persistence for unsloth data (model cache, etc.)
+persistence:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 20Gi
+  mountPath: /data
+  storageClassName: "local-path"
+  annotations: {}
+  labels: {}
+
+# Resource limits and requests - Unsloth needs more resources for AI inference
+resources:
+  limits:
+    cpu: 2
+    memory: 8Gi
+  requests:
+    cpu: 1
+    memory: 4Gi
+
+# Health checks - Unsloth provides an HTTP health endpoint
+livenessProbe:
+  httpGet:
+    path: /health
+    port: unsloth
+  initialDelaySeconds: 60
+  periodSeconds: 15
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: unsloth
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+# Security context
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+
+# Ingress configuration for Unsloth (recommended for external access)
+ingress:
+  unsloth:
+    enabled: false
+    className: ""
+    annotations: {}
+      # For Traefik (as per your setup):
+      # traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+      # traefik.ingress.kubernetes.io/router.middlewares: authentik-ak-outpost-authentik-embedded-outpost@kubernetescrd
+    hosts:
+      - host: unsloth.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+      # - secretName: unsloth-tls
+      #   hosts:
+      #     - unsloth.local
+
+  # Ingress configuration for Jupyter
+  jupyter:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts:
+      - host: jupyter.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+      # - secretName: jupyter-tls
+      #   hosts:
+      #     - jupyter.local

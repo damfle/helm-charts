@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "unsloth.fullname" . }}
+  labels:
+    {{- include "unsloth.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "unsloth.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "unsloth.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "unsloth.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.nvidia.enabled }}
+      runtimeClassName: nvidia
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: unsloth
+              containerPort: {{ .Values.service.unsloth.port }}
+              protocol: TCP
+            - name: jupyter
+              containerPort: {{ .Values.jupyter.service.port }}
+              protocol: TCP
+          env:
+            {{- /* Combine main env with jupyter env */}}
+            {{- $mainEnv := .Values.env | default list }}
+            {{- $jupyterEnv := .Values.jupyter.env | default list }}
+            {{- $allEnv := concat $mainEnv $jupyterEnv }}
+            {{- toYaml $allEnv | nindent 12 }}
+          {{- with .Values.envFrom }}
+          envFrom:
+            {{- /* Combine main envFrom with jupyter extraEnvFrom */}}
+            {{- $mainEnvFrom := .Values.envFrom | default list }}
+            {{- $jupyterEnvFrom := .Values.jupyter.extraEnvFrom | default list }}
+            {{- $allEnvFrom := concat $mainEnvFrom $jupyterEnvFrom }}
+            {{- if $allEnvFrom }}
+            {{- toYaml $allEnvFrom | nindent 12 }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            {{- if .Values.persistence.enabled }}
+            - name: {{ include "unsloth.fullname" . }}-data
+              mountPath: {{ .Values.persistence.mountPath }}
+              {{- if .Values.persistence.subPath }}
+              subPath: {{ .Values.persistence.subPath }}
+              {{- end }}
+            {{- end }}
+            {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      volumes:
+        {{- if .Values.persistence.enabled }}
+        - name: {{ include "unsloth.fullname" . }}-data
+          persistentVolumeClaim:
+            claimName: {{ include "unsloth.fullname" . }}
+        {{- end }}
+        {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

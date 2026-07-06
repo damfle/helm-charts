@@ -1,0 +1,28 @@
+apiVersion: v2
+name: unsloth
+description: A Helm chart for Unsloth AI inference server with GPU support
+
+type: application
+version: 0.1.0
+appVersion: "latest"
+
+maintainers:
+  - name: Damien FLETY
+    email: damfle+github@proton.me
+
+keywords:
+  - unsloth
+  - ai
+  - inference
+  - llm
+  - python
+  - ml
+  - gpu
+  - nvidia
+
+home: https://github.com/damfle/helm-charts
+sources:
+  - https://github.com/damfle/helm-charts
+  - https://hub.docker.com/r/unsloth/unsloth
+
+dependencies: []
