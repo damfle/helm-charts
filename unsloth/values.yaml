@@ -115,10 +115,15 @@ persistence:
   accessModes:
     - ReadWriteOnce
   size: 20Gi
-  mountPath: /data
+  mountPath: /workspace/work
   storageClassName: "local-path"
   annotations: {}
   labels: {}
+  # Volume permissions init container (useful if your storage backend doesn't support fsGroup)
+  volumePermissions:
+    enabled: false
+    image: alpine
+    command: ["/bin/sh", "-c", "chown -R 1000:1000 /workspace/work && chmod -R 775 /workspace/work"]
 
 # Resource limits and requests - Unsloth needs more resources for AI inference
 resources:
@@ -158,7 +163,6 @@ securityContext:
 
 podSecurityContext:
   runAsNonRoot: true
-  runAsUser: 1000
   fsGroup: 1000
 
 # Ingress configuration for Unsloth (recommended for external access)

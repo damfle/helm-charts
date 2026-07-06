@@ -33,6 +33,15 @@ spec:
       {{- if .Values.nvidia.enabled }}
       runtimeClassName: nvidia
       {{- end }}
+      {{- if and .Values.persistence.enabled .Values.persistence.volumePermissions.enabled }}
+      initContainers:
+        - name: volume-permissions
+          image: {{ .Values.persistence.volumePermissions.image }}
+          command: {{ .Values.persistence.volumePermissions.command }}
+          volumeMounts:
+            - name: {{ include "unsloth.fullname" . }}-data
+              mountPath: {{ .Values.persistence.mountPath }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           {{- with .Values.securityContext }}
