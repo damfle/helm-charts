@@ -2,7 +2,7 @@ apiVersion: v2
 name: ngircd
 description: A Helm chart for ngIRCd - A self-hosted IRC server.
 type: application
-version: 0.1.8
+version: 0.1.9
 appVersion: "latest"
 home: https://ngircd.barton.de/
 sources:
