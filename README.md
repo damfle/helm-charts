@@ -37,7 +37,8 @@ helm install my-release damfle/generic --values my-values.yaml
 
 Current repository contents:
 
+- **generic** v1.0.9
 - **generic** v1.0.8
 
-Generated on: 2026-07-14 11:37:07 UTC
-Total chart packages: 1
+Generated on: 2026-07-14 11:43:06 UTC
+Total chart packages: 2
