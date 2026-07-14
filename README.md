@@ -93,6 +93,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **pterodactyl** v0.1.10
 - **pterodactyl** v0.1.11
 - **pterodactyl** v0.1.12
+- **pterodactyl** v0.1.13
 - **pterodactyl** v0.1.9
 - **rustfs** v0.1.6
 - **rustfs** v0.1.7
@@ -120,6 +121,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **unsloth** v0.1.8
 - **unsloth** v0.1.9
 
-Generated on: 2026-07-06 20:57:54 UTC
-Repository tag: r108
-Total chart packages: 82
+Generated on: 2026-07-14 06:14:17 UTC
+Repository tag: r109
+Total chart packages: 83
