@@ -6,12 +6,12 @@
 generic:
   # Override naming to use "ittools" instead of "generic"
   nameOverride: "ittools"
-  
+
   # Override image settings for IT Tools
   image:
     repository: ghcr.io/corentinth/it-tools
     pullPolicy: IfNotPresent
-    tag: "2024.10.22-7ca5933"  # Must be explicit for dependency charts
+    tag: "2024.10.22-7ca5933" # Must be explicit for dependency charts
 
   # Service configuration
   service:
@@ -83,7 +83,6 @@ generic:
   securityContext:
     runAsNonRoot: true
     runAsUser: 1000
-    fsGroup: 1000
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
 
