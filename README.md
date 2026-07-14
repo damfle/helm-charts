@@ -41,6 +41,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **forgejo-runner** v0.7.6
 - **generic** v1.0.8
 - **generic** v1.0.9
+- **homebox** v0.1.10
 - **homebox** v0.1.9
 - **ittools** v0.1.6
 - **jupyter** v0.1.6
@@ -57,6 +58,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.16
 - **unsloth** v0.1.9
 
-Generated on: 2026-07-14 11:16:23 UTC
-Repository tag: r111
-Total chart packages: 19
+Generated on: 2026-07-14 11:38:19 UTC
+Repository tag: r112
+Total chart packages: 20
