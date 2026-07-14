@@ -38,7 +38,6 @@ generic:
     runAsNonRoot: true
     runAsUser: 39
     runAsGroup: 39
-    fsGroup: 39
 
   # Ingress configuration
   ingress:
