@@ -1,0 +1,26 @@
+apiVersion: v1
+entries:
+  generic:
+  - apiVersion: v2
+    created: "2026-07-14T11:37:07.591638497+02:00"
+    description: A flexible Helm chart for deploying applications with monitoring,
+      persistence, and secrets support
+    digest: 21af41e02bebf00232ddf146df5aff948d9613c2ddb60b0979db2c29ba2d0a32
+    home: https://github.com/damfle/helm-charts
+    keywords:
+    - kubernetes
+    - deployment
+    - monitoring
+    - persistence
+    - generic
+    maintainers:
+    - email: damfle+github@proton.me
+      name: Damien FLETY
+    name: generic
+    sources:
+    - https://github.com/damfle/helm-charts
+    type: application
+    urls:
+    - https://damfle.github.io/helm-charts/charts/generic-1.0.8.tgz
+    version: 1.0.8
+generated: "2026-07-14T11:37:07.591209228+02:00"
