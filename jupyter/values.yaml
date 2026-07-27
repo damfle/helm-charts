@@ -11,7 +11,7 @@ generic:
   image:
     repository: git.flety.net/damien/docker-jupyter
     pullPolicy: IfNotPresent
-    tag: "0.1.4" # Must be explicit for dependency charts
+    tag: "0.1.11" # Must be explicit for dependency charts
 
   # Service configuration
   service:
@@ -58,7 +58,7 @@ generic:
     - name: PYTORCH_CUDA_ALLOC_CONF
       value: "expandable_segments:True"
     - name: TOKENIZERS_PARALLELISM
-      value: "false"
+      value: "true"
     - name: HF_DATASETS_CACHE
       value: "/tmp/hf_cache"
 
