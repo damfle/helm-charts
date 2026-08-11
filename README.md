@@ -49,6 +49,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **jupyter** v0.1.7
 - **jupyter** v0.1.8
 - **llamacpp** v0.1.14
+- **llamacpp** v0.1.15
 - **loki** v0.1.29
 - **mcp-luanti** v0.1.2
 - **mlflowtoprom** v0.0.4
@@ -64,6 +65,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.17
 - **unsloth** v0.1.9
 
-Generated on: 2026-07-27 15:21:33 UTC
-Repository tag: r118
-Total chart packages: 26
+Generated on: 2026-08-11 07:22:08 UTC
+Repository tag: r119
+Total chart packages: 27
