@@ -11,12 +11,12 @@ generic:
   image:
     repository: ghcr.io/ggml-org/llama.cpp
     pullPolicy: IfNotPresent
-    tag: "server-cuda-b8864" # Must be explicit for dependency charts
+    tag: "server-cuda-b10357" # Must be explicit for dependency charts
 
   # Service configuration
   service:
     type: ClusterIP
-    port: 8080 # llamacpp runs on port 8888
+    port: 9931 # llamacpp runs on port 9931
     targetPort: http
     protocol: TCP
     portName: http
@@ -64,7 +64,7 @@ generic:
     - name: LLAMA_ARG_HOST
       value: "0.0.0.0"
     - name: LLAMA_ARG_PORT
-      value: "8080"
+      value: "9931"
     - name: LLAMA_ARG_ENDPOINT_METRICS
       value: "true"
     - name: LLAMA_ARG_MODELS_DIR
@@ -98,7 +98,7 @@ generic:
   livenessProbe:
     httpGet:
       path: /metrics
-      port: 8080
+      port: 9931
     initialDelaySeconds: 120
     periodSeconds: 60
     timeoutSeconds: 60
@@ -107,7 +107,7 @@ generic:
   readinessProbe:
     httpGet:
       path: /metrics
-      port: 8080
+      port: 9931
     initialDelaySeconds: 30
     periodSeconds: 30
     timeoutSeconds: 30
@@ -117,7 +117,7 @@ generic:
     enabled: true
     httpGet:
       path: /metrics
-      port: 8080
+      port: 9931
     initialDelaySeconds: 30
     periodSeconds: 30
     timeoutSeconds: 30
