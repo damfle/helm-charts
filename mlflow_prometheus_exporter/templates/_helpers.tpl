@@ -1,20 +1,20 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "mlflowtoprom.name" -}}
-{{- default "mlflowtoprom" .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- define "mlflow_prometheus_exporter.name" -}}
+{{- default "mlflow_prometheus_exporter" .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
-Create a default fully qualified app name for mlflowtoprom.
+Create a default fully qualified app name for mlflow_prometheus_exporter.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "mlflowtoprom.fullname" -}}
+{{- define "mlflow_prometheus_exporter.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
-{{- $name := default "mlflowtoprom" .Values.nameOverride }}
+{{- $name := default "mlflow_prometheus_exporter" .Values.nameOverride }}
 {{- if contains $name .Release.Name }}
 {{- .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "mlflowtoprom.chart" -}}
+{{- define "mlflow_prometheus_exporter.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
-Common labels for mlflowtoprom
+Common labels for mlflow_prometheus_exporter
 */}}
-{{- define "mlflowtoprom.labels" -}}
-helm.sh/chart: {{ include "mlflowtoprom.chart" . }}
-{{ include "mlflowtoprom.selectorLabels" . }}
+{{- define "mlflow_prometheus_exporter.labels" -}}
+helm.sh/chart: {{ include "mlflow_prometheus_exporter.chart" . }}
+{{ include "mlflow_prometheus_exporter.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -43,9 +43,9 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Selector labels for mlflowtoprom
+Selector labels for mlflow_prometheus_exporter
 */}}
-{{- define "mlflowtoprom.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "mlflowtoprom.name" . }}
+{{- define "mlflow_prometheus_exporter.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mlflow_prometheus_exporter.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

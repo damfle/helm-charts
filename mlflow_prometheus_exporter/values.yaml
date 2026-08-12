@@ -1,13 +1,13 @@
-# Default values for mlflowtoprom URL shortener
+# Default values for mlflow_prometheus_exporter URL shortener
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 generic:
   # Image configuration
   image:
-    repository: git.flety.net/vibe/mlflowtoprom
+    repository: git.flety.net/damien/mlflow_prometheus_exporter
     pullPolicy: IfNotPresent
-    tag: "0.1.2" # Must be explicit for dependency charts
+    tag: "latest" # Must be explicit for dependency charts
 
   # Replica count
   replicaCount: 1
@@ -51,7 +51,7 @@ generic:
   livenessProbe:
     enabled: true
     httpGet:
-      path: /healthz
+      path: /health
       port: http
     initialDelaySeconds: 30
     periodSeconds: 10
@@ -60,7 +60,7 @@ generic:
   readinessProbe:
     enabled: true
     httpGet:
-      path: /ready
+      path: /health
       port: http
     initialDelaySeconds: 30
     periodSeconds: 10
@@ -76,6 +76,6 @@ generic:
     path: /metrics
     portName: http
 
-  # Persistence for mlflowtoprom data
+  # Persistence for mlflow_prometheus_exporter data
   persistence:
     enabled: false
