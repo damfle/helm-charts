@@ -1,10 +1,10 @@
-# MlFlow To Prow Helm Chart
+# MLflow Prometheus Exporter Helm Chart
 
-A Helm chart for deploying MlFlow To Prow on Kubernetes
+A Helm chart for deploying MLflow Prometheus Exporter on Kubernetes
 
 ## Description
 
-[MlFlow To Prow](https://git.flety.net/vibe/mlflow_prometheus_exporter) is a simple bridge that emulates mlflow api and exposes it via Prometheus.
+[MLflow Prometheus Exporter](https://git.flety.net/damien/mlflow_prometheus_exporter) is a simple bridge that emulates the MLflow API and exposes metrics via Prometheus.
 
 ## Prerequisites
 
@@ -23,7 +23,7 @@ helm repo update
 ### Install the chart
 
 ```bash
-helm install mlflow_prometheus_exporter damfle/mlflow_prometheus_exporter 
+helm install mlflow_prometheus_exporter damfle/mlflow_prometheus_exporter
 ```
 
 ### Install with custom values
@@ -46,5 +46,5 @@ This Helm chart is licensed under the ISC License.
 
 ## Links
 
-- [MlFlow To Prow Repository](https://git.flety.net/vibe/mlflow_prometheus_exporter)
+- [MLflow Prometheus Exporter Repository](https://git.flety.net/damien/mlflow_prometheus_exporter)
 - [Chart Repository](https://github.com/damfle/helm-charts)

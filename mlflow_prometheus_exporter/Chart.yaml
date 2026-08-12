@@ -1,12 +1,12 @@
 apiVersion: v2
 name: mlflow_prometheus_exporter
-description: A Helm chart for MlFlow To Prow - Dump bridge from MLflow to Prometheus
+description: A Helm chart for MLflow Prometheus Exporter - a bridge that exposes MLflow metrics to Prometheus
 type: application
 version: 0.0.5
 appVersion: "0.1.2"
-home: https://git.flety.net/vibe/mlflow_prometheus_exporter
+home: https://git.flety.net/damien/mlflow_prometheus_exporter
 sources:
-  - https://git.flety.net/vibe/mlflow_prometheus_exporter
+  - https://git.flety.net/damien/mlflow_prometheus_exporter
 keywords:
   - mlflow
   - prometheus

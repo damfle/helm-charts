@@ -1,4 +1,4 @@
-# Default values for mlflow_prometheus_exporter URL shortener
+# Default values for mlflow_prometheus_exporter
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -76,6 +76,6 @@ generic:
     path: /metrics
     portName: http
 
-  # Persistence for mlflow_prometheus_exporter data
+  # Persistence for MLflow Prometheus Exporter data
   persistence:
     enabled: false
