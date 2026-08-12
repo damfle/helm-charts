@@ -2,7 +2,7 @@ apiVersion: v2
 name: mlflow-prom-exp
 description: A Helm chart for MLflow Prometheus Exporter - a bridge that exposes MLflow metrics to Prometheus
 type: application
-version: 0.0.8
+version: 0.0.9
 appVersion: "0.1.2"
 home: https://git.flety.net/damien/mlflow_prometheus_exporter
 sources:
