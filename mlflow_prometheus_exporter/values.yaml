@@ -3,6 +3,9 @@
 # Declare variables to be passed into your templates.
 
 generic:
+  # Override naming to use "mlflow_prometheus_exporter" instead of "generic"
+  nameOverride: "mlflow_prometheus_exporter"
+
   # Image configuration
   image:
     repository: git.flety.net/damien/mlflow_prometheus_exporter

@@ -3,6 +3,9 @@
 # Declare variables to be passed into your templates.
 
 generic:
+  # Override naming to use "shlink-ui" instead of "generic"
+  nameOverride: "shlink-ui"
+
   # Image configuration
   image:
     repository: ghcr.io/shlinkio/shlink-web-client

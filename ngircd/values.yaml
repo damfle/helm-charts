@@ -3,6 +3,9 @@
 # Declare variables to be passed into your templates.
 
 generic:
+  # Override naming to use "ngircd" instead of "generic"
+  nameOverride: "ngircd"
+
   # Image configuration
   image:
     repository: git.flety.net/damien/docker-ngircd

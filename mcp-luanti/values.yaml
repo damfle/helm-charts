@@ -3,6 +3,9 @@
 # Declare variables to be passed into your templates.
 
 generic:
+  # Override naming to use "mcp-luanti" instead of "generic"
+  nameOverride: "mcp-luanti"
+
   # Image configuration
   image:
     repository: git.flety.net/damien/mcp-luanti/gateway

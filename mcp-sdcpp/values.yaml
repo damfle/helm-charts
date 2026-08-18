@@ -3,6 +3,9 @@
 # Declare variables to be passed into your templates.
 
 generic:
+  # Override naming to use "mcp-sdcpp" instead of "generic"
+  nameOverride: "mcp-sdcpp"
+
   # Image configuration
   image:
     repository: git.flety.net/damien/mcp-sdcpp
