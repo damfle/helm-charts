@@ -51,9 +51,12 @@ helm install my-release damfle/generic --values my-values.yaml
 - **jupyter** v0.1.8
 - **llamacpp** v0.1.14
 - **llamacpp** v0.1.15
+- **llamacpp** v0.1.16
 - **loki** v0.1.29
+- **loki** v0.1.30
 - **mcp-luanti** v0.1.2
 - **mcp-luanti** v0.1.3
+- **mcp-luanti** v0.1.4
 - **mcp-sdcpp** v0.1.1
 - **mcp-sdcpp** v0.1.2
 - **mcp-sdcpp** v0.1.3
@@ -72,6 +75,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **pterodactyl** v0.1.13
 - **rustfs** v0.1.8
 - **sdcpp** v0.1.4
+- **sdcpp** v0.1.5
 - **shlink** v0.1.10
 - **shlink** v0.1.11
 - **shlink** v0.1.12
@@ -80,6 +84,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.18
 - **unsloth** v0.1.9
 
-Generated on: 2026-08-18 06:02:38 UTC
-Repository tag: r129
-Total chart packages: 42
+Generated on: 2026-08-18 06:06:34 UTC
+Repository tag: r130
+Total chart packages: 46
