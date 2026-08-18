@@ -57,6 +57,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **mcp-sdcpp** v0.1.1
 - **mcp-sdcpp** v0.1.2
 - **mcp-sdcpp** v0.1.3
+- **mcp-sdcpp** v0.1.4
 - **mlflow-prom-exp** v0.0.10
 - **mlflow-prom-exp** v0.0.7
 - **mlflow-prom-exp** v0.0.8
@@ -79,6 +80,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.18
 - **unsloth** v0.1.9
 
-Generated on: 2026-08-18 05:58:34 UTC
-Repository tag: r128
-Total chart packages: 41
+Generated on: 2026-08-18 06:02:38 UTC
+Repository tag: r129
+Total chart packages: 42
