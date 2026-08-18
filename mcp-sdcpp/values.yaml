@@ -1,0 +1,88 @@
+# Default values for mcp-sdcpp Web Client UI
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+generic:
+  # Image configuration
+  image:
+    repository: git.flety.net/damien/mcp-sdcpp
+    pullPolicy: IfNotPresent
+    tag: "0.1.0" # Must be explicit for dependency charts
+
+  # Replica count
+  replicaCount: 1
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+
+  livenessProbe:
+    enabled: false
+    httpGet:
+      path: /healthz
+      port: 8081
+  readinessProbe:
+    enabled: false
+    httpGet:
+      path: /readyz
+      port: 8081
+
+  # Resource limits and requests
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+
+  # Ingress configuration
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      # traefik.ingress.kubernetes.io/router.tls: "true"
+      # cert-manager.io/cluster-issuer: letsencrypt-prod
+      # traefik.ingress.kubernetes.io/router.middlewares: authentik-ak-outpost-authentik-embedded-outpost@kubernetescrd
+    hosts:
+      - host: mcp-sdcpp.example.com # Change this to your domain
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+
+  # Service account configuration
+  serviceAccount:
+    create: false
+    annotations: {}
+    name: ""
+
+  # Pod annotations
+  podAnnotations: {}
+
+  # Pod security context
+  podSecurityContext:
+    fsGroup: 0
+
+  # Node selector
+  nodeSelector: {}
+
+  # Tolerations
+  tolerations: []
+
+  # Affinity
+  affinity: {}
+
+  # Persistence (usually not needed for UI)
+  persistence:
+    enabled: false
