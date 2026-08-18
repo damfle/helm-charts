@@ -4,7 +4,7 @@ description: Vibe coded MCP (Model Context Protocol) adapter for the native stab
 
 type: application
 version: 0.1.6
-appVersion: "0.1.2"
+appVersion: "0.1.3"
 
 maintainers:
   - name: Damien FLETY
