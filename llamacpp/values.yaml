@@ -127,7 +127,6 @@ generic:
   securityContext:
     runAsNonRoot: false
     runAsUser: 0
-    fsGroup: 0
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: false
 

@@ -76,7 +76,7 @@ helm install rustfs damfle/rustfs \
 | `generic.resources.requests.cpu` | CPU request | `100m` |
 | `generic.resources.limits.cpu` | CPU limit | `200m` |
 | `generic.securityContext.runAsUser` | User ID | `1000` |
-| `generic.securityContext.fsGroup` | Group ID | `1000` |
+| `generic.podSecurityContext.fsGroup` | Group ID | `1000` |
 
 ## S3 Credentials Configuration
 

@@ -104,7 +104,7 @@ The following table lists the configurable parameters of the mcp-luanti chart an
 | `generic.securityContext.runAsNonRoot` | Run as non-root | `true` |
 | `generic.securityContext.runAsUser` | User ID | `1000` |
 | `generic.securityContext.runAsGroup` | Group ID | `1000` |
-| `generic.securityContext.fsGroup` | FS Group ID | `1000` |
+| `generic.podSecurityContext.fsGroup` | FS Group ID | `1000` |
 
 ### Persistence
 

@@ -149,7 +149,6 @@ generic:
   securityContext:
     runAsNonRoot: true
     runAsUser: 10001
-    fsGroup: 10001
 
   podSecurityContext:
     runAsNonRoot: true
