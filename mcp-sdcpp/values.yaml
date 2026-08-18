@@ -10,7 +10,7 @@ generic:
   image:
     repository: git.flety.net/damien/mcp-sdcpp
     pullPolicy: IfNotPresent
-    tag: "0.1.0" # Must be explicit for dependency charts
+    tag: "0.1.1" # Must be explicit for dependency charts
 
   # Number of replicas
   replicaCount: 1
