@@ -22,5 +22,5 @@ sources:
 
 dependencies:
   - name: generic
-    version: "1.0.9"
+    version: "1.0.10"
     repository: "https://damfle.github.io/helm-charts"
