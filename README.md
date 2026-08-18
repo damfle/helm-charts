@@ -82,6 +82,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **rustfs** v0.1.9
 - **sdcpp** v0.1.4
 - **sdcpp** v0.1.5
+- **sdcpp** v0.1.6
 - **shlink** v0.1.10
 - **shlink** v0.1.11
 - **shlink** v0.1.12
@@ -92,6 +93,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.19
 - **unsloth** v0.1.9
 
-Generated on: 2026-08-18 06:42:48 UTC
-Repository tag: r139
-Total chart packages: 54
+Generated on: 2026-08-18 06:45:16 UTC
+Repository tag: r140
+Total chart packages: 55
