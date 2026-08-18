@@ -77,6 +77,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **ngircd** v0.1.9
 - **ollama** v0.1.12
 - **pterodactyl** v0.1.13
+- **pterodactyl** v0.1.14
 - **rustfs** v0.1.8
 - **sdcpp** v0.1.4
 - **sdcpp** v0.1.5
@@ -88,6 +89,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.18
 - **unsloth** v0.1.9
 
-Generated on: 2026-08-18 06:32:52 UTC
-Repository tag: r135
-Total chart packages: 50
+Generated on: 2026-08-18 06:35:35 UTC
+Repository tag: r136
+Total chart packages: 51
