@@ -1,4 +1,4 @@
-# Default values for mcp-sdcpp Web Client UI
+# Default values for mcp-sdcpp MCP adapter
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -9,7 +9,7 @@ generic:
     pullPolicy: IfNotPresent
     tag: "0.1.0" # Must be explicit for dependency charts
 
-  # Replica count
+  # Number of replicas
   replicaCount: 1
 
   # Service configuration
@@ -43,7 +43,6 @@ generic:
     runAsNonRoot: true
     runAsUser: 1000
     runAsGroup: 1000
-    fsGroup: 1000
 
   # Ingress configuration
   ingress:
@@ -83,6 +82,6 @@ generic:
   # Affinity
   affinity: {}
 
-  # Persistence (usually not needed for UI)
+  # Persistence (usually not needed for stateless adapter)
   persistence:
     enabled: false

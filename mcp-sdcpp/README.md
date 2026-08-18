@@ -1,193 +1,189 @@
 # mcp-sdcpp
 
-A Helm chart for deploying the [mcp-sdcpp gateway](https://git.flety.net/damien/mcp-sdcpp). This gateway enables control of a running [SDCPP](https://github.com/SDCPP/sdcpp) server from an MCP client without implementing the SDCPP network protocol.
+Vibe coded MCP (Model Context Protocol) adapter for the native [stable-diffusion.cpp](https://github.com/leejet/stable-diffusion.cpp) sdcpp API.
 
-## Introduction
+This adapter provides a simple bridge between MCP-compatible clients and the sdcpp API, enabling image generation and editing through Stable Diffusion using the native async job-based API.
 
-This chart deploys the **mcp-sdcpp gateway** as a Kubernetes application. The gateway is a standalone HTTP server that acts as the stable network endpoint between:
+## Features
 
-- **SDCPP mod (`sapi/`)** – polls the gateway for commands
-- **MCP server (`mcp_sapi/`)** – pushes commands to the gateway via HTTP
+- **Image Generation** (txt2img) with prompt and negative prompt
+- **Image Editing** (img2img) with init image as reference
+- **LoRA Support** for both generation and editing
+- **Job Management** (status checking, cancellation)
+- **Async Polling** with automatic result retrieval
+- **List available LoRAs**
 
-The gateway decouples the lifecycles of the SDCPP mod (which runs within the SDCPP server) and the MCP server (which is started/stopped by the MCP client over stdio).
-
-## Prerequisites
-
-- Kubernetes 1.19+
-- Helm 3.0+
-
-## Installing the Chart
-
-Add the Helm repository:
+## Installation
 
 ```bash
-helm repo add damfle https://damfle.github.io/helm-charts
-helm repo update
+pip install mcp-sdcpp
 ```
 
-Install the chart:
+Or from source:
 
 ```bash
-helm install mcp-sdcpp damfle/mcp-sdcpp -f values.yaml
-```
+# Clone the repository
+git clone https://github.com/yourusername/mcp-sdcpp.git
+cd mcp-sdcpp
 
-Or with custom values:
-
-```bash
-helm install mcp-sdcpp damfle/mcp-sdcpp \
-  --set generic.image.repository=git.flety.net/damien/mcp-sdcpp/gateway \
-  --set generic.image.tag=latest \
-  --set generic.ingress.hosts[0].host=mcp-sdcpp.yourdomain.com
-```
-
-## Uninstalling the Chart
-
-```bash
-helm uninstall mcp-sdcpp
+# Install in development mode
+pip install -e ".[dev]"
 ```
 
 ## Configuration
 
-The following table lists the configurable parameters of the mcp-sdcpp chart and their default values.
+The adapter connects to the sdcpp server by default at `http://localhost:8080`. Override via environment variable:
 
-### Gateway Configuration
-
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `generic.image.repository` | Gateway container image repository | `git.flety.net/damien/mcp-sdcpp/gateway` |
-| `generic.image.tag` | Gateway container image tag | `latest` |
-| `generic.image.pullPolicy` | Image pull policy | `IfNotPresent` |
-| `generic.replicaCount` | Number of gateway replicas | `1` |
-
-### Service Configuration
-
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `generic.service.type` | Kubernetes service type | `ClusterIP` |
-| `generic.service.port` | Service port | `8765` |
-| `generic.service.targetPort` | Target port on the pod | `8765` |
-
-### Ingress Configuration
-
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `generic.ingress.enabled` | Enable ingress | `true` |
-| `generic.ingress.className` | Ingress class name | `""` |
-| `generic.ingress.annotations` | Ingress annotations | `{}` |
-| `generic.ingress.hosts` | Ingress host configuration | See values.yaml |
-| `generic.ingress.tls` | TLS configuration | `[]` |
-
-### Health Checks
-
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `generic.livenessProbe.enabled` | Enable liveness probe | `true` |
-| `generic.livenessProbe.httpGet.path` | Liveness probe path | `/health` |
-| `generic.livenessProbe.httpGet.port` | Liveness probe port | `8765` |
-| `generic.readinessProbe.enabled` | Enable readiness probe | `true` |
-| `generic.readinessProbe.httpGet.path` | Readiness probe path | `/health` |
-| `generic.readinessProbe.httpGet.port` | Readiness probe port | `8765` |
-
-### Resources
-
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `generic.resources.limits.cpu` | CPU limit | `100m` |
-| `generic.resources.limits.memory` | Memory limit | `256Mi` |
-| `generic.resources.requests.cpu` | CPU request | `10m` |
-| `generic.resources.requests.memory` | Memory request | `64Mi` |
-
-### Security
-
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `generic.securityContext.runAsNonRoot` | Run as non-root | `true` |
-| `generic.securityContext.runAsUser` | User ID | `1000` |
-| `generic.securityContext.runAsGroup` | Group ID | `1000` |
-| `generic.securityContext.fsGroup` | FS Group ID | `1000` |
-
-### Persistence
-
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `generic.persistence.enabled` | Enable persistence | `false` |
-
-## Complete Setup with SDCPP
-
-This Helm chart deploys only the **gateway** component. To use it with SDCPP:
-
-1. **Deploy the gateway** using this Helm chart
-2. **Install the mod** – Copy or symlink the `sapi/` directory into your world's `worldmods/` directory and enable it
-3. **Configure SDCPP** (`minetest.conf`) – Add the gateway URL:
-
-```ini
-secure.http_mods = sapi
-server_api_url = http://mcp-sdcpp.yourdomain.com
-# Optional tuning:
-# server_api_poll_interval = 0.2
-# server_api_poll_timeout = 35
+```bash
+export SDCPP_URL=http://your-server:8080
 ```
 
-4. **Configure the MCP client** – Point your MCP server to the gateway:
+The MCP server listens on port `8080` by default. Configure via:
+
+```bash
+export MCP_PORT=8080
+```
+
+### Kubernetes Health Checks
+
+The server exposes HTTP endpoints for Kubernetes health checks:
+
+- **Liveness Probe**: `GET /healthz` (port `8081` by default)
+  - Always returns `200 OK` if the server is running
+  - Response: `{"status": "ok"}`
+
+- **Readiness Probe**: `GET /readyz` (port `8081` by default)
+  - Returns `200 OK` only after successful connection to the sdcpp server
+  - Returns `503 Service Unavailable` if connection to sdcpp server fails
+  - Response: `{"status": "ready"}` or `{"status": "not ready"}`
+
+Configure the health check port via environment variable:
+
+```bash
+export HEALTH_CHECK_PORT=8081
+```
+
+Kubernetes deployment example:
+
+```yaml
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8081
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /readyz
+    port: 8081
+  initialDelaySeconds: 5
+  periodSeconds: 10
+```
+
+## Usage
+
+### Available Tools
+
+| Tool | Description |
+|------|-------------|
+| `list_loras` | List all available LoRA models |
+| `generate_image` | Generate image from prompt and negative prompt (with optional LoRAs) |
+| `edit_image` | Edit existing image from prompt and negative prompt (with optional LoRAs) |
+| `get_job_status` | Check job status |
+| `cancel_job` | Cancel a running job |
+| `poll_job_until_complete` | Poll job until completion, return images |
+
+### Generate an Image
 
 ```json
 {
-  "mcpServers": {
-    "sdcpp-sapi": {
-      "command": "python",
-      "args": ["-m", "mcp_sapi", "--gateway-url", "http://mcp-sdcpp.yourdomain.com"]
-    }
+  "name": "generate_image",
+  "arguments": {
+    "prompt": "a beautiful sunset over mountains, ultra realistic, 4k",
+    "negative_prompt": "blurry, low quality, deformed",
+    "width": 1024,
+    "height": 1024,
+    "batch_count": 1,
+    "lora": [{"path": "loras/epi_noiseoffset2.safetensors", "multiplier": 1.0}]
   }
 }
 ```
 
-## Architecture
+### Edit an Image
 
+```json
+{
+  "name": "edit_image",
+  "arguments": {
+    "prompt": "add a beautiful sunset background",
+    "negative_prompt": "blurry, low quality",
+    "init_image": "data:image/png;base64,iVBORw0KGgoAAA...",
+    "width": 1024,
+    "height": 1024,
+    "lora": [{"path": "loras/detail.safetensors", "multiplier": 0.8}]
+  }
+}
 ```
-sapi (Lua mod)  --poll-->  gateway  <--command--  mcp_sapi  <--stdio-->  MCP client
-                (HTTP)     (HTTP)
+
+### List LoRAs
+
+```json
+{
+  "name": "list_loras"
+}
 ```
 
-The gateway is the central component that:
-- Receives commands from the MCP server
-- Makes them available to the SDCPP mod via polling
-- Returns results from the mod back to the MCP client
+### Poll for Results
 
-## Values
+```json
+{
+  "name": "poll_job_until_complete",
+  "arguments": {
+    "job_id": "job_abc123",
+    "timeout": 600,
+    "poll_interval": 2.0
+  }
+}
+```
 
-Default values are defined in `values.yaml`. To override them, create a custom values file or use `--set` flags during installation.
+Returns generated images as base64-encoded content.
 
-## Dependencies
+## Development
 
-This chart depends on the [generic](https://damfle.github.io/helm-charts) chart (version 1.0.9+) which provides common Kubernetes resource templates.
+```bash
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate
+
+# Install dependencies
+pip install -e ".[dev]"
+
+# Run the server
+python -m mcp_sdcpp.main
+
+# Run tests
+pytest
+
+# Lint
+ruff check .
+
+# Format
+black .
+
+# Type check
+mypy src
+```
+
+## API Reference
+
+Implements the native [sdcpp API](https://github.com/leejet/stable-diffusion.cpp/blob/master/examples/server/api.md):
+
+- `GET /sdcpp/v1/capabilities`
+- `POST /sdcpp/v1/img_gen`
+- `GET /sdcpp/v1/jobs/{id}`
+- `POST /sdcpp/v1/jobs/{id}/cancel`
 
 ## License
 
-This Helm chart is provided under the same license as the mcp-sdcpp project. See the [upstream project](https://git.flety.net/damien/mcp-sdcpp) for license details.
-
-## Maintainers
-
-| Name | Email |
-|------|-------|
-| Damien FLETY | damfle+github@proton.me |
-
-## Source Code
-
-- Helm chart: https://github.com/damfle/helm-charts
-- mcp-sdcpp gateway: https://git.flety.net/damien/mcp-sdcpp
-- SDCPP engine: https://github.com/SDCPP/sdcpp
-
-## Notes
-
-- The gateway defaults to port 8765 and binds to 0.0.0.0 in the container
-- Debug mode is enabled by default via the `--debug` argument
-- Adjust resource limits and replica count based on your expected load
-- For production use, configure TLS in the ingress and set appropriate resource limits
-- The gateway is stateless, so multiple replicas can be deployed for high availability
-- Each MCP client instance connects to the gateway, which then communicates with the SDCPP server via its installed mod
-
-For more information about the mcp-sdcpp gateway architecture, available tools, and bot management, see the [upstream README](https://git.flety.net/damien/mcp-sdcpp).
-
----
-
-*This README is for the Helm chart only. For detailed information about the mcp-sdcpp gateway, mod, and MCP server, refer to the [mcp-sdcpp project documentation](https://git.flety.net/damien/mcp-sdcpp).*
+ISC

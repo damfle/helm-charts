@@ -6,7 +6,7 @@ Expand the name of the chart.
 {{- end }}
 
 {{/*
-Create a default fully qualified app name for mcp-sdcpp UI.
+Create a default fully qualified app name for mcp-sdcpp.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
@@ -31,7 +31,7 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
-Common labels for mcp-sdcpp UI
+Common labels for mcp-sdcpp
 */}}
 {{- define "mcp-sdcpp.labels" -}}
 helm.sh/chart: {{ include "mcp-sdcpp.chart" . }}
@@ -43,7 +43,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Selector labels for mcp-sdcpp UI
+Selector labels for mcp-sdcpp
 */}}
 {{- define "mcp-sdcpp.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "mcp-sdcpp.name" . }}
