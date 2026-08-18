@@ -3,7 +3,7 @@ name: mcp-sdcpp
 description: Vibe coded MCP (Model Context Protocol) adapter for the native stable-diffusion.cpp sdcpp API. Provides a bridge between MCP-compatible clients and the sdcpp API for image generation and editing.
 
 type: application
-version: 0.1.6
+version: 0.1.7
 appVersion: "0.1.3"
 
 maintainers:
