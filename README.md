@@ -53,8 +53,11 @@ helm install my-release damfle/generic --values my-values.yaml
 - **llamacpp** v0.1.15
 - **loki** v0.1.29
 - **mcp-luanti** v0.1.2
+- **mcp-luanti** v0.1.3
 - **mcp-sdcpp** v0.1.1
 - **mcp-sdcpp** v0.1.2
+- **mcp-sdcpp** v0.1.3
+- **mlflow-prom-exp** v0.0.10
 - **mlflow-prom-exp** v0.0.7
 - **mlflow-prom-exp** v0.0.8
 - **mlflow-prom-exp** v0.0.9
@@ -62,6 +65,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **mlflow_prometheus_exporter** v0.0.6
 - **mlflowtoprom** v0.0.4
 - **ngircd** v0.1.10
+- **ngircd** v0.1.11
 - **ngircd** v0.1.9
 - **ollama** v0.1.12
 - **pterodactyl** v0.1.13
@@ -69,10 +73,12 @@ helm install my-release damfle/generic --values my-values.yaml
 - **sdcpp** v0.1.4
 - **shlink** v0.1.10
 - **shlink** v0.1.11
+- **shlink** v0.1.12
 - **shlink-ui** v0.1.16
 - **shlink-ui** v0.1.17
+- **shlink-ui** v0.1.18
 - **unsloth** v0.1.9
 
-Generated on: 2026-08-18 05:48:07 UTC
-Repository tag: r127
-Total chart packages: 35
+Generated on: 2026-08-18 05:55:05 UTC
+Repository tag: r128
+Total chart packages: 41
