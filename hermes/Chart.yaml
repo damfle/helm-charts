@@ -3,7 +3,7 @@ name: hermes
 description: A Helm chart for deploying Hermes Agent by Nous Research - a conversational AI agent that grows with you.
 
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "latest"
 
 maintainers:
