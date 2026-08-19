@@ -1,0 +1,115 @@
+# Default values for hermes
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+#
+# Hermes Agent by Nous Research - a conversational AI agent that grows with you
+
+generic:
+  # Override naming to use "hermes" instead of "generic"
+  nameOverride: "hermes"
+
+  # Image configuration
+  image:
+    repository: nousresearch/hermes-agent
+    pullPolicy: Always
+    tag: "latest" # Must be explicit for dependency charts
+
+  args:
+    - gateway
+    - run
+
+  env:
+    - name: HERMES_DASHBOARD
+      value: "1"
+    - name: API_SERVER_ENABLED
+      value: "1"
+    - name: API_SERVER_HOST
+      value: "0.0.0.0"
+    - name: HERMES_DASHBOARD_HOST
+      value: "0.0.0.0"
+    - name: HERMES_DASHBOARD_PORT
+      value: "9119"
+
+  # Number of replicas
+  replicaCount: 1
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 9119
+    targetPort: 9119
+
+  additionalPorts:
+    - name: api
+      containerPort: 8642
+      protocol: TCP
+
+  livenessProbe:
+    enabled: true
+    httpGet:
+      path: /
+      port: 8642
+  readinessProbe:
+    enabled: true
+    httpGet:
+      path: /
+      port: 8642
+
+  # Resource limits and requests
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+
+  # Ingress configuration
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      # traefik.ingress.kubernetes.io/router.tls: "true"
+      # cert-manager.io/cluster-issuer: letsencrypt-prod
+      # traefik.ingress.kubernetes.io/router.middlewares: authentik-ak-outpost-authentik-embedded-outpost@kubernetescrd
+    hosts:
+      - host: hermes.example.com # Change this to your domain
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+
+  # Service account configuration
+  serviceAccount:
+    create: false
+    annotations: {}
+    name: ""
+
+  # Pod annotations
+  podAnnotations: {}
+
+  # Pod security context
+  podSecurityContext:
+    fsGroup: 0
+
+  # Node selector
+  nodeSelector: {}
+
+  # Tolerations
+  tolerations: []
+
+  # Affinity
+  affinity: {}
+
+  # Persistence for Hermes Agent data
+  persistence:
+    enabled: true
+    size: 1Gi
+    mountPath: /opt/data

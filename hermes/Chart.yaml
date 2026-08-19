@@ -1,0 +1,27 @@
+apiVersion: v2
+name: hermes
+description: A Helm chart for deploying Hermes Agent by Nous Research - a conversational AI agent that grows with you.
+
+type: application
+version: 0.1.0
+appVersion: "latest"
+
+maintainers:
+  - name: Damien FLETY
+    email: damfle+github@proton.me
+
+keywords:
+  - hermes
+  - agent
+  - ai
+  - nousresearch
+
+home: https://github.com/damfle/helm-charts
+sources:
+  - https://github.com/damfle/helm-charts
+  - https://github.com/nousresearch/hermes-agent
+
+dependencies:
+  - name: generic
+    version: "1.0.10"
+    repository: "https://damfle.github.io/helm-charts"
