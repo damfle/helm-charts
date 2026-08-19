@@ -46,11 +46,21 @@ generic:
 
   livenessProbe:
     enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 240
+    failureThreshold: 3
+
     httpGet:
       path: /
       port: 8642
   readinessProbe:
     enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 240
+    failureThreshold: 3
+
     httpGet:
       path: /
       port: 8642
@@ -58,17 +68,17 @@ generic:
   # Resource limits and requests
   resources:
     limits:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 4000m
+      memory: 8192Mi
     requests:
       cpu: 10m
       memory: 64Mi
 
   # Security context
   securityContext:
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
+    runAsNonRoot: false
+    runAsUser: 0
+    runAsGroup: 0
 
   # Ingress configuration
   ingress:
