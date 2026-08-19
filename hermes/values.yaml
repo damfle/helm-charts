@@ -45,7 +45,7 @@ generic:
       protocol: TCP
 
   livenessProbe:
-    enabled: true
+    enabled: false
     initialDelaySeconds: 60
     periodSeconds: 30
     timeoutSeconds: 240
@@ -55,7 +55,7 @@ generic:
       path: /
       port: 8642
   readinessProbe:
-    enabled: true
+    enabled: false
     initialDelaySeconds: 60
     periodSeconds: 30
     timeoutSeconds: 240
@@ -68,10 +68,10 @@ generic:
   # Resource limits and requests
   resources:
     limits:
-      cpu: 4000m
+      cpu: "4000m"
       memory: 8192Mi
     requests:
-      cpu: 10m
+      cpu: "10m"
       memory: 64Mi
 
   # Security context
