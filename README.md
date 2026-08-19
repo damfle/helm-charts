@@ -44,6 +44,7 @@ helm install my-release damfle/generic --values my-values.yaml
 - **generic** v1.0.9
 - **hermes** v0.1.1
 - **hermes** v0.1.2
+- **hermes** v0.1.3
 - **homebox** v0.1.10
 - **homebox** v0.1.11
 - **homebox** v0.1.9
@@ -96,6 +97,6 @@ helm install my-release damfle/generic --values my-values.yaml
 - **shlink-ui** v0.1.19
 - **unsloth** v0.1.9
 
-Generated on: 2026-08-19 14:07:56 UTC
-Repository tag: r143
-Total chart packages: 58
+Generated on: 2026-08-19 14:23:28 UTC
+Repository tag: r144
+Total chart packages: 59

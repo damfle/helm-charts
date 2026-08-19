@@ -3,7 +3,7 @@ entries:
   agentwhisker:
   - apiVersion: v2
     appVersion: 0.6.8
-    created: "2026-08-19T14:07:56.450193161Z"
+    created: "2026-08-19T14:23:28.171309001Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -36,9 +36,9 @@ entries:
   forgejo-runner:
   - apiVersion: v2
     appVersion: 12.7.3
-    created: "2026-08-19T14:07:56.45060204Z"
+    created: "2026-08-19T14:23:28.171892209Z"
     description: Deploy runner for an forgejo instance (default codeberg.org)
-    digest: 1ca7a805b968b21386790542139affba004c7e6dd70ed6f7818670fd2ac4edb1
+    digest: c65d3a22e60b079cc9f2a04eeedd572c3e8aeb7546b74022fe1bc429b7d375f9
     icon: https://forgejo.org/favicon.png
     name: forgejo-runner
     type: application
@@ -47,10 +47,10 @@ entries:
     version: 0.7.6
   generic:
   - apiVersion: v2
-    created: "2026-08-19T14:07:56.45099791Z"
+    created: "2026-08-19T14:23:28.172495184Z"
     description: A flexible Helm chart for deploying applications with monitoring,
       persistence, and secrets support
-    digest: 96a04ad368c97d14d9d040470753b0692c97bb5dc2428ede943e4a839b474506
+    digest: 52ca8c0a65f6be72d324cc8118a9ac521dbfc297610b0a341a0860de0635c4d7
     home: https://github.com/damfle/helm-charts
     keywords:
     - kubernetes
@@ -69,7 +69,7 @@ entries:
     - https://damfle.github.io/helm-charts/charts/generic-1.0.10.tgz
     version: 1.0.10
   - apiVersion: v2
-    created: "2026-08-19T14:07:56.451707139Z"
+    created: "2026-08-19T14:23:28.174450661Z"
     description: A flexible Helm chart for deploying applications with monitoring,
       persistence, and secrets support
     digest: 828fe2106c04aea2939ff912df9cfef77962c45f02408c2a079a557598a1107d
@@ -91,7 +91,7 @@ entries:
     - https://damfle.github.io/helm-charts/charts/generic-1.0.9.tgz
     version: 1.0.9
   - apiVersion: v2
-    created: "2026-08-19T14:07:56.451355945Z"
+    created: "2026-08-19T14:23:28.173598512Z"
     description: A flexible Helm chart for deploying applications with monitoring,
       persistence, and secrets support
     digest: 21af41e02bebf00232ddf146df5aff948d9613c2ddb60b0979db2c29ba2d0a32
@@ -115,7 +115,34 @@ entries:
   hermes:
   - apiVersion: v2
     appVersion: latest
-    created: "2026-08-19T14:07:56.452972525Z"
+    created: "2026-08-19T14:23:28.177413457Z"
+    dependencies:
+    - name: generic
+      repository: https://damfle.github.io/helm-charts
+      version: 1.0.10
+    description: A Helm chart for deploying Hermes Agent by Nous Research - a conversational
+      AI agent that grows with you.
+    digest: d4cb9cde0e22ac4dabb7d5d243b7de44931330dad645926456e26bb6c5afd686
+    home: https://github.com/damfle/helm-charts
+    keywords:
+    - hermes
+    - agent
+    - ai
+    - nousresearch
+    maintainers:
+    - email: damfle+github@proton.me
+      name: Damien FLETY
+    name: hermes
+    sources:
+    - https://github.com/damfle/helm-charts
+    - https://github.com/nousresearch/hermes-agent
+    type: application
+    urls:
+    - https://damfle.github.io/helm-charts/charts/hermes-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: latest
+    created: "2026-08-19T14:23:28.176469837Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -142,7 +169,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: latest
-    created: "2026-08-19T14:07:56.452330904Z"
+    created: "2026-08-19T14:23:28.175490961Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -170,14 +197,14 @@ entries:
   homebox:
   - apiVersion: v2
     appVersion: 0.26.2-rootless
-    created: "2026-08-19T14:07:56.454985975Z"
+    created: "2026-08-19T14:23:28.179598242Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
       version: 1.0.9
     description: A Helm chart for Homebox - Inventory and organization system for
       the home. Licensed under ISC License.
-    digest: 1ea859a1e28ba8aa79ed49c3c3e291757263e070fe8ffa2e191b8067c42e27b5
+    digest: 44237d859af1a1728dc795daddd24522a4fc798288aec61ed615d066079889f4
     home: https://github.com/damfle/helm-charts
     keywords:
     - homebox
@@ -198,7 +225,7 @@ entries:
     version: 0.1.11
   - apiVersion: v2
     appVersion: 0.25.0-rootless
-    created: "2026-08-19T14:07:56.453657379Z"
+    created: "2026-08-19T14:23:28.17850889Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -226,7 +253,7 @@ entries:
     version: 0.1.10
   - apiVersion: v2
     appVersion: 0.25.0-rootless
-    created: "2026-08-19T14:07:56.455721753Z"
+    created: "2026-08-19T14:23:28.18077125Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -255,14 +282,14 @@ entries:
   ittools:
   - apiVersion: v2
     appVersion: 2024.10.22-7ca5933
-    created: "2026-08-19T14:07:56.457017372Z"
+    created: "2026-08-19T14:23:28.183425894Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
       version: 1.0.9
     description: A Helm chart for IT Tools - A collection of handy online tools for
       developers. Licensed under ISC License.
-    digest: 48d10a638b0c198dc1e0ba241d1af535cfaac49d64b74325b6df100df14869a9
+    digest: 72b5f59be57536505db7b2dae50a23c7eb30b7c366a586b00d8d25c28e91c120
     home: https://github.com/damfle/helm-charts
     keywords:
     - it-tools
@@ -283,7 +310,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: 2024.10.22-7ca5933
-    created: "2026-08-19T14:07:56.456373592Z"
+    created: "2026-08-19T14:23:28.182459131Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -312,13 +339,13 @@ entries:
   jupyter:
   - apiVersion: v2
     appVersion: 0.1.11
-    created: "2026-08-19T14:07:56.459270075Z"
+    created: "2026-08-19T14:23:28.186487665Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
       version: 1.0.9
     description: A Helm chart for Jupyter Notebook/Lab server with GPU support
-    digest: a7dbdc6ffe75338a2c774623fab235490d2f26112d282dcbd7b95980e576309c
+    digest: ec12ee1576a76fd3fe0f53c0ec9cd4172368654227bd1c4362082a4aaf0bb652
     home: https://github.com/damfle/helm-charts
     keywords:
     - jupyter
@@ -341,7 +368,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: 0.1.11
-    created: "2026-08-19T14:07:56.458573934Z"
+    created: "2026-08-19T14:23:28.185459517Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -370,7 +397,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: 0.1.4
-    created: "2026-08-19T14:07:56.457707466Z"
+    created: "2026-08-19T14:23:28.184436539Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -400,13 +427,13 @@ entries:
   llamacpp:
   - apiVersion: v2
     appVersion: server-cuda-b10357
-    created: "2026-08-19T14:07:56.462072466Z"
+    created: "2026-08-19T14:23:28.189713892Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
       version: 1.0.9
     description: A Helm chart for llama.cpp LLM inference server with GPU support
-    digest: d78db5779659ab7336345df0948bd8edd4c8950b2a0727a6da6edd4210726617
+    digest: be630626afa14183abefd2b866f14f6b6f4909e8758b09efa0928cb2ea2eacb6
     home: https://github.com/damfle/helm-charts
     keywords:
     - llamacpp
@@ -429,7 +456,7 @@ entries:
     version: 0.1.16
   - apiVersion: v2
     appVersion: server-cuda-b10357
-    created: "2026-08-19T14:07:56.461321652Z"
+    created: "2026-08-19T14:23:28.188560581Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -458,7 +485,7 @@ entries:
     version: 0.1.15
   - apiVersion: v2
     appVersion: server-cuda-b8864
-    created: "2026-08-19T14:07:56.459979115Z"
+    created: "2026-08-19T14:23:28.187527464Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -488,14 +515,14 @@ entries:
   loki:
   - apiVersion: v2
     appVersion: 3.7.6
-    created: "2026-08-19T14:07:56.464180555Z"
+    created: "2026-08-19T14:23:28.193935815Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
       version: 1.0.9
     description: A Helm chart for Grafana Loki - Log aggregation system. Licensed
       under ISC License.
-    digest: 9efd8829183a29ff14f19ae3cd164eb60526fe12d28264b097e483ec44b4631b
+    digest: eb7dd6a241cc31a780cdb7c2b06b7de6d9a9051ddab1079048a3b5602d0e1366
     home: https://github.com/damfle/helm-charts
     keywords:
     - loki
@@ -516,7 +543,7 @@ entries:
     version: 0.1.31
   - apiVersion: v2
     appVersion: 3.7.2
-    created: "2026-08-19T14:07:56.463481913Z"
+    created: "2026-08-19T14:23:28.192860048Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -544,7 +571,7 @@ entries:
     version: 0.1.30
   - apiVersion: v2
     appVersion: 3.7.2
-    created: "2026-08-19T14:07:56.462778724Z"
+    created: "2026-08-19T14:23:28.19171367Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -573,14 +600,14 @@ entries:
   mcp-luanti:
   - apiVersion: v2
     appVersion: latest
-    created: "2026-08-19T14:07:56.465911898Z"
+    created: "2026-08-19T14:23:28.196616575Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
       version: 1.0.9
     description: A Helm chart for mcp-luanti gateway. Gateway that allow to use mcp-luanti
       with the mod accross servers.
-    digest: 370e160c3bc0ec53888e623c37e2006875a6935661cfe1031756753d48aa402e
+    digest: fcd827771a4b4b30a75a0e51b77f8d5514005ef38fe86698abdaae212f8449ce
     home: https://github.com/damfle/helm-charts
     keywords:
     - mcp-luanti
@@ -599,7 +626,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: latest
-    created: "2026-08-19T14:07:56.465332479Z"
+    created: "2026-08-19T14:23:28.195735471Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -625,7 +652,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: latest
-    created: "2026-08-19T14:07:56.464745708Z"
+    created: "2026-08-19T14:23:28.194832056Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -652,7 +679,7 @@ entries:
   mcp-sdcpp:
   - apiVersion: v2
     appVersion: 0.1.3
-    created: "2026-08-19T14:07:56.470698998Z"
+    created: "2026-08-19T14:23:28.203707761Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -660,7 +687,7 @@ entries:
     description: Vibe coded MCP (Model Context Protocol) adapter for the native stable-diffusion.cpp
       sdcpp API. Provides a bridge between MCP-compatible clients and the sdcpp API
       for image generation and editing.
-    digest: c99400db3c535cf7bb01b79d1c3317b28c6e1411e0faf05a2e5eb33a34160501
+    digest: 3faf7f4d70ce6782919caa7ba8c96b1f9e7d146fc62fdf29b820518122719fd3
     home: https://github.com/damfle/helm-charts
     keywords:
     - mcp-sdcpp
@@ -679,7 +706,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2026-08-19T14:07:56.470150092Z"
+    created: "2026-08-19T14:23:28.202743913Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -706,7 +733,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2026-08-19T14:07:56.469576792Z"
+    created: "2026-08-19T14:23:28.201785966Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -733,7 +760,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-19T14:07:56.469014845Z"
+    created: "2026-08-19T14:23:28.200112836Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -760,7 +787,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-19T14:07:56.468419947Z"
+    created: "2026-08-19T14:23:28.19922509Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -787,7 +814,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-19T14:07:56.467768595Z"
+    created: "2026-08-19T14:23:28.198355067Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -814,7 +841,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-08-19T14:07:56.466692847Z"
+    created: "2026-08-19T14:23:28.197486627Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -842,14 +869,14 @@ entries:
   mlflow-prom-exp:
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2026-08-19T14:07:56.471239102Z"
+    created: "2026-08-19T14:23:28.204576181Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
       version: 1.0.9
     description: A Helm chart for MLflow Prometheus Exporter - a bridge that exposes
       MLflow metrics to Prometheus
-    digest: 990875edcb6c70cc05d38f380fa9e483b3c79ed225107d902fcb911cf27fb6dc
+    digest: 87df681f4703dfda87c50af4b51b3d2fd352b6df2253753bb4c4b962878a6e6e
     home: https://git.flety.net/damien/mlflow_prometheus_exporter
     keywords:
     - mlflow
@@ -869,7 +896,7 @@ entries:
     version: 0.0.10
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2026-08-19T14:07:56.473489125Z"
+    created: "2026-08-19T14:23:28.207080412Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -896,7 +923,7 @@ entries:
     version: 0.0.9
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2026-08-19T14:07:56.472352878Z"
+    created: "2026-08-19T14:23:28.206260612Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -923,7 +950,7 @@ entries:
     version: 0.0.8
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2026-08-19T14:07:56.471793862Z"
+    created: "2026-08-19T14:23:28.205421988Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -951,7 +978,7 @@ entries:
   mlflow_prometheus_exporter:
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2026-08-19T14:07:56.474712821Z"
+    created: "2026-08-19T14:23:28.208715471Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -978,7 +1005,7 @@ entries:
     version: 0.0.6
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2026-08-19T14:07:56.474130997Z"
+    created: "2026-08-19T14:23:28.207887156Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -1005,7 +1032,7 @@ entries:
   mlflowtoprom:
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2026-08-19T14:07:56.475272398Z"
+    created: "2026-08-19T14:23:28.209534639Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -1032,13 +1059,13 @@ entries:
   ngircd:
   - apiVersion: v2
     appVersion: latest
-    created: "2026-08-19T14:07:56.476395614Z"
+    created: "2026-08-19T14:23:28.212260311Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
       version: 1.0.9
     description: A Helm chart for ngIRCd - A self-hosted IRC server.
-    digest: 008d8466c5be3e91b5a324f34e418b15b7bb59136d1c08e7956f498a9f633378
+    digest: 843fd8ee49e22e20c2efc967b440d15aab1db651ce3e7ac0084fe344bec28246
     home: https://ngircd.barton.de/
     keywords:
     - ngircd
@@ -1056,7 +1083,7 @@ entries:
     version: 0.1.11
   - apiVersion: v2
     appVersion: latest
-    created: "2026-08-19T14:07:56.47583453Z"
+    created: "2026-08-19T14:23:28.211325528Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -1080,7 +1107,7 @@ entries:
     version: 0.1.10
   - apiVersion: v2
     appVersion: latest
-    created: "2026-08-19T14:07:56.476975504Z"
+    created: "2026-08-19T14:23:28.213135704Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -1105,7 +1132,7 @@ entries:
   ollama:
   - apiVersion: v2
     appVersion: 0.30.0
-    created: "2026-08-19T14:07:56.47761936Z"
+    created: "2026-08-19T14:23:28.21411482Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -1133,9 +1160,9 @@ entries:
   pterodactyl:
   - apiVersion: v2
     appVersion: v1.15.1
-    created: "2026-08-19T14:07:56.479064623Z"
+    created: "2026-08-19T14:23:28.215617353Z"
     description: A Helm chart for Pterodactyl Panel - A game management panel
-    digest: e2a29091a243054cfc7e82188df94df955b199847d5a4a6b95ab30956d9e3906
+    digest: d4cc430480f8e6bf35ca78d6f0df9d442b18b7c32d79081c6e703e77433f8e74
     home: https://github.com/damfle/helm-charts
     keywords:
     - pterodactyl
@@ -1155,7 +1182,7 @@ entries:
     version: 0.1.14
   - apiVersion: v2
     appVersion: v1.14.1
-    created: "2026-08-19T14:07:56.478196477Z"
+    created: "2026-08-19T14:23:28.21485988Z"
     description: A Helm chart for Pterodactyl Panel - A game management panel
     digest: ee49ec1cef16945b49f6544c91412eb665c8ee39a768928c06ede78f01a9a171
     home: https://github.com/damfle/helm-charts
@@ -1178,10 +1205,10 @@ entries:
   rustfs:
   - apiVersion: v2
     appVersion: 1.0.0-rc.2
-    created: "2026-08-19T14:07:56.480084796Z"
+    created: "2026-08-19T14:23:28.216757259Z"
     description: A Helm chart for RustFS server - HTTP-based file sharing protocol.
       Licensed under ISC License.
-    digest: cbea4746ae7633f4cc78cdc0bba3d25520f00674bb3fea7b395a931c40710ef7
+    digest: df8dd5c32153108598087b4fb0644e89624fc1c1a52445722582db988141e010
     home: https://github.com/damfle/helm-charts
     keywords:
     - rustfs
@@ -1203,7 +1230,7 @@ entries:
     version: 0.1.9
   - apiVersion: v2
     appVersion: 1.0.0-beta.6
-    created: "2026-08-19T14:07:56.479674097Z"
+    created: "2026-08-19T14:23:28.216197615Z"
     description: A Helm chart for RustFS server - HTTP-based file sharing protocol.
       Licensed under ISC License.
     digest: 414cb9562043ff9e755417b2e7389dc2134f72bf143f5e583d413bf34920f343
@@ -1229,14 +1256,14 @@ entries:
   sdcpp:
   - apiVersion: v2
     appVersion: master-vulkan
-    created: "2026-08-19T14:07:56.482139564Z"
+    created: "2026-08-19T14:23:28.220851337Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
       version: 1.0.9
     description: A Helm chart for stable-diffusion.cpp image generation server with
       GPU support
-    digest: b78a9fb9307c661aed5b116948463ded0218fe27eb9bce4186f66384cc0df5a3
+    digest: 91ae0aabcfba8f6077e1042e87ed55aa1d9d2ee2d0d84dc259cd2dda41116e0c
     home: https://github.com/damfle/helm-charts
     keywords:
     - sdcpp
@@ -1259,7 +1286,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: master-vulkan
-    created: "2026-08-19T14:07:56.481445341Z"
+    created: "2026-08-19T14:23:28.218794048Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -1289,7 +1316,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: master-vulkan
-    created: "2026-08-19T14:07:56.480774358Z"
+    created: "2026-08-19T14:23:28.217781259Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -1320,14 +1347,14 @@ entries:
   shlink:
   - apiVersion: v2
     appVersion: 5.1.5
-    created: "2026-08-19T14:07:56.484550224Z"
+    created: "2026-08-19T14:23:28.224666923Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
       version: 1.0.9
     description: A Helm chart for Shlink - A self-hosted URL shortener with analytics.
       Licensed under ISC License.
-    digest: fbbad74342e84f1016f203b113a2ceae18e980ec03a658c55346d40bbd8e16a9
+    digest: d5473b55c232c83a28f5edb225182174e63d53d1569475aea52c8e79c4d32046
     home: https://shlink.io/
     keywords:
     - shlink
@@ -1347,7 +1374,7 @@ entries:
     version: 0.1.13
   - apiVersion: v2
     appVersion: 5.0.2
-    created: "2026-08-19T14:07:56.483928414Z"
+    created: "2026-08-19T14:23:28.223757537Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -1374,7 +1401,7 @@ entries:
     version: 0.1.12
   - apiVersion: v2
     appVersion: 5.0.2
-    created: "2026-08-19T14:07:56.483333168Z"
+    created: "2026-08-19T14:23:28.222818646Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -1401,7 +1428,7 @@ entries:
     version: 0.1.11
   - apiVersion: v2
     appVersion: 5.0.2
-    created: "2026-08-19T14:07:56.482747558Z"
+    created: "2026-08-19T14:23:28.22189884Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -1429,14 +1456,14 @@ entries:
   shlink-ui:
   - apiVersion: v2
     appVersion: 4.8.1
-    created: "2026-08-19T14:07:56.487612671Z"
+    created: "2026-08-19T14:23:28.228276395Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
       version: 1.0.9
     description: A Helm chart for Shlink Web Client UI - Web client for Shlink URL
       shortener. Licensed under ISC License.
-    digest: 0f41cef8ffee4a9512932474317486db2d9cc69679c3836446e96379c844bd19
+    digest: a24314bb4f8f2cfccf90a87ebe98f43544b4c5b9cafe59a30a22b2a47aad7a5d
     home: https://github.com/damfle/helm-charts
     keywords:
     - shlink
@@ -1458,7 +1485,7 @@ entries:
     version: 0.1.19
   - apiVersion: v2
     appVersion: 4.7.1
-    created: "2026-08-19T14:07:56.487000588Z"
+    created: "2026-08-19T14:23:28.227373251Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -1487,7 +1514,7 @@ entries:
     version: 0.1.18
   - apiVersion: v2
     appVersion: 4.7.1
-    created: "2026-08-19T14:07:56.48636485Z"
+    created: "2026-08-19T14:23:28.226478092Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -1516,7 +1543,7 @@ entries:
     version: 0.1.17
   - apiVersion: v2
     appVersion: 4.7.1
-    created: "2026-08-19T14:07:56.485298482Z"
+    created: "2026-08-19T14:23:28.225582591Z"
     dependencies:
     - name: generic
       repository: https://damfle.github.io/helm-charts
@@ -1546,7 +1573,7 @@ entries:
   unsloth:
   - apiVersion: v2
     appVersion: latest
-    created: "2026-08-19T14:07:56.488107147Z"
+    created: "2026-08-19T14:23:28.229553628Z"
     description: A Helm chart for Unsloth AI inference server with GPU support
     digest: f4ef36bab60a50fd14ccc6ddb3657ebd33929ce8a1081e487bcc70b605411e0a
     home: https://github.com/damfle/helm-charts
@@ -1570,4 +1597,4 @@ entries:
     urls:
     - https://damfle.github.io/helm-charts/charts/unsloth-0.1.9.tgz
     version: 0.1.9
-generated: "2026-08-19T14:07:56.449316278Z"
+generated: "2026-08-19T14:23:28.169951319Z"
