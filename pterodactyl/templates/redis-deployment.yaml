@@ -30,9 +30,10 @@ spec:
       {{- end }}
       containers:
         - name: redis
+          {{- with .Values.redis.securityContext }}
           securityContext:
-            runAsUser: 999
-            runAsGroup: 1000
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
           imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
           env:

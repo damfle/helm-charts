@@ -140,6 +140,12 @@ panel:
   volumes: []
   volumeMounts: []
 
+  # Security context for the panel container
+  securityContext:
+    runAsUser: 33
+    runAsGroup: 33
+    allowPrivilegeEscalation: false
+
   # Health checks
   livenessProbe:
     enabled: true
@@ -203,6 +209,12 @@ mariadb:
   tolerations: []
   affinity: {}
 
+  # Security context for MariaDB container
+  securityContext:
+    runAsUser: 999
+    runAsGroup: 999
+    allowPrivilegeEscalation: false
+
   # MariaDB type
   type: "mariadb"
   # Root password for MariaDB (randomly generated if not set)
@@ -251,6 +263,12 @@ redis:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+  # Security context for Redis container
+  securityContext:
+    runAsUser: 999
+    runAsGroup: 1000
+    allowPrivilegeEscalation: false
 
   # Redis authentication (if enabled)
   auth:

@@ -27,10 +27,26 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.panel.persistence.enabled }}
+      initContainers:
+        - name: volume-permission-fix
+          image: busybox:latest
+          command: ["sh", "-c", "chown -R {{ .Values.panel.securityContext.runAsUser | default 33 }}:{{ .Values.panel.securityContext.runAsGroup | default 33 }} {{ .Values.panel.persistence.mountPath | default "/app/var" }} && chmod -R 775 {{ .Values.panel.persistence.mountPath | default "/app/var" }}"]
+          volumeMounts:
+            - name: {{ include "pterodactyl.fullname" . }}-storage
+              mountPath: {{ .Values.panel.persistence.mountPath | default "/app/var" }}
+              {{- if .Values.panel.persistence.subPath }}
+              subPath: {{ .Values.panel.persistence.subPath }}
+              {{- end }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.panel.image.repository }}:{{ .Values.panel.image.tag }}"
           imagePullPolicy: {{ .Values.panel.image.pullPolicy }}
+          {{- with .Values.panel.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.panel.service.port }}

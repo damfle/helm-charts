@@ -23,9 +23,10 @@ spec:
       {{- end }}
       containers:
         - name: mariadb
+          {{- with .Values.mariadb.securityContext }}
           securityContext:
-            runAsUser: 999
-            runAsGroup: 999
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           image: "{{ .Values.mariadb.image.repository }}:{{ .Values.mariadb.image.tag }}"
           imagePullPolicy: {{ .Values.mariadb.image.pullPolicy }}
           env:
