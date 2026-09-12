@@ -75,8 +75,8 @@ helm install rustfs damfle/rustfs \
 | `generic.resources.limits.memory` | Memory limit | `256Mi` |
 | `generic.resources.requests.cpu` | CPU request | `100m` |
 | `generic.resources.limits.cpu` | CPU limit | `200m` |
-| `generic.securityContext.runAsUser` | User ID | `1000` |
-| `generic.podSecurityContext.fsGroup` | Group ID | `1000` |
+| `podSecurityContext.fsGroup` | Group ID for volume access | `1000` |
+| `securityContext.runAsUser` | User ID for container | `1000` |
 
 ## S3 Credentials Configuration
 
@@ -287,10 +287,11 @@ generic:
       cpu: "1000m"
 
   # Security hardening
+  podSecurityContext:
+    fsGroup: 1000
   securityContext:
     runAsNonRoot: true
     runAsUser: 1000
-    fsGroup: 1000
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: false
 ```

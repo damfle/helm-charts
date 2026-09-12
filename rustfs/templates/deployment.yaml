@@ -12,8 +12,16 @@ spec:
       labels:
         app: {{ include "rustfs.name" . }}
     spec:
+      securityContext:
+        {{- with .Values.podSecurityContext }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
+          securityContext:
+            {{- with .Values.securityContext }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           command: ["/usr/bin/rustfs"]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -50,7 +58,6 @@ spec:
             httpGet:
               path: /health
               port: 9000
-            exec:
             initialDelaySeconds: 30
             periodSeconds: 5
             timeoutSeconds: 3
