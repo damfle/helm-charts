@@ -21,10 +21,6 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      podSecurityContext:
-        runAsUser: 999
-        runAsGroup: 999
-        fsGroup: 999
       containers:
         - name: mariadb
           securityContext:

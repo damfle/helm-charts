@@ -28,9 +28,6 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      podSecurityContext:
-        runAsUser: 999
-        runAsGroup: 1000
       containers:
         - name: redis
           securityContext:
