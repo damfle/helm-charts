@@ -31,7 +31,7 @@ spec:
       initContainers:
         - name: volume-permission-fix
           image: busybox:latest
-          command: ["sh", "-c", "chown -R {{ .Values.panel.securityContext.runAsUser | default 33 }}:{{ .Values.panel.securityContext.runAsGroup | default 33 }} {{ .Values.panel.persistence.mountPath | default "/app/var" }} && chmod -R 775 {{ .Values.panel.persistence.mountPath | default "/app/var" }}"]
+          command: ["sh", "-c", "chown -R {{ .Values.panel.securityContext.runAsUser | default 0 }}:{{ .Values.panel.securityContext.runAsGroup | default 0 }} {{ .Values.panel.persistence.mountPath | default "/app/var" }} && chmod -R 775 {{ .Values.panel.persistence.mountPath | default "/app/var" }}"]
           volumeMounts:
             - name: {{ include "pterodactyl.fullname" . }}-storage
               mountPath: {{ .Values.panel.persistence.mountPath | default "/app/var" }}

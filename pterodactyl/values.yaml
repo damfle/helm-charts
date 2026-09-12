@@ -142,9 +142,9 @@ panel:
 
   # Security context for the panel container
   securityContext:
-    runAsUser: 33
-    runAsGroup: 33
-    allowPrivilegeEscalation: false
+    runAsUser: 0
+    runAsGroup: 0
+    allowPrivilegeEscalation: true
 
   # Health checks
   livenessProbe:
