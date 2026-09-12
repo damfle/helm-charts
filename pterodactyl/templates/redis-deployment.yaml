@@ -28,6 +28,18 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.redis.persistence.enabled }}
+      initContainers:
+        - name: volume-permission-fix
+          image: busybox:latest
+          command: ["sh", "-c", "chown -R {{ .Values.redis.securityContext.runAsUser | default 999 }}:{{ .Values.redis.securityContext.runAsGroup | default 1000 }} /data && chmod -R 775 /data"]
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+              {{- if .Values.redis.persistence.subPath }}
+              subPath: {{ .Values.redis.persistence.subPath }}
+              {{- end }}
+      {{- end }}
       containers:
         - name: redis
           {{- with .Values.redis.securityContext }}

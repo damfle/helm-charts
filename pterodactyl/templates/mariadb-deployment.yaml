@@ -21,6 +21,13 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      initContainers:
+        - name: volume-permission-fix
+          image: busybox:latest
+          command: ["sh", "-c", "chown -R {{ .Values.mariadb.securityContext.runAsUser | default 999 }}:{{ .Values.mariadb.securityContext.runAsGroup | default 999 }} /var/lib/mysql && chmod -R 775 /var/lib/mysql"]
+          volumeMounts:
+            - name: mariadb-data
+              mountPath: /var/lib/mysql
       containers:
         - name: mariadb
           {{- with .Values.mariadb.securityContext }}
