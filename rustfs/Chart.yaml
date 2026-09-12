@@ -4,7 +4,7 @@ description: A Helm chart for RustFS server - HTTP-based file sharing protocol. 
 
 type: application
 version: 0.1.9
-appVersion: "1.0.0-rc.2"
+appVersion: "1.0.0-rc.6"
 
 maintainers:
   - name: Damien FLETY

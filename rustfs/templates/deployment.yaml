@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: {{ include "rustfs.fullname" . }}
 spec:
-  serviceName: {{ include "rustfs.fullname" . }}-headless
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
